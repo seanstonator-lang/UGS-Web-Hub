@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sean's UGS Hub | Titan Overload</title>
+    
+    <!-- CUSTOM FAVICON -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+
     <style>
         :root { --primary: #38bdf8; --secondary: #818cf8; --bg: #020617; --card-bg: rgba(15, 23, 42, 0.9); }
         
+        /* CSS Property for Animated Borders */
+        @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
         body { background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; margin: 0; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden; }
+
+        /* NEON SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--secondary)); border-radius: 10px; }
 
         header { text-align: center; padding: 50px 20px; background: linear-gradient(180deg, #1e293b 0%, var(--bg) 100%); width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); }
         h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 8px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.3)); }
         #game-counter { font-size: 0.9rem; color: var(--secondary); margin-top: 10px; font-weight: bold; letter-spacing: 3px; opacity: 0.7; }
 
-        /* STICKY SEARCH */
+        /* STICKY BLURRED SEARCH */
         .search-wrapper { position: sticky; top: 0; width: 100%; z-index: 1000; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0; display: flex; justify-content: center; }
         .tools-bar { width: 90%; max-width: 800px; padding: 0 20px; }
-        #searchInput { width: 100%; padding: 15px 25px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 50px; font-size: 1rem; }
+        #searchInput { width: 100%; padding: 15px 25px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 50px; font-size: 1rem; transition: 0.3s; }
 
-        /* GRID LAYOUT */
         .container { width: 90%; max-width: 1400px; padding: 20px 20px 100px 80px; box-sizing: border-box; margin: 0 auto; }
         #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
 
@@ -26,24 +37,32 @@
         .game-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; }
         .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px rgba(0,0,0,0.8); background: rgba(30, 41, 59, 1); }
         
+        /* ACTION BORDER ANIMATION */
+        .action-border { position: relative; padding: 1px; }
+        .action-border::before {
+            content: ''; position: absolute; inset: -2px; z-index: -1;
+            background: conic-gradient(from var(--angle), var(--primary), #f43f5e, var(--secondary), var(--primary));
+            border-radius: 22px; animation: rotate-border 3s linear infinite;
+        }
+        @keyframes rotate-border { to { --angle: 360deg; } }
+
         .game-image { width: 100%; height: 130px; background: #020617; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
         .card-content { padding: 15px; text-align: center; font-size: 0.95rem; font-weight: 700; color: #e2e8f0; text-transform: capitalize; }
 
-        /* TAGS FOR EVERY GAME */
+        /* TAGS */
         .tag { position: absolute; top: 12px; right: 12px; font-size: 0.6rem; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; z-index: 5; }
         .tag-sports { background: #059669; color: #fff; }
         .tag-action { background: #dc2626; color: #fff; }
         .tag-classic { background: #d97706; color: #fff; }
-        .tag-stash { background: #6366f1; color: #fff; } /* Default Tag */
+        .tag-stash { background: #6366f1; color: #fff; }
+        .tag-client { background: var(--primary); color: #fff; }
 
-        /* SIDEBAR */
         .alphabet-sidebar { position: fixed; left: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9); padding: 15px 8px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
         .alpha-link { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.7rem; font-weight: 800; cursor: pointer; transition: 0.2s; text-align: center; }
         .alpha-link:hover { color: var(--primary); transform: scale(1.4); }
 
         .section-header { grid-column: 1 / -1; font-size: 1.6rem; color: var(--primary); margin-top: 50px; border-bottom: 2px solid rgba(56, 189, 248, 0.1); padding-bottom: 12px; display: flex; align-items: center; gap: 15px; }
 
-        /* BACK TO TOP */
         #backToTop { position: fixed; bottom: 35px; right: 35px; background: var(--primary); color: #020617; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; z-index: 2000; }
         #backToTop.visible { opacity: 1; pointer-events: auto; }
     </style>
@@ -52,13 +71,13 @@
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">LOADING STASH...</div>
+    <div id="game-counter">CALIBRATING TITAN CORES...</div>
     <button onclick="playRandom()" style="background:none; border: 2px solid var(--primary); padding:10px 30px; border-radius:50px; color:var(--primary); font-weight:bold; cursor:pointer; margin-top:15px; transition: 0.3s;">✨ RANDOM GAME</button>
 </header>
 
 <div class="search-wrapper">
     <div class="tools-bar">
-        <input type="text" id="searchInput" placeholder="Search 2,000+ games...">
+        <input type="text" id="searchInput" placeholder="Search the stash...">
     </div>
 </div>
 
@@ -77,111 +96,167 @@
     const container = document.getElementById('sections-container');
     const counter = document.getElementById('game-counter');
     const backBtn = document.getElementById('backToTop');
+    
+    // EMBEDDED CONSOLE HOVER SOUND
+    // The embedded sound file has been removed for safety reasons.
 
-    function init() {
-        if (typeof rawGames === 'undefined') {
-            counter.innerText = "LINK ERROR: games-data.js MISSING";
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Function to load games and categorize them
+    function loadGames() {
+        if (!window.gamesData) {
+            console.error("games-data.js not loaded or empty.");
+            container.innerHTML = '<p style="text-align:center; color:gray; font-size:1.2rem;">Error loading games. Please check the games-data.js file.</p>';
+            counter.textContent = 'ERROR LOADING TITAN CORES';
             return;
         }
 
-        allGames = rawGames.map(game => {
-            let name = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
-            
-            // TITAN SPACING ENGINE (No Capitals Needed)
-            // Injects spaces before numbers and common game words
-            let formatted = name
-                .replace(/([0-9]+)/g, ' $1 ') 
-                .replace(/(soccer|basket|ball|run|dash|battle|world|sim|clash|king|war|shooting|mania|adventure|panda|birds|escape|goal|combat)/gi, ' $1 ')
-                .replace(/ +/g, ' ')
-                .trim();
+        allGames = window.gamesData;
+        counter.textContent = `TITAN CORES ONLINE (${allGames.length})`;
 
-            // TAGGING ENGINE (Ensures every game has a tag)
-            let tag = "Stash"; 
-            let tagClass = "tag-stash";
-            const low = formatted.toLowerCase();
+        // Sort games alphabetically by title
+        allGames.sort((a, b) => a.title.localeCompare(b.title));
 
-            if (/(soccer|basket|ball|tennis|bowl|golf|baseball|goal)/i.test(low)) {
-                tag = "Sports"; tagClass = "tag-sports";
-            } else if (/(run|dash|combat|war|battle|rush|shoot|action|madness)/i.test(low)) {
-                tag = "Action"; tagClass = "tag-action";
-            } else if (/(nes|retro|atari|classic|old|world|mario|sonic)/i.test(low)) {
-                tag = "Classic"; tagClass = "tag-classic";
+        const categorizedGames = allGames.reduce((acc, game) => {
+            const firstLetter = game.title.charAt(0).toUpperCase();
+            if (!acc[firstLetter]) {
+                acc[firstLetter] = [];
             }
+            acc[firstLetter].push(game);
+            return acc;
+        }, {});
 
-            return { ...game, displayName: formatted, tag, tagClass };
-        }).sort((a, b) => {
-            const isNumA = /^[0-9]/.test(a.displayName);
-            const isNumB = /^[0-9]/.test(b.displayName);
-            if (isNumA && !isNumB) return 1;
-            if (!isNumA && isNumB) return -1;
-            return a.displayName.localeCompare(b.displayName);
-        });
+        renderGames(categorizedGames);
+        renderAlphabetSidebar(Object.keys(categorizedGames).sort());
 
-        counter.innerText = `${allGames.length} TITLES ONLINE`;
-        setupSidebar();
-        renderGames(allGames);
-    }
-
-    function renderGames(list) {
-        container.innerHTML = "";
-        let currentHeader = "";
-
-        list.forEach(game => {
-            const first = game.displayName.charAt(0).toUpperCase();
-            const group = /^[0-9]/.test(first) ? "#" : first;
-
-            if (group !== currentHeader) {
-                currentHeader = group;
-                const h = document.createElement('div');
-                h.className = "section-header";
-                h.id = `section-${currentHeader}`;
-                h.innerHTML = `<span>🎮</span> ${currentHeader === '#' ? '0-9' : currentHeader}`;
-                container.appendChild(h);
-            }
-
-            const card = document.createElement('div');
-            card.className = "game-card";
-            card.onclick = () => window.location.href = game.url;
-            card.innerHTML = `
-                <div class="game-image">🎮</div>
-                <div class="tag ${game.tagClass}">${game.tag}</div>
-                <div class="card-content">${game.displayName}</div>
-            `;
-            container.appendChild(card);
+        // Add hover sound effect to game cards
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('mouseover', () => {
+                // Play sound effect (currently removed)
+            });
         });
     }
 
-    function setupSidebar() {
-        const side = document.getElementById('sidebar');
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split('').forEach(l => {
+    // Function to render games by category
+    function renderGames(categorizedGames) {
+        container.innerHTML = ''; // Clear previous content
+        for (const letter in categorizedGames) {
+            const sectionHeader = document.createElement('h2');
+            sectionHeader.id = `section-${letter}`;
+            sectionHeader.className = 'section-header';
+            sectionHeader.innerHTML = `${letter} <span style="font-size:0.8em; color:rgba(255,255,255,0.4); font-weight:normal;">(${categorizedGames[letter].length})</span>`;
+            container.appendChild(sectionHeader);
+
+            categorizedGames[letter].forEach(game => {
+                const card = document.createElement('div');
+                card.className = game.tag === 'action' ? 'game-card action-border' : 'game-card'; // Apply animated border based on tag
+                card.setAttribute('data-title', game.title.toLowerCase());
+                card.setAttribute('data-category', game.tag.toLowerCase());
+                card.onclick = () => window.open(game.link, '_blank');
+
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'game-image';
+                imageDiv.innerHTML = game.icon;
+
+                const tagSpan = document.createElement('span');
+                tagSpan.className = `tag tag-${game.tag.toLowerCase()}`;
+                tagSpan.textContent = game.tag;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'card-content';
+                contentDiv.textContent = game.title;
+
+                card.appendChild(imageDiv);
+                card.appendChild(tagSpan);
+                card.appendChild(contentDiv);
+                container.appendChild(card);
+            });
+        }
+    }
+
+    // Function to render the alphabet sidebar
+    function renderAlphabetSidebar(letters) {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.innerHTML = ''; // Clear previous sidebar links
+        letters.forEach(letter => {
             const link = document.createElement('a');
-            link.className = "alpha-link";
-            link.innerText = l;
-            link.onclick = () => {
-                const el = document.getElementById(`section-${l}`);
-                if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-            };
-            side.appendChild(link);
+            link.href = `#section-${letter}`;
+            link.className = 'alpha-link';
+            link.textContent = letter;
+            sidebar.appendChild(link);
         });
     }
 
-    window.onscroll = () => {
-        if (window.scrollY > 800) backBtn.classList.add('visible');
-        else backBtn.classList.remove('visible');
-    };
+    // Function to handle search input
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.game-card');
 
-    function playRandom() {
-        const g = allGames[Math.floor(Math.random() * allGames.length)];
-        window.location.href = g.url;
-    }
+        cards.forEach(card => {
+            const title = card.getAttribute('data-title');
+            const category = card.getAttribute('data-category');
+            if (title.includes(searchTerm) || category.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
 
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(val));
-        renderGames(filtered);
+        // Hide section headers if all games in that section are hidden
+        document.querySelectorAll('.section-header').forEach(header => {
+            const letter = header.id.replace('section-', '');
+            const gamesInSection = container.querySelectorAll(`#sections-container > .game-card[data-title^="${letter.toLowerCase()}"]`);
+            const visibleGamesInSection = Array.from(gamesInSection).filter(card => card.style.display !== 'none');
+            if (visibleGamesInSection.length === 0) {
+                header.style.display = 'none';
+            } else {
+                header.style.display = 'flex'; // Use flex display for the header
+            }
+        });
+
+        // Update alphabet sidebar visibility based on search results
+        document.querySelectorAll('.alpha-link').forEach(link => {
+            const targetId = link.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            if (targetSection && targetSection.style.display !== 'none') {
+                link.style.display = 'block';
+            } else {
+                link.style.display = 'none';
+            }
+        });
     });
 
-    window.onload = init;
+    // Function to play a random game
+    function playRandom() {
+        if (allGames.length === 0) {
+            console.warn("No games loaded to play randomly.");
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * allGames.length);
+        const randomGame = allGames[randomIndex];
+        window.open(randomGame.link, '_blank');
+    }
+
+    // Show/hide back to top button
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 200) { // Show after scrolling 200px
+            backBtn.classList.add('visible');
+        } else {
+            backBtn.classList.remove('visible');
+        }
+    });
+
+    // Initial load of games
+    loadGames();
+
 </script>
+
 </body>
 </html>
