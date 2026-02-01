@@ -21,7 +21,7 @@
 
         header { text-align: center; padding: 60px 20px; }
         h1 {
-            font-size: clamp(2rem, 8vw, 5rem); margin: 0; font-weight: 900;
+            font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; font-weight: 900;
             background: linear-gradient(90deg, var(--primary), var(--secondary), #f472b6);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-transform: uppercase; letter-spacing: 15px; filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5));
@@ -40,28 +40,28 @@
             flex: 1; padding: 18px 30px; background: #0f172a; border: 1px solid #334155;
             color: white; border-radius: 100px; font-size: 1.1rem; transition: 0.3s;
         }
-        #sortSelect { padding: 0 25px; background: #1e293b; color: white; border-radius: 100px; border: 1px solid var(--primary); font-weight: bold; cursor: pointer; }
+        #sortSelect { padding: 0 25px; background: #1e293b; color: white; border-radius: 100px; border: 1px solid var(--primary); font-weight: bold; cursor: pointer; height: 55px; }
 
-        .filter-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .filter-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .pill {
-            padding: 8px 18px; border-radius: 50px; font-size: 0.75rem; font-weight: 800;
+            padding: 8px 18px; border-radius: 50px; font-size: 0.7rem; font-weight: 800;
             cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
             background: rgba(255,255,255,0.05); text-transform: uppercase;
         }
-        .pill.active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        .pill.active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); border-color: var(--primary); }
 
-        .container { width: 95%; max-width: 1600px; padding: 40px 20px 100px 100px; margin: 0 auto; }
+        .container { width: 92%; max-width: 1600px; padding: 40px 20px 100px 100px; margin: 0 auto; }
         #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
 
         .game-card {
             background: rgba(15, 23, 42, 0.7); border-radius: 24px; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
             position: relative; border: 2px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px); display: flex; flex-direction: column;
+            display: flex; flex-direction: column; height: 100%;
         }
-        .game-card:hover { transform: translateY(-12px) scale(1.03); }
+        .game-card:hover { transform: translateY(-12px) scale(1.02); border-color: var(--primary); }
 
-        /* Categorized Glows */
+        /* Categorized Glow Borders */
         .glow-retro:hover { border-color: var(--retro); box-shadow: 0 0 30px var(--retro); }
         .glow-online:hover { border-color: var(--online); box-shadow: 0 0 30px var(--online); }
         .glow-action:hover { border-color: var(--action); box-shadow: 0 0 30px var(--action); }
@@ -71,31 +71,33 @@
         .glow-sports:hover { border-color: var(--sports); box-shadow: 0 0 30px var(--sports); }
 
         .game-image {
-            width: 100%; height: 140px; background: #000;
+            width: 100%; height: 130px; background: #000;
             display: flex; align-items: center; justify-content: center;
-            font-size: 3.5rem; transition: 0.5s; opacity: 0.6;
+            font-size: 3.5rem; transition: 0.4s; opacity: 0.6;
         }
-        .game-card:hover .game-image { opacity: 1; font-size: 4.2rem; }
+        .game-card:hover .game-image { opacity: 1; transform: scale(1.1); }
        
-        .card-content { padding: 20px; text-align: left; }
-        .game-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .game-desc { font-size: 0.8rem; color: #94a3b8; font-weight: 400; line-height: 1.4; height: 3em; overflow: hidden; }
+        .card-content { padding: 20px; flex-grow: 1; }
+        .card-tag { font-size: 0.65rem; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+        .game-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .game-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; font-weight: 400; }
 
+        /* Fixed Sidebar Navigation */
         .alphabet-sidebar {
             position: fixed; left: 20px; top: 50%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 5px; background: rgba(15, 23, 42, 0.9);
-            padding: 20px 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            z-index: 1001; backdrop-filter: blur(10px); max-height: 85vh; overflow-y: auto; scrollbar-width: none;
+            display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9);
+            padding: 15px 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            z-index: 2000; backdrop-filter: blur(10px); max-height: 80vh; overflow-y: auto; scrollbar-width: none;
         }
         .alphabet-sidebar::-webkit-scrollbar { display: none; }
         .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.75rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center; }
-        .alpha-link:hover { color: var(--primary); transform: scale(1.4); }
+        .alpha-link:hover { color: var(--primary); transform: scale(1.5); }
 
         #backToTop {
             position: fixed; bottom: 40px; right: 40px; background: white; color: black;
             width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center;
-            justify-content: center; font-size: 1.8rem; cursor: pointer; transition: 0.5s;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; z-index: 2000;
+            justify-content: center; font-size: 2rem; cursor: pointer; transition: 0.5s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: auto; z-index: 2000;
         }
         #backToTop.visible { opacity: 1; pointer-events: auto; }
     </style>
@@ -104,13 +106,13 @@
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">SYSTEM INITIALIZING...</div>
+    <div id="game-counter">0 TITANS ONLINE</div>
 </header>
 
 <div class="nav-sticky">
     <div class="controls-container">
         <div class="top-row">
-            <input type="text" id="searchInput" placeholder="Search 2,000+ Titans..." oninput="render()">
+            <input type="text" id="searchInput" placeholder="Search 2,000+ Game Titles..." oninput="render()">
             <select id="sortSelect" onchange="toggleSort(this.value)">
                 <option value="alpha">A-Z View</option>
                 <option value="category">Genre View</option>
@@ -140,6 +142,7 @@
     let activeTag = 'all';
     let currentSort = 'alpha';
 
+    // UI Sound Controller
     const uiSound = new Audio('https://www.soundjay.com');
     uiSound.volume = 0.1;
     function playSound() { uiSound.currentTime = 0; uiSound.play().catch(() => {}); }
@@ -152,24 +155,24 @@
             let formatted = raw.replace(/([A-Z0-9])/g, ' $1').trim();
             formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
+            // INTELLIGENT CATEGORY ENGINE
             let category = "Action"; 
             let emoji = "⚔️";
             const n = formatted.toLowerCase();
 
-            // High-Sensitivity Keyword Detection
-            if (n.includes("client") || n.includes("eagler") || n.includes("multi") || n.includes("server")) { category = "Online"; emoji = "🌐"; }
-            else if (n.includes("run") || n.includes("speed") || n.includes("drive") || n.includes("moto") || n.includes("drift")) { category = "Racing"; emoji = "🏎️"; }
-            else if (n.includes("retro") || n.includes("64") || n.includes("class") || n.includes("nes") || n.includes("bit")) { category = "Retro"; emoji = "🕹️"; }
-            else if (n.includes("craft") || n.includes("survive") || n.includes("mine") || n.includes("zombie")) { category = "Survival"; emoji = "🌲"; }
-            else if (n.includes("puzzle") || n.includes("logic") || n.includes("math") || n.includes("word") || n.includes("chess")) { category = "Puzzle"; emoji = "🧩"; }
-            else if (n.includes("ball") || n.includes("soccer") || n.includes("basket") || n.includes("dunk") || n.includes("pool")) { category = "Sports"; emoji = "🏀"; }
+            if (n.includes("client") || n.includes("eagler") || n.includes("multi")) { category = "Online"; emoji = "🌐"; }
+            else if (n.includes("run") || n.includes("speed") || n.includes("drive") || n.includes("drift")) { category = "Racing"; emoji = "🏎️"; }
+            else if (n.includes("retro") || n.includes("64") || n.includes("pixel") || n.includes("class")) { category = "Retro"; emoji = "🕹️"; }
+            else if (n.includes("puzzle") || n.includes("math") || n.includes("logic") || n.includes("word")) { category = "Puzzle"; emoji = "🧩"; }
+            else if (n.includes("ball") || n.includes("soccer") || n.includes("basket") || n.includes("pool")) { category = "Sports"; emoji = "🏀"; }
+            else if (n.includes("craft") || n.includes("survive") || n.includes("mine")) { category = "Survival"; emoji = "🌲"; }
 
-            const desc = `Experience the thrill of ${formatted}. A top-tier ${category} challenge optimized for speed.`;
+            const desc = `Engage in the high-performance world of ${formatted}. A premier ${category} title optimized for Titan Infinity.`;
 
             return { ...game, displayName: formatted, category, emoji, desc, glowClass: `glow-${category.toLowerCase()}` };
         });
 
-        document.getElementById('game-counter').innerText = `${allGames.length} GAMES ONLINE`;
+        document.getElementById('game-counter').innerText = `${allGames.length} TITANS ONLINE`;
         applySort();
         generateSidebar();
         render();
@@ -180,6 +183,7 @@
             allGames.sort((a, b) => {
                 const aNum = /^\d/.test(a.displayName);
                 const bNum = /^\d/.test(b.displayName);
+                // Numbers move to the end of the A-Z list
                 if (aNum && !bNum) return 1;
                 if (!aNum && bNum) return -1;
                 return a.displayName.localeCompare(b.displayName);
@@ -205,7 +209,7 @@
             <div class="game-card ${g.glowClass}" onmouseenter="playSound()" onclick="window.open('${g.url}', '_blank')">
                 <div class="game-image">${g.emoji}</div>
                 <div class="card-content">
-                    <div style="font-size: 0.65rem; color: var(--primary); font-weight: 900; text-transform: uppercase; margin-bottom: 5px;">${g.category}</div>
+                    <div class="card-tag">${g.category}</div>
                     <div class="game-title">${g.displayName}</div>
                     <div class="game-desc">${g.desc}</div>
                 </div>
@@ -216,14 +220,29 @@
     function generateSidebar() {
         const sidebar = document.getElementById('sidebar');
         sidebar.innerHTML = `<a class="alpha-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); playSound()">🏠</a>`;
+        
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
             const a = document.createElement('a');
             a.className = 'alpha-link';
             a.innerText = l;
-            a.onclick = () => { playSound(); document.getElementById('searchInput').value = l; render(); window.scrollTo({top: 400, behavior: 'smooth'}); };
+            a.onclick = () => { 
+                playSound();
+                document.getElementById('searchInput').value = l; 
+                render(); 
+                window.scrollTo({ top: document.querySelector('.container').offsetTop - 100, behavior: 'smooth' });
+            };
             sidebar.appendChild(a);
         });
-        sidebar.innerHTML += `<a class="alpha-link" onclick="playSound(); document.getElementById('searchInput').value = '1'; render()">#</a>`;
+
+        const hash = document.createElement('a');
+        hash.className = 'alpha-link';
+        hash.innerText = "#";
+        hash.onclick = () => {
+            playSound();
+            const firstNum = allGames.find(g => /^\d/.test(g.displayName));
+            if(firstNum) { document.getElementById('searchInput').value = firstNum.displayName.charAt(0); render(); }
+        };
+        sidebar.appendChild(hash);
     }
 
     document.querySelectorAll('.pill').forEach(pill => {
