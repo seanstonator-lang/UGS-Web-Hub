@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sean's UGS Hub | Titan Infinity</title>
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
-
     <style>
         :root { 
             --primary: #38bdf8; --secondary: #818cf8; --bg: #020617; 
@@ -17,14 +15,13 @@
         body { 
             background: var(--bg); font-family: 'Inter', sans-serif; color: white; 
             margin: 0; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden;
-            /* Cyberpunk Grid Background */
             background-image: 
                 linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
         }
 
-        header { text-align: center; padding: 60px 20px; position: relative; }
+        header { text-align: center; padding: 60px 20px; }
         h1 { 
             font-size: clamp(2rem, 8vw, 5rem); margin: 0; font-weight: 900;
             background: linear-gradient(90deg, var(--primary), var(--secondary), #f472b6);
@@ -32,7 +29,8 @@
             text-transform: uppercase; letter-spacing: 15px; filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5));
         }
 
-        /* NAVIGATION */
+        #game-counter { color: var(--secondary); font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
+
         .nav-sticky { 
             position: sticky; top: 0; width: 100%; z-index: 1000; 
             background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(20px); 
@@ -45,7 +43,6 @@
             color: white; border-radius: 100px; font-size: 1.1rem; transition: 0.3s;
         }
         #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); outline: none; }
-        #sortSelect { padding: 0 25px; background: #1e293b; color: white; border-radius: 100px; border: 1px solid var(--primary); font-weight: bold; cursor: pointer; }
 
         .filter-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .pill { 
@@ -55,62 +52,50 @@
         }
         .pill.active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
-        /* GRID */
         .container { width: 95%; max-width: 1600px; padding: 40px 20px 100px 100px; margin: 0 auto; }
-        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 40px; }
+        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
 
-        /* DYNAMIC HOVER CARDS */
         .game-card { 
-            background: rgba(15, 23, 42, 0.7); border-radius: 24px; overflow: hidden; 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
-            position: relative; border: 2px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.7); border-radius: 20px; overflow: hidden; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
+            position: relative; border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; flex-direction: column;
         }
-        .game-card:hover { transform: translateY(-15px) scale(1.05); }
+        .game-card:hover { transform: translateY(-10px); }
 
-        /* HOVER GLOW BORDERS (Different for each category) */
-        .glow-retro:hover { border-color: var(--retro); box-shadow: 0 0 30px var(--retro); }
-        .glow-multi:hover { border-color: var(--multi); box-shadow: 0 0 30px var(--multi); }
-        .glow-online:hover { border-color: var(--online); box-shadow: 0 0 30px var(--online); }
-        .glow-emu:hover { border-color: var(--emu); box-shadow: 0 0 30px var(--emu); }
-        .glow-action:hover { border-color: var(--action); box-shadow: 0 0 30px var(--action); }
-        .glow-racing:hover { border-color: var(--racing); box-shadow: 0 0 30px var(--racing); }
-        .glow-puzzle:hover { border-color: var(--puzzle); box-shadow: 0 0 30px var(--puzzle); }
-        .glow-survival:hover { border-color: var(--survival); box-shadow: 0 0 30px var(--survival); }
+        /* Categorized Neon Glows */
+        .glow-retro:hover { border-color: var(--retro); box-shadow: 0 0 25px var(--retro); }
+        .glow-online:hover { border-color: var(--online); box-shadow: 0 0 25px var(--online); }
+        .glow-racing:hover { border-color: var(--racing); box-shadow: 0 0 25px var(--racing); }
+        .glow-action:hover { border-color: var(--action); box-shadow: 0 0 25px var(--action); }
 
         .game-image { 
-            width: 100%; height: 160px; background: #000; 
+            width: 100%; height: 120px; background: #000; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 4.5rem; transition: 0.5s; opacity: 0.6;
+            font-size: 3.5rem; opacity: 0.6; transition: 0.3s;
         }
-        .game-card:hover .game-image { opacity: 1; font-size: 5.5rem; }
+        .game-card:hover .game-image { opacity: 1; font-size: 4rem; }
         
-        .card-content { padding: 20px; text-align: center; font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; }
+        .card-content { padding: 15px; text-align: left; }
+        .game-title { color: var(--primary); font-weight: 800; font-size: 1rem; margin-bottom: 5px; }
+        .game-desc { font-size: 0.75rem; color: #94a3b8; font-weight: 400; line-height: 1.4; }
 
-        /* SIDEBAR */
         .alphabet-sidebar { 
             position: fixed; left: 20px; top: 50%; transform: translateY(-50%); 
-            display: flex; flex-direction: column; gap: 6px; background: rgba(15, 23, 42, 0.9); 
-            padding: 25px 12px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); 
+            display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9); 
+            padding: 20px 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); 
             z-index: 1001; backdrop-filter: blur(10px);
         }
-        .alpha-link { color: rgba(255,255,255,0.2); text-decoration: none; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .alpha-link:hover { color: var(--primary); transform: scale(1.5); }
-
-        .section-header { 
-            grid-column: 1 / -1; font-size: 2rem; color: var(--primary); 
-            margin-top: 60px; border-bottom: 2px solid rgba(255,255,255,0.05); 
-            padding-bottom: 15px; font-weight: 900; display: flex; align-items: center; gap: 20px;
-        }
+        .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.7rem; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .alpha-link:hover { color: var(--primary); transform: scale(1.4); }
 
         #backToTop { 
-            position: fixed; bottom: 40px; right: 40px; background: white; color: black; 
-            width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center; 
-            justify-content: center; font-size: 2rem; cursor: pointer; transition: 0.5s; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; z-index: 2000;
+            position: fixed; bottom: 30px; right: 30px; background: white; color: black; 
+            width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; 
+            justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.4s; 
+            opacity: 0; pointer-events: none; z-index: 2000;
         }
         #backToTop.visible { opacity: 1; pointer-events: auto; }
-        #backToTop:hover { transform: rotate(360deg); background: var(--primary); color: white; }
     </style>
 </head>
 <body>
@@ -124,21 +109,13 @@
     <div class="controls-container">
         <div class="top-row">
             <input type="text" id="searchInput" placeholder="Search 2,000+ Titans...">
-            <select id="sortSelect">
-                <option value="alpha">A-Z View</option>
-                <option value="category">Genre View</option>
-            </select>
         </div>
         <div class="filter-pills" id="pills">
             <div class="pill active" data-tag="all">All Access</div>
             <div class="pill" data-tag="Action">Action</div>
             <div class="pill" data-tag="Retro">Retro</div>
-            <div class="pill" data-tag="2-Player">2-Player</div>
             <div class="pill" data-tag="Online">Online</div>
-            <div class="pill" data-tag="Emulator">Emulator</div>
             <div class="pill" data-tag="Racing">Racing</div>
-            <div class="pill" data-tag="Puzzle">Puzzle</div>
-            <div class="pill" data-tag="Survival">Survival</div>
         </div>
     </div>
 </div>
@@ -148,129 +125,98 @@
 <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
 
 <script src="games-data.js"></script>
-
 <script>
     let allGames = [];
     let activeTag = 'all';
-    let currentSort = 'alpha';
 
     function init() {
         if (typeof rawGames === 'undefined') return;
 
+        // Optimized Mapping with Auto-Description Logic
         allGames = rawGames.map(game => {
-            let name = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
-            name = name.replace('.html', '');
-            
-            const dict = ['soccer', 'basket', 'ball', 'run', 'dash', 'battle', 'world', 'sim', 'war', 'shooting', 'adventure', 'panda', 'birds', 'escape', 'goal', 'random', 'clicker', 'stars', 'bros', 'lol', 'tennis', 'bowl', 'pool', 'classic', 'retro', 'player', 'party', 'online', 'io', 'emu', 'gba', 'nes', 'n64', 'drive', 'drift', 'moto', 'car', 'chess', 'block', 'match', 'zombie', 'craft', 'combat', 'rush', 'madness', 'sonic', 'mario'];
-            let spaced = name.replace(/([0-9]+)/g, ' $1 ');
-            dict.forEach(w => { spaced = spaced.replace(new RegExp(`(${w})`, 'gi'), ' $1 '); });
-            let formatted = spaced.replace(/ +/g, ' ').trim();
+            let raw = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
+            let formatted = raw.replace(/([A-Z0-9])/g, ' $1').trim();
+            formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
-            let tag = "Action"; 
-            let tagClass = "glow-action";
-            const low = formatted.toLowerCase();
+            let tag = game.tag || "Action"; 
+            let emoji = "🎮";
+            let desc = "";
+            const n = formatted.toLowerCase();
 
-            if (/(retro|old|classic|nes|n64|atari|64|snes|nes)/i.test(low)) { tag = "Retro"; tagClass = "glow-retro"; }
-            else if (/(2player|multiplayer|party|bros|player|1v1|tennis|battle)/i.test(low)) { tag = "2-Player"; tagClass = "glow-multi"; }
-            else if (/(online|io|server|web|multi|agario|slither)/i.test(low)) { tag = "Online"; tagClass = "glow-online"; }
-            else if (/(emu|gba|ds|nintendo|pokemon|emulator|gameboy)/i.test(low)) { tag = "Emulator"; tagClass = "glow-emu"; }
-            else if (/(drive|drift|moto|car|race|speed|kart)/i.test(low)) { tag = "Racing"; tagClass = "glow-racing"; }
-            else if (/(chess|block|match|puzzle|sudoku|logic|escape)/i.test(low)) { tag = "Puzzle"; tagClass = "glow-puzzle"; }
-            else if (/(zombie|craft|survival|island|survive|horror)/i.test(low)) { tag = "Survival"; tagClass = "glow-survival"; }
+            // Intelligent Keyword matching
+            if (n.includes("client") || n.includes("eagler")) { tag = "Online"; emoji = "🌐"; desc = "Pro-grade gaming client. Custom features enabled."; }
+            else if (n.includes("run") || n.includes("dash")) { tag = "Racing"; emoji = "🏎️"; desc = "High-speed reflex challenge. Don't slow down!"; }
+            else if (n.includes("retro") || n.includes("old")) { tag = "Retro"; emoji = "🕹️"; desc = "Classic arcade experience optimized for modern web."; }
+            else { desc = `Jump into ${formatted}! Top-tier performance and unlimited play.`; }
 
-            return { ...game, displayName: formatted, tag, tagClass };
+            return { ...game, displayName: formatted, tag, emoji, desc, glowClass: `glow-${tag.toLowerCase()}` };
         });
 
-        updateHub();
+        document.getElementById('game-counter').innerText = `${allGames.length} TITANS READY`;
+        generateSidebar();
+        render();
     }
 
-    function updateHub() {
-        let list = [...allGames];
-        if (activeTag !== 'all') list = list.filter(g => g.tag === activeTag);
-
-        if (currentSort === 'alpha') {
-            list.sort((a, b) => {
-                const isNumA = /^[0-9]/.test(a.displayName);
-                const isNumB = /^[0-9]/.test(b.displayName);
-                if (isNumA && !isNumB) return 1;
-                if (!isNumA && isNumB) return -1;
-                return a.displayName.localeCompare(b.displayName);
-            });
-        } else {
-            list.sort((a, b) => a.tag.localeCompare(b.tag));
-        }
-
-        renderGames(list);
-        document.getElementById('game-counter').innerText = `${list.length} TITANS READY`;
-    }
-
-    function renderGames(list) {
+    function render() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
         const container = document.getElementById('sections-container');
-        container.innerHTML = "";
-        let currentHeader = "";
+        
+        const filtered = allGames.filter(g => {
+            const matchesSearch = g.displayName.toLowerCase().includes(term);
+            const matchesTag = activeTag === 'all' || g.tag === activeTag;
+            return matchesSearch && matchesTag;
+        });
 
-        list.forEach(game => {
-            let headerVal = "";
-            if (currentSort === 'alpha') {
-                const first = game.displayName.charAt(0).toUpperCase();
-                headerVal = /^[0-9]/.test(first) ? "0-9" : first;
-            } else {
-                headerVal = game.tag;
-            }
-
-            if (headerVal !== currentHeader) {
-                currentHeader = headerVal;
-                const h = document.createElement('div');
-                h.className = "section-header";
-                h.id = `section-${currentHeader}`;
-                h.innerHTML = `<span>⚡</span> ${currentHeader}`;
-                container.appendChild(h);
-            }
-
+        // Use DocumentFragment for high-performance rendering
+        const fragment = document.createDocumentFragment();
+        filtered.forEach(g => {
             const card = document.createElement('div');
-            card.className = `game-card ${game.tagClass}`;
-            card.onclick = () => window.location.href = game.url;
-            card.innerHTML = `<div class="game-image">🎮</div><div class="card-content">${game.displayName}</div>`;
-            container.appendChild(card);
+            card.className = `game-card ${g.glowClass}`;
+            card.onclick = () => window.open(g.url, '_blank');
+            card.innerHTML = `
+                <div class="game-image">${g.emoji}</div>
+                <div class="card-content">
+                    <div class="game-title">${g.displayName}</div>
+                    <div class="game-desc">${g.desc}</div>
+                </div>`;
+            fragment.appendChild(card);
+        });
+        
+        container.innerHTML = "";
+        container.appendChild(fragment);
+    }
+
+    function generateSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
+            const a = document.createElement('a');
+            a.className = 'alpha-link';
+            a.innerText = l;
+            a.onclick = () => {
+                document.getElementById('searchInput').value = l;
+                render();
+                window.scrollTo({top: 400, behavior: 'smooth'});
+            };
+            sidebar.appendChild(a);
         });
     }
 
-    document.getElementById('pills').addEventListener('click', (e) => {
-        if (e.target.classList.contains('pill')) {
+    // Interactive Listeners
+    document.getElementById('searchInput').oninput = render;
+    document.querySelectorAll('.pill').forEach(pill => {
+        pill.onclick = () => {
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            e.target.classList.add('active');
-            activeTag = e.target.dataset.tag;
-            updateHub();
-        }
+            pill.classList.add('active');
+            activeTag = pill.getAttribute('data-tag');
+            render();
+        };
     });
-
-    document.getElementById('sortSelect').addEventListener('change', (e) => {
-        currentSort = e.target.value;
-        updateHub();
-    });
-
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(val));
-        renderGames(filtered);
-    });
-
-    function setupSidebar() {
-        const side = document.getElementById('sidebar');
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split('').forEach(l => {
-            const link = document.createElement('a'); link.className = "alpha-link"; link.innerText = l;
-            link.onclick = () => { const el = document.getElementById(`section-${l === '#' ? '0-9' : l}`); if(el) el.scrollIntoView({ behavior: "smooth" }); };
-            side.appendChild(link);
-        });
-    }
 
     window.onscroll = () => {
-        const btn = document.getElementById('backToTop');
-        if (window.scrollY > 800) btn.classList.add('visible');
-        else btn.classList.remove('visible');
+        document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 600);
     };
 
-    window.onload = () => { init(); setupSidebar(); };
+    init();
 </script>
 </body>
 </html>
