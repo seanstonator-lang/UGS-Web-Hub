@@ -3,82 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sean's UGS Hub | Titan Edition</title>
+    <title>Sean's UGS Hub | Titan Overload</title>
     <style>
-        :root { --primary: #38bdf8; --secondary: #818cf8; --bg: #0f172a; --card-bg: rgba(30, 41, 59, 0.6); }
+        :root { --primary: #38bdf8; --secondary: #818cf8; --bg: #020617; --card-bg: rgba(15, 23, 42, 0.8); }
+        
         body { background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden; }
+
+        /* Header */
+        header { text-align: center; padding: 40px 20px; background: linear-gradient(180deg, #1e293b 0%, var(--bg) 100%); width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 8px; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3)); }
+        #game-counter { font-size: 0.9rem; color: var(--secondary); margin-top: 10px; font-weight: bold; letter-spacing: 3px; opacity: 0.8; }
+
+        /* STICKY SEARCH BAR */
+        .search-wrapper { position: sticky; top: 0; width: 100%; z-index: 1000; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0; display: flex; justify-content: center; }
+        .tools-bar { width: 90%; max-width: 800px; }
+        #searchInput { width: 100%; padding: 15px 25px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 50px; font-size: 1rem; transition: 0.3s; box-sizing: border-box; }
+        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); outline: none; }
+
+        /* Container & Sections */
+        .container { width: 90%; max-width: 1400px; padding: 20px 20px 100px 70px; box-sizing: border-box; }
+        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+
+        /* DARKER GLASS UI CARDS */
+        .game-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; overflow: hidden; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer; position: relative; backdrop-filter: blur(5px); }
+        .game-card:hover { transform: scale(1.05); border-color: var(--primary); box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); background: rgba(30, 41, 59, 0.9); }
         
-        header { text-align: center; padding: 60px 20px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 0; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 5px; }
-        #game-counter { font-size: 1.1rem; color: var(--secondary); margin: 15px 0; font-weight: bold; letter-spacing: 2px; }
+        .game-image { width: 100%; height: 130px; background: #020617; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; transition: 0.3s; }
+        .game-card:hover .game-image { background: #0f172a; }
 
-        /* Sidebar Navigation */
-        .alphabet-sidebar { position: fixed; left: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 2px; background: rgba(30, 41, 59, 0.8); padding: 10px 5px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
-        .alpha-link { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.2s; padding: 2px 5px; text-align: center; }
-        .alpha-link:hover { color: var(--primary); transform: scale(1.4); }
+        .card-content { padding: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; position: relative; }
 
-        /* Search & Container */
-        .tools-bar { margin: 30px auto; width: 90%; max-width: 800px; display: flex; gap: 15px; }
-        #searchInput { flex: 1; padding: 15px 25px; background: #1e293b; border: 2px solid #334155; color: white; border-radius: 12px; font-size: 1rem; }
-        .container { width: 90%; max-width: 1400px; padding: 20px 20px 100px 60px; }
-        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; opacity: 0; transition: 0.5s; }
+        /* CATEGORY TAGS */
+        .tag { position: absolute; top: 10px; right: 10px; font-size: 0.65rem; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
+        .tag-sports { background: #10b981; color: #ecfdf5; }
+        .tag-action { background: #ef4444; color: #fef2f2; }
+        .tag-classic { background: #f59e0b; color: #fffbeb; }
+        .tag-client { background: var(--primary); color: #f0f9ff; }
 
-        /* Game Cards */
-        .game-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
-        .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .game-card::after { content: attr(data-desc); position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: #1e293b; color: var(--primary); padding: 12px; border-radius: 8px; border: 1px solid var(--primary); width: 180px; font-size: 0.75rem; text-align: center; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 2000; pointer-events: none; }
-        .game-card:hover::after { opacity: 1; visibility: visible; bottom: 115%; }
+        /* SIDEBAR & HEADER */
+        .alphabet-sidebar { position: fixed; left: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9); padding: 12px 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
+        .alpha-link { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.75rem; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; }
+        .alpha-link:hover { color: var(--primary); transform: scale(1.3); }
 
-        .game-image { width: 100%; height: 120px; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; }
-        .card-content { padding: 15px; text-align: center; font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        /* Section Header with Controller Icon */
-        .section-header { grid-column: 1 / -1; font-size: 1.5rem; color: var(--primary); margin-top: 40px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        /* FLOATING BACK TO TOP */
+        #backToTop { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: #020617; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; z-index: 2000; }
+        #backToTop.visible { opacity: 1; pointer-events: auto; }
+        #backToTop:hover { transform: translateY(-5px) scale(1.1); background: white; }
+
+        .section-header { grid-column: 1 / -1; font-size: 1.5rem; color: var(--primary); margin-top: 50px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px; display: flex; align-items: center; gap: 12px; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">SYNCING REPOSITORY...</div>
-    <div class="hero-btns">
-        <button onclick="playRandom()" style="background:var(--primary); border:none; padding:12px 30px; border-radius:8px; font-weight:bold; cursor:pointer; color:#0f172a; margin-top:10px;">✨ RANDOM GAME</button>
-    </div>
+    <div id="game-counter">INITIALIZING TITAN ENGINE...</div>
+    <button onclick="playRandom()" style="background:none; border: 1px solid var(--primary); padding:10px 25px; border-radius:50px; color:var(--primary); font-weight:bold; cursor:pointer; margin-top:15px; transition: 0.3s;">✨ RANDOM GAME</button>
 </header>
 
-<nav class="alphabet-sidebar" id="sidebar"></nav>
-
-<div class="tools-bar">
-    <input type="text" id="searchInput" placeholder="Search 2,000+ games...">
+<div class="search-wrapper">
+    <div class="tools-bar">
+        <input type="text" id="searchInput" placeholder="Search 2,000+ titles instantly...">
+    </div>
 </div>
+
+<nav class="alphabet-sidebar" id="sidebar"></nav>
 
 <div class="container">
     <div id="sections-container"></div>
 </div>
 
-<!-- This ensures it looks for the data file in the same folder as index.html -->
+<div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+
 <script src="games-data.js"></script>
 
 <script>
     let allGames = [];
     const container = document.getElementById('sections-container');
     const counter = document.getElementById('game-counter');
+    const backBtn = document.getElementById('backToTop');
 
+    // HYBRID ENGINE: Formats names and adds Tags
     function init() {
         if (typeof rawGames === 'undefined') {
-            counter.innerText = "ERROR: games-data.js NOT FOUND";
+            counter.innerText = "CRITICAL ERROR: DATA NOT LOADED";
             return;
         }
 
         allGames = rawGames.map(game => {
-            let clean = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
-            let formatted = clean.replace(/([0-9]+|[A-Z])/g, ' $1').replace(/ +/g, ' ').trim();
+            let raw = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
+            
+            // HYBRID SPACING LOGIC: Separates numbers, caps, and common squashed words
+            let formatted = raw
+                .replace(/([0-9]+)/g, ' $1 ') // Space around numbers
+                .replace(/([A-Z])/g, ' $1') // Space before capitals
+                .replace(/(soccer|basketball|football|tennis|baseball|ball|random|run|dash|panda|birds|battle|sim|clicker)/gi, ' $1 ') // Space around sports/genres
+                .replace(/ +/g, ' ') // Collapse double spaces
+                .trim();
+            
             formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
-            let desc = `Play ${formatted} for free on Sean's UGS Hub!`;
-            return { ...game, displayName: formatted, autoDesc: desc };
+            // AUTO-TAGGING ENGINE
+            let tag = ""; let tagClass = "";
+            const low = formatted.toLowerCase();
+            if (low.includes("soccer") || low.includes("ball") || low.includes("basket")) { tag = "Sports"; tagClass = "tag-sports"; }
+            else if (low.includes("run") || low.includes("dash") || low.includes("rush")) { tag = "Action"; tagClass = "tag-action"; }
+            else if (low.includes("classic") || low.includes("nes") || low.includes("retro")) { tag = "Classic"; tagClass = "tag-classic"; }
+            else if (low.includes("client") || low.includes("wurst")) { tag = "Client"; tagClass = "tag-client"; }
+
+            return { ...game, displayName: formatted, tag, tagClass };
         }).sort((a, b) => {
-            // Updated sorting logic: Letters A-Z first, then Numbers at the bottom
             const isNumA = /^[0-9]/.test(a.displayName);
             const isNumB = /^[0-9]/.test(b.displayName);
             if (isNumA && !isNumB) return 1;
@@ -86,35 +120,35 @@
             return a.displayName.localeCompare(b.displayName);
         });
 
-        counter.innerText = `${allGames.length} GAMES ONLINE`;
+        counter.innerText = `${allGames.length} TITLES CONNECTED`;
         setupSidebar();
         renderGames(allGames);
-        container.style.opacity = "1";
     }
 
     function renderGames(list) {
         container.innerHTML = "";
-        let currentHeader = "";
+        let currentGroup = "";
 
         list.forEach(game => {
-            const firstChar = game.displayName.charAt(0).toUpperCase();
-            const group = /^[0-9]/.test(firstChar) ? "#" : firstChar;
+            const first = game.displayName.charAt(0).toUpperCase();
+            const group = /^[0-9]/.test(first) ? "#" : first;
 
-            if (group !== currentHeader) {
-                currentHeader = group;
-                const header = document.createElement('div');
-                header.className = "section-header";
-                header.id = `section-${currentHeader}`;
-                header.innerHTML = `<span>🎮</span> ${currentHeader === '#' ? '0-9' : currentHeader}`;
-                container.appendChild(header);
+            if (group !== currentGroup) {
+                currentGroup = group;
+                const h = document.createElement('div');
+                h.className = "section-header";
+                h.id = `section-${currentGroup}`;
+                h.innerHTML = `<span>🎮</span> ${currentGroup === '#' ? 'Numbers' : currentGroup}`;
+                container.appendChild(h);
             }
 
             const card = document.createElement('div');
             card.className = "game-card";
-            card.setAttribute('data-desc', game.autoDesc);
+            card.setAttribute('data-desc', `Play ${game.displayName} instantly on the Hub.`);
             card.onclick = () => window.location.href = game.url;
             card.innerHTML = `
-                <div class="game-image">🎮</div> 
+                <div class="game-image">🎮</div>
+                ${game.tag ? `<div class="tag ${game.tagClass}">${game.tag}</div>` : ''}
                 <div class="card-content">${game.displayName}</div>
             `;
             container.appendChild(card);
@@ -122,8 +156,7 @@
     }
 
     function setupSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        // Sidebar shows A-Z, then # for numbers at the bottom
+        const side = document.getElementById('sidebar');
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split('').forEach(l => {
             const link = document.createElement('a');
             link.className = "alpha-link";
@@ -132,9 +165,14 @@
                 const el = document.getElementById(`section-${l}`);
                 if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
             };
-            sidebar.appendChild(link);
+            side.appendChild(link);
         });
     }
+
+    window.onscroll = () => {
+        if (window.scrollY > 500) backBtn.classList.add('visible');
+        else backBtn.classList.remove('visible');
+    };
 
     function playRandom() {
         const g = allGames[Math.floor(Math.random() * allGames.length)];
@@ -142,8 +180,8 @@
     }
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(val));
+        const v = e.target.value.toLowerCase();
+        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(v));
         renderGames(filtered);
     });
 
