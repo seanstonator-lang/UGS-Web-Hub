@@ -133,14 +133,14 @@
 <footer>
     <a href="privacy.html" onmouseenter="playSound()">Privacy Policy</a>
     <span style="color: rgba(255,255,255,0.2); margin: 0 15px;">|</span>
-    <a href="mailto:support@ugswebhub.com" onmouseenter="playSound()">Contact Us</a>
+    <!-- FIXED CONTACT LINK -->
+    <a href="contact.html" onmouseenter="playSound()">Contact Us</a>
 </footer>
 
 <script src="games-data.js"></script>
 
 <script>
     let allGames = [];
-    // 🔊 AUDIO ENGINE - Using a high-quality UI click
     const uiSound = new Audio('https://www.soundjay.com');
     uiSound.volume = 0.15;
     function playSound() { uiSound.currentTime = 0; uiSound.play().catch(() => {}); }
@@ -149,96 +149,91 @@
         const bar = document.getElementById('progress-bar');
         const status = document.getElementById('load-status');
         
-        if (typeof rawGames === 'undefined') return;
-
-        const total = rawGames.length;
-        for (let i = 0; i <= total; i += 50) {
-            const percent = Math.floor((i / total) * 100);
-            bar.style.width = percent + "%";
-            status.innerText = `Syncing Titan ${i} of ${total}...`;
-            await new Promise(r => setTimeout(r, 10));
+        if (typeof rawGames === 'undefined') {
+            status.textContent = "Error: Library not found.";
+            return;
         }
 
-        allGames = rawGames.map(game => {
-            let raw = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
-            let formatted = raw.replace(/([A-Z0-9])/g, ' $1').trim();
-            formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-            return { ...game, displayName: formatted, firstLetter: formatted.charAt(0).toUpperCase() };
-        });
+        // Simulate high-load loading bar
+        const total = rawGames.length;
+        for (let i = 0; i <= total; i += 100) {
+            const percent = Math.min(Math.floor((i / total) * 100), 100);
+            bar.style.width = percent + "%";
+            await new Promise(r => setTimeout(r, 20));
+        }
 
-        allGames.sort((a, b) => {
-            const aNum = /^\d/.test(a.displayName);
-            const bNum = /^\d/.test(b.displayName);
-            if (aNum && !bNum) return 1;
-            if (!aNum && bNum) return -1;
-            return a.displayName.localeCompare(b.displayName);
-        });
-
-        document.getElementById('game-counter').innerText = `${allGames.length} TITANS ONLINE`;
-        generateSidebar();
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
+        
+        allGames = rawGames;
+        document.getElementById('game-counter').textContent = `${allGames.length} TITANS ONLINE`;
         render();
-
-        setTimeout(() => {
-            document.getElementById('loader').style.opacity = "0";
-            setTimeout(() => document.getElementById('loader').style.display = "none", 800);
-        }, 500);
-    }
-
-    function pickRandomTitan() {
-        playSound();
-        const lucky = allGames[Math.floor(Math.random() * allGames.length)];
-        window.open(lucky.url, '_blank');
+        createSidebar();
     }
 
     function render() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
+        const query = document.getElementById('searchInput').value.toLowerCase();
         const container = document.getElementById('sections-container');
         container.innerHTML = "";
-        let currentLetter = "";
-        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(term));
 
-        filtered.forEach(g => {
-            if (g.firstLetter !== currentLetter && !term) {
-                currentLetter = g.firstLetter;
-                const header = document.createElement('div');
-                header.className = 'alpha-header';
-                header.id = `section-${currentLetter}`;
-                header.innerText = currentLetter;
-                container.appendChild(header);
-            }
-            const card = document.createElement('div');
-            card.className = "game-card";
-            card.onmouseenter = playSound;
-            card.onclick = () => { playSound(); window.open(g.url, '_blank'); };
-            card.innerHTML = `
-                <div class="game-image">🎮</div>
-                <div class="card-content">
-                    <div class="game-title">${g.displayName}</div>
-                    <div class="game-desc">High-performance gaming for UGS Web Hub.</div>
-                </div>
-            `;
-            container.appendChild(card);
+        const filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
+        
+        // Group by Letter
+        const grouped = {};
+        filtered.forEach(game => {
+            const letter = game.name[0].toUpperCase();
+            if (!grouped[letter]) grouped[letter] = [];
+            grouped[letter].push(game);
+        });
+
+        Object.keys(grouped).sort().forEach(letter => {
+            const header = document.createElement('div');
+            header.className = 'alpha-header';
+            header.id = `section-${letter}`;
+            header.textContent = letter;
+            container.appendChild(header);
+
+            grouped[letter].forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => window.open(game.url, '_blank');
+                card.innerHTML = `
+                    <div class="game-image">🎮</div>
+                    <div class="card-content">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-desc">Experience this Titan in full screen high performance.</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         });
     }
 
-    function generateSidebar() {
+    function createSidebar() {
         const sidebar = document.getElementById('sidebar');
-        sidebar.innerHTML = `<a class="alpha-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); playSound()">🏠</a>`;
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").forEach(l => {
-            const a = document.createElement('a');
-            a.className = 'alpha-link';
-            a.innerText = l;
-            a.onclick = () => { 
-                playSound();
-                const targetId = l === "#" ? "section-1" : `section-${l}`;
-                const target = document.getElementById(targetId);
-                if (target) window.scrollTo({ top: target.offsetTop - 150, behavior: 'smooth' });
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("");
+        letters.forEach(l => {
+            const link = document.createElement('a');
+            link.className = 'alpha-link';
+            link.textContent = l;
+            link.onclick = () => {
+                const el = document.getElementById(`section-${l}`);
+                if (el) window.scrollTo({top: el.offsetTop - 120, behavior: 'smooth'});
             };
-            sidebar.appendChild(a);
+            sidebar.appendChild(link);
         });
     }
 
-    window.onscroll = () => document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 600);
+    function pickRandomTitan() {
+        const game = allGames[Math.floor(Math.random() * allGames.length)];
+        window.open(game.url, '_blank');
+    }
+
+    window.onscroll = () => {
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 500) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    };
 </script>
 </body>
 </html>
