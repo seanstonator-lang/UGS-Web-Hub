@@ -10,11 +10,10 @@
     <style>
         :root { 
             --primary: #38bdf8; --secondary: #818cf8; --bg: #020617; 
-            --retro: #fbbf24; --multi: #f87171; --online: #34d399; --emu: #a78bfa; --stash: #6366f1;
+            --retro: #fbbf24; --multi: #f87171; --online: #34d399; --emu: #a78bfa; 
+            --puzzle: #ec4899; --racing: #f97316; --survival: #10b981; --stash: #6366f1;
         }
         
-        @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-
         body { 
             background: var(--bg); font-family: 'Inter', 'Segoe UI', sans-serif; color: white; 
             margin: 0; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden;
@@ -25,7 +24,6 @@
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--secondary)); border-radius: 10px; }
 
-        /* HEADER & HERO */
         header { 
             text-align: center; padding: 80px 20px; 
             background: radial-gradient(circle at center, #1e293b 0%, var(--bg) 100%); 
@@ -41,102 +39,106 @@
         /* STICKY SEARCH & CATEGORY BAR */
         .nav-sticky { 
             position: sticky; top: 0; width: 100%; z-index: 1000; 
-            background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(25px); 
+            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(25px); 
             border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0;
         }
         .search-container { width: 90%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
         #searchInput { 
             width: 100%; padding: 18px 30px; background: rgba(15, 23, 42, 0.6); 
             border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 100px; 
-            font-size: 1.1rem; transition: 0.4s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.1rem; transition: 0.4s;
         }
-        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 25px rgba(56, 189, 248, 0.3); outline: none; }
+        #searchInput:focus { border-color: var(--primary); outline: none; }
 
-        /* CATEGORY FILTER PILLS */
-        .filter-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .filter-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .pill { 
-            padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; 
+            padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; 
             cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; background: rgba(255,255,255,0.05);
         }
-        .pill:hover, .pill.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+        .pill.active { background: var(--primary); color: var(--bg); }
 
-        /* MAIN GRID */
+        /* GRID */
         .container { width: 95%; max-width: 1600px; padding: 40px 20px 100px 100px; margin: 0 auto; }
         #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; }
 
-        /* THE GOD-TIER GAME CARD */
+        /* GAME CARDS */
         .game-card { 
-            background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.08); 
-            border-radius: 24px; overflow: hidden; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); 
+            background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 24px; overflow: hidden; transition: 0.3s ease; 
             cursor: pointer; position: relative; backdrop-filter: blur(10px);
         }
-        .game-card:hover { transform: translateY(-15px) rotateX(5deg) rotateY(5deg); border-color: var(--primary); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .game-card:hover { transform: translateY(-10px); }
 
-        /* DYNAMIC CATEGORY FX */
-        .fx-retro:hover { box-shadow: 0 0 30px var(--retro); }
-        .fx-online:hover { box-shadow: 0 0 30px var(--online); }
-        .fx-multi:hover { box-shadow: 0 0 30px var(--multi); }
-        .fx-emu:hover { box-shadow: 0 0 30px var(--emu); }
+        /* --- FIXED CATEGORY EFFECTS --- */
         
-        .fx-emu::before {
-            content: ''; position: absolute; inset: -1px; z-index: -1;
-            background: conic-gradient(from var(--angle), var(--emu), transparent, var(--emu));
-            border-radius: 24px; animation: rotate 3s linear infinite;
+        /* Racing & Online: Pulse Glow */
+        .fx-racing:hover { box-shadow: 0 0 20px var(--racing); border-color: var(--racing); }
+        .fx-online:hover { box-shadow: 0 0 20px var(--online); border-color: var(--online); }
+
+        /* Retro: CRT Flicker */
+        .fx-retro:hover { animation: crt-flicker 0.15s infinite; border-color: var(--retro); box-shadow: 0 0 20px var(--retro); }
+        @keyframes crt-flicker { 0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
+
+        /* Emulator & Action: Rotating Border (Fixed Method) */
+        .fx-emu, .fx-multi { position: relative; }
+        .fx-emu:hover::before, .fx-multi:hover::before {
+            content: ''; position: absolute; inset: -2px; border-radius: 26px;
+            padding: 2px; background: linear-gradient(90deg, var(--emu), var(--primary), var(--emu));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: rotate-gradient 2s linear infinite;
         }
-        @keyframes rotate { to { --angle: 360deg; } }
+        @keyframes rotate-gradient { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        .game-image { width: 100%; height: 150px; background: #000; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
-        .card-content { padding: 20px; text-align: center; font-size: 1rem; font-weight: 800; color: #f8fafc; letter-spacing: 0.5px; }
+        .game-image { width: 100%; height: 140px; background: #000; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+        .card-content { padding: 18px; text-align: center; font-size: 0.95rem; font-weight: 800; color: #f8fafc; }
 
-        .tag { position: absolute; top: 15px; right: 15px; font-size: 0.65rem; padding: 5px 12px; border-radius: 10px; font-weight: 900; text-transform: uppercase; z-index: 5; }
+        .tag { position: absolute; top: 15px; right: 15px; font-size: 0.6rem; padding: 4px 10px; border-radius: 8px; font-weight: 900; text-transform: uppercase; z-index: 5; }
         .tag-retro { background: var(--retro); color: #000; }
         .tag-multi { background: var(--multi); color: #fff; }
         .tag-online { background: var(--online); color: #fff; }
         .tag-emu { background: var(--emu); color: #fff; }
+        .tag-puzzle { background: var(--puzzle); color: #fff; }
+        .tag-racing { background: var(--racing); color: #fff; }
+        .tag-survival { background: var(--survival); color: #fff; }
         .tag-stash { background: var(--stash); color: #fff; }
 
-        /* SIDEBAR NAVIGATION */
+        /* SIDEBAR */
         .alphabet-sidebar { 
             position: fixed; left: 20px; top: 50%; transform: translateY(-50%); 
             display: flex; flex-direction: column; gap: 5px; background: rgba(15, 23, 42, 0.8); 
             padding: 20px 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); 
             z-index: 1001; backdrop-filter: blur(10px);
         }
-        .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: 0.3s; text-align: center; }
-        .alpha-link:hover { color: var(--primary); transform: scale(1.5); }
+        .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.75rem; font-weight: 900; cursor: pointer; text-align: center; }
+        .alpha-link:hover { color: var(--primary); }
 
-        .section-header { 
-            grid-column: 1 / -1; font-size: 2rem; color: var(--primary); 
-            margin-top: 60px; border-bottom: 2px solid rgba(255,255,255,0.05); 
-            padding-bottom: 15px; display: flex; align-items: center; gap: 20px; font-weight: 900;
-        }
+        .section-header { grid-column: 1 / -1; font-size: 1.8rem; color: var(--primary); margin-top: 50px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; font-weight: 900; }
 
-        #backToTop { 
-            position: fixed; bottom: 40px; right: 40px; background: white; color: black; 
-            width: 60px; height: 60px; border-radius: 20px; display: flex; align-items: center; 
-            justify-content: center; font-size: 2rem; cursor: pointer; transition: 0.5s; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; z-index: 2000; 
-        }
+        #backToTop { position: fixed; bottom: 40px; right: 40px; background: white; color: black; width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.3s; opacity: 0; pointer-events: none; z-index: 2000; }
         #backToTop.visible { opacity: 1; pointer-events: auto; }
-        #backToTop:hover { transform: scale(1.1) rotate(360deg); background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">AWAKENING TITAN ENGINES...</div>
+    <div id="game-counter">CALIBRATING TITAN CORES...</div>
 </header>
 
 <div class="nav-sticky">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search 2,000+ games by name or category...">
+        <input type="text" id="searchInput" placeholder="Search 2,000+ titles...">
         <div class="filter-pills" id="pills">
-            <div class="pill active" onclick="filterByTag('all')">All Games</div>
-            <div class="pill" onclick="filterByTag('Retro')">Retro</div>
-            <div class="pill" onclick="filterByTag('2-Player')">2-Player</div>
-            <div class="pill" onclick="filterByTag('Online')">Online</div>
-            <div class="pill" onclick="filterByTag('Emulator')">Emulator</div>
+            <div class="pill active" data-tag="all">All</div>
+            <div class="pill" data-tag="Retro">Retro</div>
+            <div class="pill" data-tag="2-Player">2-Player</div>
+            <div class="pill" data-tag="Online">Online</div>
+            <div class="pill" data-tag="Emulator">Emulator</div>
+            <div class="pill" data-tag="Racing">Racing</div>
+            <div class="pill" data-tag="Puzzle">Puzzle</div>
+            <div class="pill" data-tag="Survival">Survival</div>
         </div>
     </div>
 </div>
@@ -156,37 +158,31 @@
     let activeTag = 'all';
     const container = document.getElementById('sections-container');
     const counter = document.getElementById('game-counter');
-    const backBtn = document.getElementById('backToTop');
 
     function init() {
-        if (typeof rawGames === 'undefined') {
-            counter.innerText = "SYSTEM ERROR: games-data.js MISSING";
-            return;
-        }
+        if (typeof rawGames === 'undefined') return;
 
         allGames = rawGames.map(game => {
             let name = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
             name = name.replace('.html', '');
             
-            // HYPER-SPACING ENGINE
-            const words = ['soccer', 'basket', 'ball', 'run', 'dash', 'battle', 'world', 'sim', 'war', 'shooting', 'adventure', 'panda', 'birds', 'escape', 'goal', 'random', 'clicker', 'stars', 'bros', 'lol', 'tennis', 'bowl', 'pool', 'classic', 'retro', 'player', 'party', 'online', 'io', 'emu', 'gba', 'nes', 'n64', 'doom', 'shooting', 'zombie'];
+            // TITAN HYPER-SPACING
+            const words = ['soccer', 'basket', 'ball', 'run', 'dash', 'battle', 'world', 'sim', 'war', 'shooting', 'adventure', 'panda', 'birds', 'escape', 'goal', 'random', 'clicker', 'stars', 'bros', 'lol', 'tennis', 'bowl', 'pool', 'classic', 'retro', 'player', 'party', 'online', 'io', 'emu', 'gba', 'nes', 'n64', 'drive', 'drift', 'moto', 'car', 'chess', 'block', 'match', 'zombie', 'craft'];
             let spaced = name.replace(/([0-9]+)/g, ' $1 ');
             words.forEach(w => { spaced = spaced.replace(new RegExp(`(${w})`, 'gi'), ' $1 '); });
             let formatted = spaced.replace(/ +/g, ' ').trim();
 
-            // ADVANCED CATEGORY ENGINE
+            // EXPANDED CATEGORY ENGINE
             let tag = "Stash"; let tagClass = "tag-stash"; let fxClass = "";
             const low = formatted.toLowerCase();
 
-            if (/(retro|old|classic|nes|n64|atari|64|snes|doom|quake)/i.test(low)) {
-                tag = "Retro"; tagClass = "tag-retro"; fxClass = "fx-retro";
-            } else if (/(2player|multiplayer|party|bros|player|1v1|tennis|battle)/i.test(low)) {
-                tag = "2-Player"; tagClass = "tag-multi"; fxClass = "fx-multi";
-            } else if (/(online|io|server|web|multi|agario|slither)/i.test(low)) {
-                tag = "Online"; tagClass = "tag-online"; fxClass = "fx-online";
-            } else if (/(emu|gba|ds|nintendo|pokemon|emulator|gameboy)/i.test(low)) {
-                tag = "Emulator"; tagClass = "tag-emu"; fxClass = "fx-emu";
-            }
+            if (/(retro|old|classic|nes|n64|atari|64|snes|nes)/i.test(low)) { tag = "Retro"; tagClass = "tag-retro"; fxClass = "fx-retro"; }
+            else if (/(2player|multiplayer|party|bros|player|1v1|tennis|battle)/i.test(low)) { tag = "2-Player"; tagClass = "tag-multi"; fxClass = "fx-multi"; }
+            else if (/(online|io|server|web|multi|agario|slither)/i.test(low)) { tag = "Online"; tagClass = "tag-online"; fxClass = "fx-online"; }
+            else if (/(emu|gba|ds|nintendo|pokemon|emulator|gameboy)/i.test(low)) { tag = "Emulator"; tagClass = "tag-emu"; fxClass = "fx-emu"; }
+            else if (/(drive|drift|moto|car|race|speed|kart)/i.test(low)) { tag = "Racing"; tagClass = "tag-racing"; fxClass = "fx-racing"; }
+            else if (/(chess|block|match|puzzle|sudoku|logic|escape)/i.test(low)) { tag = "Puzzle"; tagClass = "tag-puzzle"; fxClass = "fx-puzzle"; }
+            else if (/(zombie|craft|survival|island|survive|horror)/i.test(low)) { tag = "Survival"; tagClass = "tag-survival"; fxClass = "fx-survival"; }
 
             return { ...game, displayName: formatted, tag, tagClass, fxClass };
         }).sort((a, b) => {
@@ -197,7 +193,7 @@
             return a.displayName.localeCompare(b.displayName);
         });
 
-        counter.innerText = `${allGames.length} TITANS READY FOR DEPLOYMENT`;
+        counter.innerText = `${allGames.length} TITANS READY`;
         setupSidebar();
         renderGames(allGames);
     }
@@ -205,10 +201,9 @@
     function renderGames(list) {
         container.innerHTML = "";
         let currentHeader = "";
+        const filtered = activeTag === 'all' ? list : list.filter(g => g.tag === activeTag);
 
-        list.forEach(game => {
-            if (activeTag !== 'all' && game.tag !== activeTag) return;
-
+        filtered.forEach(game => {
             const first = game.displayName.charAt(0).toUpperCase();
             const group = /^[0-9]/.test(first) ? "#" : first;
 
@@ -217,31 +212,26 @@
                 const h = document.createElement('div');
                 h.className = "section-header";
                 h.id = `section-${currentHeader}`;
-                h.innerHTML = `<span>🕹️</span> ${currentHeader === '#' ? '0-9' : currentHeader}`;
+                h.innerHTML = `<span>🎮</span> ${currentHeader === '#' ? '0-9' : currentHeader}`;
                 container.appendChild(h);
             }
 
             const card = document.createElement('div');
             card.className = `game-card ${game.fxClass}`;
             card.onclick = () => window.location.href = game.url;
-            card.innerHTML = `
-                <div class="game-image">🎮</div>
-                <div class="tag ${game.tagClass}">${game.tag}</div>
-                <div class="card-content">${game.displayName}</div>
-            `;
+            card.innerHTML = `<div class="game-image">🎮</div><div class="tag ${game.tagClass}">${game.tag}</div><div class="card-content">${game.displayName}</div>`;
             container.appendChild(card);
         });
     }
 
-    function filterByTag(tag) {
-        activeTag = tag;
-        // Update Pills
-        document.querySelectorAll('.pill').forEach(p => {
-            p.classList.remove('active');
-            if (p.innerText === tag || (tag === 'all' && p.innerText === 'All Games')) p.classList.add('active');
-        });
-        renderGames(allGames);
-    }
+    document.getElementById('pills').addEventListener('click', (e) => {
+        if (e.target.classList.contains('pill')) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            e.target.classList.add('active');
+            activeTag = e.target.dataset.tag;
+            renderGames(allGames);
+        }
+    });
 
     function setupSidebar() {
         const side = document.getElementById('sidebar');
@@ -259,16 +249,14 @@
     }
 
     window.onscroll = () => {
-        if (window.scrollY > 800) backBtn.classList.add('visible');
-        else backBtn.classList.remove('visible');
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 800) btn.classList.add('visible');
+        else btn.classList.remove('visible');
     };
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const val = e.target.value.toLowerCase();
-        const filtered = allGames.filter(g => 
-            g.displayName.toLowerCase().includes(val) || 
-            g.tag.toLowerCase().includes(val)
-        );
+        const filtered = allGames.filter(g => g.displayName.toLowerCase().includes(val));
         renderGames(filtered);
     });
 
@@ -276,4 +264,3 @@
 </script>
 </body>
 </html>
-
