@@ -1,20 +1,61 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#020617; color:white; font-family:sans-serif; padding:50px; text-align:center;">
-    <h2 style="color:#38bdf8;">Contact UGS Support</h2>
-    <p>Need a game added? Found a bug?</p>
-    
-    <!-- Using Formspree so it actually sends an email -->
-    <form action="https://formspree.io" method="POST" style="display:inline-block; text-align:left; background:#0f172a; padding:30px; border-radius:15px; border:1px solid #1e293b;">
-        <label>Your Email:</label><br>
-        <input type="email" name="email" required style="width:100%; margin:10px 0; background:#1e293b; border:1px solid #334155; color:white; padding:10px; border-radius:5px;"><br>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Support | UGS Hub</title>
+    <style>
+        body {
+            background: #020617; color: white; font-family: 'Inter', sans-serif;
+            display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;
+        }
+        .form-container {
+            background: rgba(15, 23, 42, 0.7); padding: 40px; border-radius: 24px;
+            border: 2px solid rgba(56, 189, 248, 0.1); width: 90%; max-width: 450px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+        h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-top: 0; }
+        label { display: block; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; font-weight: bold; }
         
-        <label>Message:</label><br>
-        <textarea name="message" required style="width:100%; height:100px; margin:10px 0; background:#1e293b; border:1px solid #334155; color:white; padding:10px; border-radius:5px;"></textarea><br>
+        input, textarea {
+            width: 100%; padding: 12px; margin-top: 8px; background: #0f172a;
+            border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box;
+        }
+        input:focus, textarea:focus { border-color: #38bdf8; outline: none; }
+
+        button {
+            width: 100%; margin-top: 30px; padding: 15px; background: #38bdf8;
+            border: none; border-radius: 50px; color: #020617; font-weight: 900;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background: #818cf8; transform: scale(1.02); box-shadow: 0 0 20px #38bdf8; }
         
-        <button type="submit" style="width:100%; padding:10px; background:#38bdf8; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Send Message</button>
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 0.8rem; }
+        .back-link:hover { color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Contact Support</h2>
+    <p style="color: #64748b; font-size: 0.9rem;">Request a game or report a bug.</p>
+
+    <form action="https://formspree.io/f/mzdvropy" method="POST">
+        <label>YOUR EMAIL</label>
+        <input type="email" name="email" placeholder="titan@example.com" required>
+
+        <label>YOUR MESSAGE</label>
+        <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
+
+        <!-- Use this to redirect users back to your site after they submit -->
+        <input type="hidden" name="_next" value="https://seanstonator-lang.github.io">
+
+        <button type="submit">Deploy Message</button>
     </form>
-    <br><br>
-    <a href="index.html" style="color:#818cf8; text-decoration:none;">← Back to Hub</a>
+
+    <a href="index.html" class="back-link">← Back to Titan Hub</a>
+</div>
+
 </body>
 </html>
+
