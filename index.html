@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sean's UGS Hub | Titan Overload</title>
     
-    <!-- CUSTOM FAVICON -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
 
     <style>
-        :root { --primary: #38bdf8; --secondary: #818cf8; --bg: #020617; --card-bg: rgba(15, 23, 42, 0.9); }
+        :root { 
+            --primary: #38bdf8; 
+            --secondary: #818cf8; 
+            --bg: #020617; 
+            --card-bg: rgba(15, 23, 42, 0.9); 
+            --retro-gold: #f59e0b;
+            --online-green: #10b981;
+            --multi-red: #ef4444;
+            --emu-purple: #a855f7;
+        }
         
-        /* CSS Property for Animated Borders */
         @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
         body { background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; margin: 0; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden; }
@@ -25,36 +32,43 @@
         h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 8px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.3)); }
         #game-counter { font-size: 0.9rem; color: var(--secondary); margin-top: 10px; font-weight: bold; letter-spacing: 3px; opacity: 0.7; }
 
-        /* STICKY BLURRED SEARCH */
         .search-wrapper { position: sticky; top: 0; width: 100%; z-index: 1000; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0; display: flex; justify-content: center; }
         .tools-bar { width: 90%; max-width: 800px; padding: 0 20px; }
         #searchInput { width: 100%; padding: 15px 25px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 50px; font-size: 1rem; transition: 0.3s; }
-        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); outline: none; }
 
         .container { width: 90%; max-width: 1400px; padding: 20px 20px 100px 80px; box-sizing: border-box; margin: 0 auto; }
         #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
 
-        /* HIGH-END GLASS CARDS */
+        /* BASE CARD STYLE */
         .game-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; }
-        .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px rgba(0,0,0,0.8); background: rgba(30, 41, 59, 1); }
-        
-        /* ACTION BORDER ANIMATION */
-        .action-border { position: relative; padding: 2px; }
-        .action-border::before {
-            content: ''; position: absolute; inset: -2px; z-index: -1;
-            background: conic-gradient(from var(--angle), var(--primary), #f43f5e, var(--secondary), var(--primary));
-            border-radius: 22px; animation: rotate-border 3s linear infinite;
-        }
-        @keyframes rotate-border { to { --angle: 360deg; } }
+        .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+
+        /* --- CATEGORY EFFECTS --- */
+
+        /* 1. Online - Pulsing Green Glow */
+        .fx-online { border-color: var(--online-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); } 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } }
+
+        /* 2. Retro - CRT Scanline Flicker */
+        .fx-retro::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+
+        /* 3. 2-Player - Red/Blue Split Border */
+        .fx-multi { border: 2px solid; border-image: linear-gradient(to right, var(--multi-red), var(--primary)) 1; }
+
+        /* 4. Emulator - Animated Spinning Purple */
+        .fx-emu { position: relative; padding: 1px; }
+        .fx-emu::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: conic-gradient(from var(--angle), var(--emu-purple), var(--secondary), var(--emu-purple)); border-radius: 22px; animation: rotate-emu 4s linear infinite; }
+        @keyframes rotate-emu { to { --angle: 360deg; } }
 
         .game-image { width: 100%; height: 130px; background: #020617; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: white; }
         .card-content { padding: 15px; text-align: center; font-size: 0.95rem; font-weight: 700; color: #e2e8f0; text-transform: capitalize; }
 
         /* TAGS */
         .tag { position: absolute; top: 12px; right: 12px; font-size: 0.6rem; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; z-index: 5; }
-        .tag-sports { background: #059669; color: #fff; }
-        .tag-action { background: #dc2626; color: #fff; }
-        .tag-classic { background: #d97706; color: #fff; }
+        .tag-retro { background: var(--retro-gold); color: #000; }
+        .tag-multi { background: var(--multi-red); color: #fff; }
+        .tag-online { background: var(--online-green); color: #fff; }
+        .tag-emu { background: var(--emu-purple); color: #fff; }
         .tag-stash { background: #6366f1; color: #fff; }
 
         .alphabet-sidebar { position: fixed; left: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9); padding: 15px 8px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); z-index: 1001; }
@@ -71,13 +85,13 @@
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">LOADING STASH...</div>
+    <div id="game-counter">CALIBRATING SYSTEMS...</div>
     <button onclick="playRandom()" style="background:none; border: 2px solid var(--primary); padding:10px 30px; border-radius:50px; color:var(--primary); font-weight:bold; cursor:pointer; margin-top:15px;">✨ RANDOM GAME</button>
 </header>
 
 <div class="search-wrapper">
     <div class="tools-bar">
-        <input type="text" id="searchInput" placeholder="Search the stash...">
+        <input type="text" id="searchInput" placeholder="Search 2,000+ games...">
     </div>
 </div>
 
@@ -99,7 +113,7 @@
 
     function init() {
         if (typeof rawGames === 'undefined') {
-            counter.innerText = "ERROR: rawGames NOT DEFINED";
+            counter.innerText = "ERROR: DATA LINK BROKEN";
             return;
         }
 
@@ -107,25 +121,27 @@
             let name = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
             name = name.replace('.html', '');
             
-            // TITAN HEURISTIC ENGINE (Lowercase Spacing)
-            const words = ['soccer', 'basket', 'ball', 'run', 'dash', 'battle', 'world', 'sim', 'war', 'shooting', 'adventure', 'panda', 'birds', 'escape', 'goal', 'random', 'clicker', 'stars', 'bros', 'lol', 'tennis', 'bowl', 'pool', 'classic', 'retro'];
+            // TITAN SPACING ENGINE
+            const words = ['soccer', 'basket', 'ball', 'run', 'dash', 'battle', 'world', 'sim', 'war', 'shooting', 'adventure', 'panda', 'birds', 'escape', 'goal', 'random', 'clicker', 'stars', 'bros', 'lol', 'tennis', 'bowl', 'pool', 'classic', 'retro', 'player', 'party', 'online', 'io', 'emu', 'gba', 'nes', 'n64'];
             let spaced = name.replace(/([0-9]+)/g, ' $1 ');
             words.forEach(w => { spaced = spaced.replace(new RegExp(`(${w})`, 'gi'), ' $1 '); });
             let formatted = spaced.replace(/ +/g, ' ').trim();
 
-            // TAGGING & BORDER ENGINE
-            let tag = "Stash"; let tagClass = "tag-stash"; let borderClass = "";
+            // ADVANCED CATEGORY ENGINE
+            let tag = "Stash"; let tagClass = "tag-stash"; let fxClass = "";
             const low = formatted.toLowerCase();
 
-            if (/(soccer|basket|ball|tennis|bowl|pool|golf|goal)/i.test(low)) {
-                tag = "Sports"; tagClass = "tag-sports";
-            } else if (/(run|dash|combat|war|battle|rush|shoot|action|madness)/i.test(low)) {
-                tag = "Action"; tagClass = "tag-action"; borderClass = "action-border";
-            } else if (/(nes|retro|atari|classic|old|world|mario|sonic|64)/i.test(low)) {
-                tag = "Classic"; tagClass = "tag-classic";
+            if (/(retro|old|classic|nes|n64|atari|64|snes)/i.test(low)) {
+                tag = "Retro"; tagClass = "tag-retro"; fxClass = "fx-retro";
+            } else if (/(2player|multiplayer|party|bros|player)/i.test(low)) {
+                tag = "2-Player"; tagClass = "tag-multi"; fxClass = "fx-multi";
+            } else if (/(online|io|server|web|multi)/i.test(low)) {
+                tag = "Online"; tagClass = "tag-online"; fxClass = "fx-online";
+            } else if (/(emu|gba|ds|nintendo|pokemon|emulator)/i.test(low)) {
+                tag = "Emulator"; tagClass = "tag-emu"; fxClass = "fx-emu";
             }
 
-            return { ...game, displayName: formatted, tag, tagClass, borderClass };
+            return { ...game, displayName: formatted, tag, tagClass, fxClass };
         }).sort((a, b) => {
             const isNumA = /^[0-9]/.test(a.displayName);
             const isNumB = /^[0-9]/.test(b.displayName);
@@ -134,7 +150,7 @@
             return a.displayName.localeCompare(b.displayName);
         });
 
-        counter.innerText = `${allGames.length} TITANS ONLINE`;
+        counter.innerText = `${allGames.length} TITANS READY`;
         setupSidebar();
         renderGames(allGames);
     }
@@ -157,7 +173,7 @@
             }
 
             const card = document.createElement('div');
-            card.className = `game-card ${game.borderClass}`;
+            card.className = `game-card ${game.fxClass}`;
             card.onclick = () => window.location.href = game.url;
             card.innerHTML = `
                 <div class="game-image">🎮</div>
@@ -204,3 +220,4 @@
 </script>
 </body>
 </html>
+
