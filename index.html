@@ -23,24 +23,23 @@
 
         header { text-align: center; padding: 60px 20px; }
         h1 { 
-            font-size: clamp(2rem, 8vw, 5rem); margin: 0; font-weight: 900;
+            font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; font-weight: 900;
             background: linear-gradient(90deg, var(--primary), var(--secondary), #f472b6);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-transform: uppercase; letter-spacing: 15px; filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5));
         }
 
-        #game-counter { color: var(--secondary); font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
+        #game-counter { color: var(--secondary); font-weight: bold; letter-spacing: 2px; margin-top: 10px; text-transform: uppercase; }
 
         .nav-sticky { 
             position: sticky; top: 0; width: 100%; z-index: 1000; 
-            background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(20px); 
+            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(20px); 
             border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 0;
         }
         .controls-container { width: 90%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .top-row { display: flex; gap: 15px; }
         #searchInput { 
-            flex: 1; padding: 18px 30px; background: #0f172a; border: 1px solid #334155; 
-            color: white; border-radius: 100px; font-size: 1.1rem; transition: 0.3s;
+            width: 100%; padding: 18px 30px; background: #0f172a; border: 1px solid #334155; 
+            color: white; border-radius: 100px; font-size: 1.1rem; transition: 0.3s; box-sizing: border-box;
         }
         #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); outline: none; }
 
@@ -50,50 +49,56 @@
             cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; 
             background: rgba(255,255,255,0.05); text-transform: uppercase;
         }
-        .pill.active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        .pill.active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); border-color: var(--primary); }
 
         .container { width: 95%; max-width: 1600px; padding: 40px 20px 100px 100px; margin: 0 auto; }
-        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
+        #sections-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
 
+        /* Card Styling */
         .game-card { 
-            background: rgba(15, 23, 42, 0.7); border-radius: 20px; overflow: hidden; 
+            background: rgba(15, 23, 42, 0.7); border-radius: 24px; overflow: hidden; 
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
             position: relative; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; height: 100%;
         }
-        .game-card:hover { transform: translateY(-10px); }
-
-        /* Categorized Neon Glows */
-        .glow-retro:hover { border-color: var(--retro); box-shadow: 0 0 25px var(--retro); }
-        .glow-online:hover { border-color: var(--online); box-shadow: 0 0 25px var(--online); }
-        .glow-racing:hover { border-color: var(--racing); box-shadow: 0 0 25px var(--racing); }
-        .glow-action:hover { border-color: var(--action); box-shadow: 0 0 25px var(--action); }
+        .game-card:hover { transform: translateY(-12px); border-color: var(--primary); }
 
         .game-image { 
-            width: 100%; height: 120px; background: #000; 
+            width: 100%; height: 140px; background: #000; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 3.5rem; opacity: 0.6; transition: 0.3s;
+            font-size: 4rem; opacity: 0.7; transition: 0.3s;
         }
-        .game-card:hover .game-image { opacity: 1; font-size: 4rem; }
+        .game-card:hover .game-image { opacity: 1; transform: scale(1.1); }
         
-        .card-content { padding: 15px; text-align: left; }
-        .game-title { color: var(--primary); font-weight: 800; font-size: 1rem; margin-bottom: 5px; }
-        .game-desc { font-size: 0.75rem; color: #94a3b8; font-weight: 400; line-height: 1.4; }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .tag-badge { 
+            font-size: 0.65rem; background: rgba(56, 189, 248, 0.15); padding: 4px 10px; 
+            border-radius: 6px; color: var(--primary); text-transform: uppercase; 
+            font-weight: 900; align-self: flex-start; margin-bottom: 12px; border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        .game-title { color: #f1f5f9; font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; }
+        .game-desc { font-size: 0.85rem; color: #94a3b8; font-weight: 400; line-height: 1.5; }
+
+        /* Category Glows */
+        .glow-retro:hover { box-shadow: 0 0 30px var(--retro); border-color: var(--retro); }
+        .glow-online:hover { box-shadow: 0 0 30px var(--online); border-color: var(--online); }
+        .glow-racing:hover { box-shadow: 0 0 30px var(--racing); border-color: var(--racing); }
+        .glow-survival:hover { box-shadow: 0 0 30px var(--survival); border-color: var(--survival); }
 
         .alphabet-sidebar { 
             position: fixed; left: 20px; top: 50%; transform: translateY(-50%); 
-            display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.9); 
+            display: flex; flex-direction: column; gap: 5px; background: rgba(15, 23, 42, 0.9); 
             padding: 20px 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); 
             z-index: 1001; backdrop-filter: blur(10px);
         }
-        .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.7rem; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        .alpha-link:hover { color: var(--primary); transform: scale(1.4); }
+        .alpha-link { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.75rem; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .alpha-link:hover { color: var(--primary); transform: scale(1.5); }
 
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; background: white; color: black; 
-            width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; 
-            justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.4s; 
-            opacity: 0; pointer-events: none; z-index: 2000;
+            width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; 
+            justify-content: center; font-size: 1.6rem; cursor: pointer; transition: 0.4s; 
+            opacity: 0; pointer-events: none; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         #backToTop.visible { opacity: 1; pointer-events: auto; }
     </style>
@@ -102,20 +107,19 @@
 
 <header>
     <h1>Sean's UGS Hub</h1>
-    <div id="game-counter">TITAN INITIALIZATION...</div>
+    <div id="game-counter">System Loading...</div>
 </header>
 
 <div class="nav-sticky">
     <div class="controls-container">
-        <div class="top-row">
-            <input type="text" id="searchInput" placeholder="Search 2,000+ Titans...">
-        </div>
+        <input type="text" id="searchInput" placeholder="Search through 2,000+ game titles...">
         <div class="filter-pills" id="pills">
-            <div class="pill active" data-tag="all">All Access</div>
+            <div class="pill active" data-tag="all">All Games</div>
             <div class="pill" data-tag="Action">Action</div>
             <div class="pill" data-tag="Retro">Retro</div>
             <div class="pill" data-tag="Online">Online</div>
             <div class="pill" data-tag="Racing">Racing</div>
+            <div class="pill" data-tag="Survival">Survival</div>
         </div>
     </div>
 </div>
@@ -130,9 +134,12 @@
     let activeTag = 'all';
 
     function init() {
-        if (typeof rawGames === 'undefined') return;
+        if (typeof rawGames === 'undefined') {
+            document.getElementById('game-counter').innerText = "FATAL ERROR: games-data.js MISSING";
+            return;
+        }
 
-        // Optimized Mapping with Auto-Description Logic
+        // 🚀 SMART MAPPING ENGINE
         allGames = rawGames.map(game => {
             let raw = game.name.startsWith('cl') ? game.name.substring(2) : game.name;
             let formatted = raw.replace(/([A-Z0-9])/g, ' $1').trim();
@@ -140,19 +147,31 @@
 
             let tag = game.tag || "Action"; 
             let emoji = "🎮";
-            let desc = "";
             const n = formatted.toLowerCase();
 
-            // Intelligent Keyword matching
-            if (n.includes("client") || n.includes("eagler")) { tag = "Online"; emoji = "🌐"; desc = "Pro-grade gaming client. Custom features enabled."; }
-            else if (n.includes("run") || n.includes("dash")) { tag = "Racing"; emoji = "🏎️"; desc = "High-speed reflex challenge. Don't slow down!"; }
-            else if (n.includes("retro") || n.includes("old")) { tag = "Retro"; emoji = "🕹️"; desc = "Classic arcade experience optimized for modern web."; }
-            else { desc = `Jump into ${formatted}! Top-tier performance and unlimited play.`; }
+            // Logic-based Tag & Emoji Selection
+            if (n.includes("client") || n.includes("eagler") || n.includes("multi")) { tag = "Online"; emoji = "🌐"; }
+            else if (n.includes("run") || n.includes("dash") || n.includes("speed") || n.includes("drive")) { tag = "Racing"; emoji = "🏎️"; }
+            else if (n.includes("retro") || n.includes("class") || n.includes("64") || n.includes("boy")) { tag = "Retro"; emoji = "🕹️"; }
+            else if (n.includes("craft") || n.includes("survive") || n.includes("zombie")) { tag = "Survival"; emoji = "🌲"; }
+            else if (n.includes("soccer") || n.includes("ball") || n.includes("basket")) { tag = "Action"; emoji = "⚽"; }
+
+            // Logic-based Descriptions
+            const descMap = {
+                "Online": `Join the global community in ${formatted}. Optimized for high-speed multiplayer performance.`,
+                "Racing": `Push the limits of speed in ${formatted}. Can you dominate the track and beat the clock?`,
+                "Retro": `Experience the ultimate pixel-perfect nostalgia with ${formatted}. A legendary classic reborn.`,
+                "Survival": `Test your endurance in the world of ${formatted}. Scavenge, build, and survive the night.`,
+                "Action": `Fast-paced combat and quick reflexes required. Master ${formatted} and climb the ranks!`,
+                "Default": `Start playing ${formatted} instantly. Experience high-quality browser gaming on Sean's Hub.`
+            };
+
+            let desc = descMap[tag] || descMap["Default"];
 
             return { ...game, displayName: formatted, tag, emoji, desc, glowClass: `glow-${tag.toLowerCase()}` };
         });
 
-        document.getElementById('game-counter').innerText = `${allGames.length} TITANS READY`;
+        document.getElementById('game-counter').innerText = `${allGames.length} TITANS READY FOR PLAY`;
         generateSidebar();
         render();
     }
@@ -167,23 +186,16 @@
             return matchesSearch && matchesTag;
         });
 
-        // Use DocumentFragment for high-performance rendering
-        const fragment = document.createDocumentFragment();
-        filtered.forEach(g => {
-            const card = document.createElement('div');
-            card.className = `game-card ${g.glowClass}`;
-            card.onclick = () => window.open(g.url, '_blank');
-            card.innerHTML = `
+        container.innerHTML = filtered.map(g => `
+            <div class="game-card ${g.glowClass}" onclick="window.open('${g.url}', '_blank')">
                 <div class="game-image">${g.emoji}</div>
                 <div class="card-content">
+                    <span class="tag-badge">${g.tag}</span>
                     <div class="game-title">${g.displayName}</div>
                     <div class="game-desc">${g.desc}</div>
-                </div>`;
-            fragment.appendChild(card);
-        });
-        
-        container.innerHTML = "";
-        container.appendChild(fragment);
+                </div>
+            </div>
+        `).join('');
     }
 
     function generateSidebar() {
@@ -201,7 +213,7 @@
         });
     }
 
-    // Interactive Listeners
+    // Controls Logic
     document.getElementById('searchInput').oninput = render;
     document.querySelectorAll('.pill').forEach(pill => {
         pill.onclick = () => {
