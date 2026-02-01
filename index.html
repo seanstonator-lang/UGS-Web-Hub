@@ -100,7 +100,8 @@
         #backToTop.visible { opacity: 1; pointer-events: auto; }
 
         footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; }
-        footer a { color: var(--secondary); text-decoration: none; font-size: 0.9rem; }
+        footer a { color: var(--secondary); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        footer a:hover { color: var(--primary); }
     </style>
 </head>
 <body onload="init()">
@@ -130,13 +131,16 @@
 <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
 
 <footer>
-    <a href="privacy.html">Privacy Policy</a>
+    <a href="privacy.html" onmouseenter="playSound()">Privacy Policy</a>
+    <span style="color: rgba(255,255,255,0.2); margin: 0 15px;">|</span>
+    <a href="mailto:support@ugswebhub.com" onmouseenter="playSound()">Contact Us</a>
 </footer>
 
 <script src="games-data.js"></script>
 
 <script>
     let allGames = [];
+    // 🔊 AUDIO ENGINE - Using a high-quality UI click
     const uiSound = new Audio('https://www.soundjay.com');
     uiSound.volume = 0.15;
     function playSound() { uiSound.currentTime = 0; uiSound.play().catch(() => {}); }
@@ -210,7 +214,7 @@
                 <div class="game-image">🎮</div>
                 <div class="card-content">
                     <div class="game-title">${g.displayName}</div>
-                    <div class="game-desc">High-performance Titan gaming.</div>
+                    <div class="game-desc">High-performance gaming for UGS Web Hub.</div>
                 </div>
             `;
             container.appendChild(card);
@@ -238,3 +242,4 @@
 </script>
 </body>
 </html>
+
