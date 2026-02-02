@@ -12,9 +12,7 @@
   --primary:#38bdf8;
   --secondary:#818cf8;
 }
-
 * { box-sizing:border-box; }
-
 body {
   margin:0;
   background:var(--bg);
@@ -23,7 +21,7 @@ body {
   overflow-x:hidden;
 }
 
-/* ===== LANDING ===== */
+/* LANDING */
 #landing {
   height:100vh;
   display:flex;
@@ -32,7 +30,6 @@ body {
   text-align:center;
   padding:40px;
 }
-
 #landing h1 {
   font-size:clamp(3rem,8vw,5rem);
   font-weight:900;
@@ -41,7 +38,6 @@ body {
   -webkit-text-fill-color:transparent;
   letter-spacing:8px;
 }
-
 #landing p {
   max-width:720px;
   margin:30px auto;
@@ -49,7 +45,6 @@ body {
   opacity:.85;
   line-height:1.6;
 }
-
 #enterBtn {
   padding:16px 42px;
   font-weight:900;
@@ -60,21 +55,19 @@ body {
   cursor:pointer;
   transition:.3s;
 }
-
 #enterBtn:hover {
   background:var(--primary);
   color:black;
   box-shadow:0 0 25px var(--primary);
 }
 
-/* ===== HUB ===== */
+/* HUB */
 #hub {
   display:none;
   padding:120px 20px 80px;
   max-width:1600px;
   margin:auto;
 }
-
 #search {
   width:100%;
   max-width:600px;
@@ -86,13 +79,11 @@ body {
   margin:0 auto 50px;
   display:block;
 }
-
 #games {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:26px;
 }
-
 .section {
   grid-column:1/-1;
   font-size:2rem;
@@ -102,7 +93,7 @@ body {
   border-bottom:2px solid rgba(56,189,248,.2);
 }
 
-/* ===== GAME CARD ===== */
+/* CARDS */
 .card {
   background:var(--card);
   border-radius:22px;
@@ -111,23 +102,17 @@ body {
   transition:.35s;
   border:2px solid transparent;
 }
-
 .card:hover {
   transform:translateY(-10px) scale(1.02);
   border-color:var(--primary);
   box-shadow:0 0 25px rgba(56,189,248,.25);
 }
-
-.card h3 {
-  margin:0 0 6px;
-}
-
 .card p {
   font-size:.85rem;
   opacity:.6;
 }
 
-/* ===== LETTER SLIDER ===== */
+/* ALPHA SLIDER */
 #alpha {
   position:fixed;
   left:12px;
@@ -141,20 +126,18 @@ body {
   gap:6px;
   z-index:2000;
 }
-
 #alpha span {
   font-size:.7rem;
   font-weight:900;
   opacity:.35;
   cursor:pointer;
 }
-
 #alpha span:hover {
   opacity:1;
   color:var(--primary);
 }
 
-/* ===== PROGRESS BAR ===== */
+/* PROGRESS */
 #progress {
   position:fixed;
   top:0;
@@ -165,7 +148,7 @@ body {
   z-index:9999;
 }
 
-/* ===== HOME BUTTON ===== */
+/* HOME */
 #homeBtn {
   position:fixed;
   top:16px;
@@ -186,7 +169,7 @@ body {
   color:black;
 }
 
-/* ===== BACK TO TOP ===== */
+/* BACK TO TOP */
 #topBtn {
   position:fixed;
   bottom:30px;
@@ -210,7 +193,7 @@ body {
   pointer-events:auto;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 footer {
   text-align:center;
   padding:60px 20px;
@@ -218,25 +201,20 @@ footer {
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
-
 footer a {
   color:var(--secondary);
   text-decoration:none;
   margin:0 14px;
 }
-
-footer a:hover {
-  color:var(--primary);
-}
+footer a:hover { color:var(--primary); }
 </style>
 </head>
 
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()" aria-label="Home">🏠</button>
+<button id="homeBtn" onclick="goHome()">🏠</button>
 
-<!-- LANDING -->
 <section id="landing">
   <div>
     <h1>UGS WEB HUB</h1>
@@ -249,7 +227,6 @@ footer a:hover {
   </div>
 </section>
 
-<!-- HUB -->
 <section id="hub">
   <input id="search" placeholder="Search games…" oninput="render()" />
   <div id="games"></div>
@@ -282,54 +259,51 @@ let hubActive = false;
 const gamesData = window.rawGames || [];
 
 function enterHub() {
-  landing.style.display="none";
-  hub.style.display="block";
-  homeBtn.style.display="block";
+  landing.style.display = "none";
+  hub.style.display = "block";
+  homeBtn.style.display = "flex";
   hubActive = true;
+  window.scrollTo({ top: 0, behavior: "instant" });
   render();
 }
 
 function goHome() {
-  hub.style.display="none";
-  landing.style.display="flex";
-  homeBtn.style.display="none";
+  hub.style.display = "none";
+  landing.style.display = "flex";
+  homeBtn.style.display = "none";
   hubActive = false;
-  window.scrollTo({top:0});
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function render() {
-  gamesEl.innerHTML="";
+  gamesEl.innerHTML = "";
   const q = search.value.toLowerCase();
   let currentLetter = "";
 
-  gamesData
+  const filtered = gamesData
     .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name))
-    .forEach(game => {
-      const letter = game.name[0].toUpperCase();
-      if (letter !== currentLetter) {
-        const section = document.createElement("div");
-        section.className="section";
-        section.id="sec-"+letter;
-        section.textContent=letter;
-        gamesEl.appendChild(section);
-        currentLetter = letter;
-      }
+    .sort((a,b)=>a.name.localeCompare(b.name));
 
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML = `
-        <h3>${game.name}</h3>
-        <p>Instant play · Fullscreen</p>
-      `;
-      card.onclick = () => window.open(game.url,"_blank");
-      gamesEl.appendChild(card);
-    });
+  filtered.forEach(game => {
+    const letter = game.name[0].toUpperCase();
+    if (letter !== currentLetter) {
+      const sec = document.createElement("div");
+      sec.className = "section";
+      sec.id = "sec-" + letter;
+      sec.textContent = letter;
+      gamesEl.appendChild(sec);
+      currentLetter = letter;
+    }
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<h3>${game.name}</h3><p>Instant play · Fullscreen</p>`;
+    card.onclick = () => window.open(game.url,"_blank");
+    gamesEl.appendChild(card);
+  });
 
-  document.getElementById("count").textContent = gamesData.length;
+  document.getElementById("count").textContent = filtered.length;
 }
 
-/* Alphabet slider */
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
   const s = document.createElement("span");
   s.textContent = l;
@@ -340,8 +314,7 @@ function render() {
   alpha.appendChild(s);
 });
 
-/* Scroll effects */
-addEventListener("scroll",()=>{
+addEventListener("scroll", () => {
   if (!hubActive) {
     topBtn.classList.remove("show");
     return;
@@ -351,7 +324,6 @@ addEventListener("scroll",()=>{
   topBtn.classList.toggle("show", scrollY > 400);
 });
 
-/* Keyboard jump */
 addEventListener("keydown", e => {
   const el = document.getElementById("sec-"+e.key.toUpperCase());
   if (el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
@@ -360,4 +332,3 @@ addEventListener("keydown", e => {
 
 </body>
 </html>
-
