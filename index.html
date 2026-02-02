@@ -1,330 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>UGS Web Hub</title>
+  <meta charset="UTF-8" />
+  <title>UGS Web Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root {
-  --bg:#020617;
-  --card:#0f172a;
-  --primary:#38bdf8;
-  --secondary:#818cf8;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: white;
+    }
 
-* { box-sizing:border-box; }
+    section {
+      padding: 80px 20px;
+      min-height: 100vh;
+    }
 
-body {
-  margin:0;
-  background:var(--bg);
-  color:white;
-  font-family:Inter, system-ui, sans-serif;
-  overflow-x:hidden;
-}
+    /* LANDING */
+    #landing {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-/* ===== LANDING ===== */
-#landing {
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:40px;
-}
+    #landing p {
+      max-width: 700px;
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
 
-#landing h1 {
-  font-size:clamp(3rem,8vw,5rem);
-  font-weight:900;
-  background:linear-gradient(90deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing:8px;
-}
+    #enterBtn {
+      margin-top: 30px;
+      padding: 14px 22px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid white;
+      background: black;
+      color: white;
+    }
 
-#landing p {
-  max-width:720px;
-  margin:30px auto;
-  font-size:1.1rem;
-  opacity:.85;
-  line-height:1.6;
-}
+    #enterBtn:hover {
+      background: white;
+      color: black;
+    }
 
-#enterBtn {
-  padding:16px 42px;
-  font-weight:900;
-  border-radius:999px;
-  border:2px solid var(--primary);
-  background:transparent;
-  color:var(--primary);
-  cursor:pointer;
-  transition:.3s;
-}
+    /* HOME BUTTON */
+    #homeBtn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1000;
+      padding: 10px 14px;
+      font-weight: bold;
+      background: black;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+    }
 
-#enterBtn:hover {
-  background:var(--primary);
-  color:black;
-  box-shadow:0 0 25px var(--primary);
-}
+    #homeBtn:hover {
+      background: white;
+      color: black;
+    }
 
-/* ===== HUB ===== */
-#hub {
-  display:none;
-  padding:120px 20px 80px;
-  max-width:1600px;
-  margin:auto;
-}
+    /* HUB */
+    #hub {
+      background: #111;
+    }
 
-#search {
-  width:100%;
-  max-width:600px;
-  padding:16px 26px;
-  border-radius:999px;
-  border:1px solid #334155;
-  background:#020617;
-  color:white;
-  margin:0 auto 50px;
-  display:block;
-}
+    #games {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
 
-#games {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:26px;
-}
+    .game {
+      padding: 20px;
+      border: 2px solid white;
+      cursor: pointer;
+      text-align: center;
+    }
 
-.section {
-  grid-column:1/-1;
-  font-size:2rem;
-  font-weight:900;
-  color:var(--primary);
-  margin-top:40px;
-  border-bottom:2px solid rgba(56,189,248,.2);
-}
+    .game:hover {
+      background: white;
+      color: black;
+    }
 
-/* ===== GAME CARD ===== */
-.card {
-  background:var(--card);
-  border-radius:22px;
-  padding:20px;
-  cursor:pointer;
-  transition:.35s;
-  border:2px solid transparent;
-}
+    /* BACK TO TOP */
+    #backToTop {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      padding: 12px 16px;
+      font-size: 20px;
+      background: black;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+    }
 
-.card:hover {
-  transform:translateY(-10px) scale(1.02);
-  border-color:var(--primary);
-  box-shadow:0 0 25px rgba(56,189,248,.25);
-}
+    #backToTop:hover {
+      background: white;
+      color: black;
+    }
 
-.card h3 {
-  margin:0 0 6px;
-}
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 50px 20px;
+      background: #0b0b0b;
+      opacity: 0.6;
+      font-size: 0.9rem;
+    }
 
-.card p {
-  font-size:.85rem;
-  opacity:.6;
-}
-
-/* ===== LETTER SLIDER ===== */
-#alpha {
-  position:fixed;
-  left:12px;
-  top:50%;
-  transform:translateY(-50%);
-  background:#0f172aee;
-  border-radius:30px;
-  padding:14px 8px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  z-index:2000;
-}
-
-#alpha span {
-  font-size:.7rem;
-  font-weight:900;
-  opacity:.35;
-  cursor:pointer;
-}
-
-#alpha span:hover {
-  opacity:1;
-  color:var(--primary);
-}
-
-/* ===== PROGRESS BAR ===== */
-#progress {
-  position:fixed;
-  top:0;
-  left:0;
-  height:4px;
-  background:var(--primary);
-  width:0%;
-  z-index:9999;
-}
-
-/* ===== BACK TO TOP ===== */
-#topBtn {
-  position:fixed;
-  bottom:30px;
-  right:30px;
-  width:60px;
-  height:60px;
-  border-radius:20px;
-  background:white;
-  color:black;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.8rem;
-  cursor:pointer;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-}
-
-#topBtn.show {
-  opacity:1;
-  pointer-events:auto;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  text-align:center;
-  padding:60px 20px;
-  opacity:.6;
-  font-size:.9rem;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-footer a {
-  color:var(--secondary);
-  text-decoration:none;
-  margin:0 14px;
-}
-
-footer a:hover {
-  color:var(--primary);
-}
-</style>
+    footer a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="progress"></div>
+  <!-- HOME BUTTON -->
+  <button id="homeBtn" onclick="goHome()">HOME</button>
 
-<!-- LANDING -->
-<section id="landing">
-  <div>
-    <h1>UGS WEB HUB</h1>
+  <!-- LANDING -->
+  <section id="landing">
+    <h1>UGS Web Hub</h1>
+
     <p>
       Welcome to <strong>UGS Web Hub</strong>.<br><br>
-      A curated library of browser games that just work.
-      No downloads. No accounts. No filler.<br><br>
-      Every game is fullscreen, fast, and hand-picked.
-      If it’s here, it earned it.<br><br>
-      Built for people who want games — not distractions.
+
+      This is a curated collection of browser games that just work.
+      No downloads. No accounts. No clutter getting in the way.
+      You click a game and you play — immediately.<br><br>
+
+      Every game here is fullscreen, fast, and hand-picked.
+      If it’s on this site, it earned its spot.
+      If it’s not? It didn’t meet the standard.<br><br>
+
+      Built for people who want games, not distractions.
     </p>
+
     <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
-  </div>
-</section>
+  </section>
 
-<!-- HUB -->
-<section id="hub">
-  <input id="search" placeholder="Search games…" oninput="render()" />
-  <div id="games"></div>
-</section>
+  <!-- HUB -->
+  <section id="hub">
+    <h2>Games</h2>
+    <div id="games"></div>
+  </section>
 
-<div id="alpha"></div>
-<div id="topBtn" onclick="scrollTo({top:0,behavior:'smooth'})">↑</div>
+  <!-- BACK TO TOP -->
+  <button id="backToTop" onclick="scrollToTop()">↑</button>
 
-<footer>
-  <p>UGS Web Hub · Version 2.2.1</p>
-  <p>Total Games: <span id="count">0</span></p>
-  <p>
-    <a href="privacy.html">Privacy Policy</a> |
-    <a href="contact.html">Contact Us</a>
-  </p>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <p>UGS Web Hub · Version 2.2.1</p>
+    <p>Total Games: <span id="gameCount"></span></p>
+    <p>
+      <a href="/contact.html">Contact Us</a> ·
+      <a href="/privacy.html">Privacy Policy</a>
+    </p>
+  </footer>
 
-<script src="games-data.js"></script>
-<script>
-const landing = document.getElementById("landing");
-const hub = document.getElementById("hub");
-const gamesEl = document.getElementById("games");
-const search = document.getElementById("search");
-const alpha = document.getElementById("alpha");
-const progress = document.getElementById("progress");
-const topBtn = document.getElementById("topBtn");
+  <script>
+    /* NAV */
+    function enterHub() {
+      document.getElementById("hub")
+        .scrollIntoView({ behavior: "smooth" });
+    }
 
-/* SUPPORT BOTH rawGames AND games */
-const gamesData = window.rawGames || window.games || [];
+    function goHome() {
+      document.getElementById("landing")
+        .scrollIntoView({ behavior: "smooth" });
+    }
 
-function enterHub() {
-  landing.style.display="none";
-  hub.style.display="block";
-  render();
-}
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-function render() {
-  gamesEl.innerHTML="";
-  const q = search.value.toLowerCase();
-  let currentLetter = "";
-
-  gamesData
-    .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name))
-    .forEach(game => {
-      const letter = game.name[0].toUpperCase();
-      if (letter !== currentLetter) {
-        const section = document.createElement("div");
-        section.className="section";
-        section.id="sec-"+letter;
-        section.textContent=letter;
-        gamesEl.appendChild(section);
-        currentLetter = letter;
-      }
-
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML = `
-        <h3>${game.name}</h3>
-        <p>Instant play · Fullscreen</p>
-      `;
-      card.onclick = () => window.open(game.url,"_blank");
-      gamesEl.appendChild(card);
+    window.addEventListener("scroll", () => {
+      const btn = document.getElementById("backToTop");
+      btn.style.display = window.scrollY > 300 ? "block" : "none";
     });
 
-  document.getElementById("count").textContent = gamesData.length;
-}
+    /* GAMES DATA — REPLACE / EXPAND AS NEEDED */
+    const games = [
+      { name: "Example Game 1", url: "#" },
+      { name: "Example Game 2", url: "#" },
+      { name: "Example Game 3", url: "#" }
+    ];
 
-/* Alphabet slider */
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
-  const s = document.createElement("span");
-  s.textContent = l;
-  s.onclick = () => {
-    const el = document.getElementById("sec-"+l);
-    if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
-  };
-  alpha.appendChild(s);
-});
+    const gamesContainer = document.getElementById("games");
 
-/* Scroll effects */
-addEventListener("scroll",()=>{
-  progress.style.width =
-    (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
-  topBtn.classList.toggle("show", scrollY > 400);
-});
+    games.forEach(game => {
+      const div = document.createElement("div");
+      div.className = "game";
+      div.textContent = game.name;
+      div.onclick = () => window.location.href = game.url;
+      gamesContainer.appendChild(div);
+    });
 
-/* Keyboard jump */
-addEventListener("keydown", e => {
-  const el = document.getElementById("sec-"+e.key.toUpperCase());
-  if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
-});
-</script>
+    document.getElementById("gameCount").textContent = games.length;
+  </script>
 
 </body>
 </html>
-
