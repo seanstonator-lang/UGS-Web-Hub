@@ -3,13 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 <title>UGS Web Hub</title>
-
-<!-- FILTER / LIGHTSPEED SAFE META -->
-<meta name="description" content="UGS Web Hub is a student-built web development portfolio showcasing interactive JavaScript projects and demos." />
-<meta name="keywords" content="student portfolio, web development, javascript projects, html css, interactive demos" />
-<meta name="author" content="Sean" />
 
 <style>
 :root {
@@ -93,6 +87,7 @@ body {
   display:block;
 }
 
+/* ===== GAMES ===== */
 #games {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
@@ -124,10 +119,7 @@ body {
   box-shadow:0 0 25px rgba(56,189,248,.25);
 }
 
-.card h3 { margin:0 0 6px; }
-.card p { font-size:.85rem; opacity:.6; }
-
-/* ===== ALPHA SLIDER ===== */
+/* ===== ALPHABET ===== */
 #alpha {
   position:fixed;
   left:12px;
@@ -136,7 +128,7 @@ body {
   background:#0f172aee;
   border-radius:30px;
   padding:14px 8px;
-  display:flex;
+  display:none;
   flex-direction:column;
   gap:6px;
   z-index:2000;
@@ -165,7 +157,7 @@ body {
   z-index:9999;
 }
 
-/* ===== HOME ===== */
+/* ===== HOME BUTTON ===== */
 #homeBtn {
   position:fixed;
   top:16px;
@@ -173,21 +165,22 @@ body {
   width:52px;
   height:52px;
   border-radius:16px;
-  font-size:1.4rem;
-  background:black;
-  color:white;
-  border:2px solid white;
+  background:#0f172a;
+  border:2px solid var(--primary);
+  color:var(--primary);
+  font-size:1.3rem;
   cursor:pointer;
-  z-index:3000;
   display:none;
+  z-index:3000;
+  transition:.25s;
 }
 
 #homeBtn:hover {
-  background:white;
+  background:var(--primary);
   color:black;
 }
 
-/* ===== TOP BTN ===== */
+/* ===== TOP ===== */
 #topBtn {
   position:fixed;
   bottom:30px;
@@ -220,7 +213,6 @@ footer {
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
-
 footer a {
   color:var(--secondary);
   text-decoration:none;
@@ -233,23 +225,20 @@ footer a:hover { color:var(--primary); }
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()" aria-label="Home">🏠</button>
+<button id="homeBtn" onclick="goHome()" aria-label="Home">⌂</button>
 
-<!-- LANDING -->
 <section id="landing">
   <div>
     <h1>UGS WEB HUB</h1>
     <p>
-      A student-built web development portfolio.<br><br>
-      Showcasing interactive JavaScript projects that launch instantly,
-      run fullscreen, and focus on performance.<br><br>
-      Built for experimentation, learning, and clean execution.
+      A curated collection of interactive web projects.<br><br>
+      Built fast. No distractions. No filler.<br><br>
+      Enter when you’re ready.
     </p>
-    <button id="enterBtn" onclick="enterHub()">ENTER</button>
+    <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
   </div>
 </section>
 
-<!-- HUB -->
 <section id="hub">
   <input id="search" placeholder="Search projects…" oninput="render()" />
   <div id="games"></div>
@@ -259,11 +248,11 @@ footer a:hover { color:var(--primary); }
 <div id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <footer>
-  <p>UGS Web Hub · Version 2.5</p>
-  <p>Total Projects: <span id="count">0</span></p>
+  <p>UGS Web Hub · Version 2.6</p>
+  <p>Total Projects: <span id="count">—</span></p>
   <p>
     <a href="privacy.html">Privacy Policy</a> |
-    <a href="contact.html">Contact Us</a>
+    <a href="contact.html">Contact</a>
   </p>
 </footer>
 
@@ -277,17 +266,19 @@ const alpha = document.getElementById("alpha");
 const progress = document.getElementById("progress");
 const topBtn = document.getElementById("topBtn");
 const homeBtn = document.getElementById("homeBtn");
+const countEl = document.getElementById("count");
 
 let hubActive = false;
-const gamesData = window.rawGames || window.games || [];
+const gamesData = window.rawGames || [];
 
 function enterHub() {
   landing.style.display = "none";
   hub.style.display = "block";
   homeBtn.style.display = "flex";
+  alpha.style.display = "flex";
   hubActive = true;
 
-  window.scrollTo({ top: 0, behavior: "auto" });
+  window.scrollTo({ top: 0, behavior: "instant" });
   render();
 }
 
@@ -295,9 +286,10 @@ function goHome() {
   hub.style.display = "none";
   landing.style.display = "flex";
   homeBtn.style.display = "none";
+  alpha.style.display = "none";
+  topBtn.classList.remove("show");
   hubActive = false;
-
-  window.scrollTo({ top: 0, behavior: "auto" });
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function render() {
@@ -305,34 +297,32 @@ function render() {
   const q = search.value.toLowerCase();
   let currentLetter = "";
 
-  gamesData
+  const visible = gamesData
     .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name))
-    .forEach(game => {
-      const letter = game.name[0].toUpperCase();
-      if (letter !== currentLetter) {
-        const section = document.createElement("div");
-        section.className="section";
-        section.id="sec-"+letter;
-        section.textContent=letter;
-        gamesEl.appendChild(section);
-        currentLetter = letter;
-      }
+    .sort((a,b)=>a.name.localeCompare(b.name));
 
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML = `
-        <h3>${game.name}</h3>
-        <p>Instant launch · Fullscreen</p>
-      `;
-      card.onclick = () => window.open(game.url,"_blank");
-      gamesEl.appendChild(card);
-    });
+  visible.forEach(game => {
+    const letter = game.name[0].toUpperCase();
+    if (letter !== currentLetter) {
+      const section = document.createElement("div");
+      section.className="section";
+      section.id="sec-"+letter;
+      section.textContent=letter;
+      gamesEl.appendChild(section);
+      currentLetter = letter;
+    }
 
-  document.getElementById("count").textContent = gamesData.length;
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML = `<h3>${game.name}</h3><p>Instant · Fullscreen</p>`;
+    card.onclick = () => window.open(game.url,"_blank");
+    gamesEl.appendChild(card);
+  });
+
+  countEl.textContent = gamesData.length;
 }
 
-/* Alpha slider */
+/* Alphabet */
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
   const s = document.createElement("span");
   s.textContent = l;
@@ -343,22 +333,12 @@ function render() {
   alpha.appendChild(s);
 });
 
-/* Scroll logic */
+/* Scroll */
 addEventListener("scroll",()=>{
-  if (!hubActive) {
-    topBtn.classList.remove("show");
-    return;
-  }
+  if (!hubActive) return;
   progress.style.width =
     (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
   topBtn.classList.toggle("show", scrollY > 400);
-});
-
-/* Keyboard jump */
-addEventListener("keydown", e => {
-  const el = document.getElementById("sec-"+e.key.toUpperCase());
-  if (el && hubActive)
-    scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
 
