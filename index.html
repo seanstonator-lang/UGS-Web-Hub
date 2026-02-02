@@ -109,24 +109,11 @@ footer a:hover { color: var(--primary); }
     width: 160px;
     z-index: 1500;
 }
-
 .left-ad { left: 10px; }
 .right-ad { right: 10px; }
-
-.top-ad {
-    display: block;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 970px;
-}
-
-/* Inline ad spacing */
+.top-ad { display: block; margin: 20px auto; width: 90%; max-width: 970px; }
 .inline-ad { margin: 40px 0; display: block; text-align: center; }
-
-/* Hide side ads on smaller screens */
-@media (max-width: 1200px) {
-    .side-ad { display: none; }
-}
+@media (max-width: 1200px) { .side-ad { display: none; } }
 </style>
 </head>
 
@@ -153,7 +140,6 @@ footer a:hover { color: var(--primary); }
      data-ad-slot="1111111111"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
-
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
 <!-- Left & Right Side Ads -->
@@ -169,10 +155,7 @@ footer a:hover { color: var(--primary); }
      data-ad-slot="3333333333"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
-
-<script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
 <div class="nav-sticky">
     <div class="controls-container">
@@ -245,7 +228,6 @@ function render() {
         header.textContent = letter;
         container.appendChild(header);
 
-        // Insert an inline ad between every 10 games
         let count = 0;
         grouped[letter].forEach(game => {
             const card = document.createElement('div');
