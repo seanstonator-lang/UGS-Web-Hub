@@ -120,11 +120,37 @@
     </div>
 </header>
 
+<!-- GOOGLE ADSENSE AD UNIT BELOW HEADER -->
+<div style="display:flex; justify-content:center; margin: 20px 0;">
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; max-width:728px; height:90px;"
+         data-ad-client="ca-pub-7149012908091118"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+</div>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <div class="nav-sticky">
     <div class="controls-container">
         <input type="text" id="searchInput" placeholder="Search 2,000+ Titles..." oninput="render()">
     </div>
 </div>
+
+<!-- GOOGLE ADSENSE AD UNIT ABOVE GAME GRID -->
+<div style="display:flex; justify-content:center; margin: 30px 0;">
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; max-width:468px; height:60px;"
+         data-ad-client="ca-pub-7149012908091118"
+         data-ad-slot="0987654321"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+</div>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
 <nav class="alphabet-sidebar" id="sidebar"></nav>
 <div class="container"><div id="sections-container"></div></div>
@@ -133,7 +159,6 @@
 <footer>
     <a href="privacy.html" onmouseenter="playSound()">Privacy Policy</a>
     <span style="color: rgba(255,255,255,0.2); margin: 0 15px;">|</span>
-    <!-- FIXED CONTACT LINK -->
     <a href="contact.html" onmouseenter="playSound()">Contact Us</a>
 </footer>
 
@@ -154,7 +179,6 @@
             return;
         }
 
-        // Simulate high-load loading bar
         const total = rawGames.length;
         for (let i = 0; i <= total; i += 100) {
             const percent = Math.min(Math.floor((i / total) * 100), 100);
@@ -178,7 +202,6 @@
 
         const filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
         
-        // Group by Letter
         const grouped = {};
         filtered.forEach(game => {
             const letter = game.name[0].toUpperCase();
@@ -237,4 +260,3 @@
 </script>
 </body>
 </html>
-
