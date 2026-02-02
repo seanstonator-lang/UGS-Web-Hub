@@ -23,37 +23,6 @@ body {
   overflow-x:hidden;
 }
 
-/* ===== PROGRESS BAR ===== */
-#progress {
-  position:fixed;
-  top:0;
-  left:0;
-  height:4px;
-  background:var(--primary);
-  width:0%;
-  z-index:9999;
-  display:none;
-}
-
-/* ===== HOME BUTTON ===== */
-#homeBtn {
-  position:fixed;
-  top:16px;
-  left:16px;
-  padding:10px 14px;
-  font-weight:900;
-  background:black;
-  color:white;
-  border:2px solid white;
-  cursor:pointer;
-  z-index:3000;
-  display:none;
-}
-#homeBtn:hover {
-  background:white;
-  color:black;
-}
-
 /* ===== LANDING ===== */
 #landing {
   height:100vh;
@@ -91,6 +60,7 @@ body {
   cursor:pointer;
   transition:.3s;
 }
+
 #enterBtn:hover {
   background:var(--primary);
   color:black;
@@ -141,13 +111,21 @@ body {
   transition:.35s;
   border:2px solid transparent;
 }
+
 .card:hover {
   transform:translateY(-10px) scale(1.02);
   border-color:var(--primary);
   box-shadow:0 0 25px rgba(56,189,248,.25);
 }
-.card h3 { margin:0 0 6px; }
-.card p { font-size:.85rem; opacity:.6; }
+
+.card h3 {
+  margin:0 0 6px;
+}
+
+.card p {
+  font-size:.85rem;
+  opacity:.6;
+}
 
 /* ===== LETTER SLIDER ===== */
 #alpha {
@@ -158,20 +136,54 @@ body {
   background:#0f172aee;
   border-radius:30px;
   padding:14px 8px;
-  display:none;
+  display:flex;
   flex-direction:column;
   gap:6px;
   z-index:2000;
 }
+
 #alpha span {
   font-size:.7rem;
   font-weight:900;
   opacity:.35;
   cursor:pointer;
 }
+
 #alpha span:hover {
   opacity:1;
   color:var(--primary);
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress {
+  position:fixed;
+  top:0;
+  left:0;
+  height:4px;
+  background:var(--primary);
+  width:0%;
+  z-index:9999;
+}
+
+/* ===== HOME BUTTON ===== */
+#homeBtn {
+  position:fixed;
+  top:16px;
+  left:16px;
+  width:52px;
+  height:52px;
+  border-radius:16px;
+  font-size:1.4rem;
+  background:black;
+  color:white;
+  border:2px solid white;
+  cursor:pointer;
+  z-index:3000;
+  display:none;
+}
+#homeBtn:hover {
+  background:white;
+  color:black;
 }
 
 /* ===== BACK TO TOP ===== */
@@ -206,19 +218,23 @@ footer {
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
+
 footer a {
   color:var(--secondary);
   text-decoration:none;
   margin:0 14px;
 }
-footer a:hover { color:var(--primary); }
+
+footer a:hover {
+  color:var(--primary);
+}
 </style>
 </head>
 
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()">HOME</button>
+<button id="homeBtn" onclick="goHome()" aria-label="Home">🏠</button>
 
 <!-- LANDING -->
 <section id="landing">
@@ -227,7 +243,7 @@ footer a:hover { color:var(--primary); }
     <p>
       A curated library of browser games that just work.<br><br>
       No downloads. No accounts. No filler.<br><br>
-      If it’s here, it earned it.
+      Built for people who want games — not distractions.
     </p>
     <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
   </div>
@@ -240,9 +256,9 @@ footer a:hover { color:var(--primary); }
 </section>
 
 <div id="alpha"></div>
-<div id="topBtn" onclick="scrollTo({top:0,behavior:'smooth'})">↑</div>
+<div id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
-<footer id="footer" style="display:none">
+<footer>
   <p>UGS Web Hub · Version 2.2.1</p>
   <p>Total Games: <span id="count">0</span></p>
   <p>
@@ -261,82 +277,75 @@ const alpha = document.getElementById("alpha");
 const progress = document.getElementById("progress");
 const topBtn = document.getElementById("topBtn");
 const homeBtn = document.getElementById("homeBtn");
-const footer = document.getElementById("footer");
 
-const gamesData = window.rawGames || window.games || [];
 let hubActive = false;
+const gamesData = window.rawGames || [];
 
 function enterHub() {
   landing.style.display="none";
   hub.style.display="block";
-  alpha.style.display="flex";
-  progress.style.display="block";
   homeBtn.style.display="block";
-  footer.style.display="block";
   hubActive = true;
   render();
 }
 
 function goHome() {
   hub.style.display="none";
-  alpha.style.display="none";
-  progress.style.display="none";
-  homeBtn.style.display="none";
-  footer.style.display="none";
   landing.style.display="flex";
-  scrollTo(0,0);
+  homeBtn.style.display="none";
   hubActive = false;
-}
-
-function normalizeLetter(name) {
-  const l = name[0].toUpperCase();
-  return /[A-Z]/.test(l) ? l : "#";
+  window.scrollTo({top:0});
 }
 
 function render() {
   gamesEl.innerHTML="";
   const q = search.value.toLowerCase();
-  let current = "";
+  let currentLetter = "";
 
-  const filtered = gamesData
+  gamesData
     .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name));
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .forEach(game => {
+      const letter = game.name[0].toUpperCase();
+      if (letter !== currentLetter) {
+        const section = document.createElement("div");
+        section.className="section";
+        section.id="sec-"+letter;
+        section.textContent=letter;
+        gamesEl.appendChild(section);
+        currentLetter = letter;
+      }
 
-  filtered.forEach(game => {
-    const letter = normalizeLetter(game.name);
-    if (letter !== current) {
-      const section = document.createElement("div");
-      section.className="section";
-      section.id="sec-"+letter;
-      section.textContent=letter;
-      gamesEl.appendChild(section);
-      current = letter;
-    }
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML = `
+        <h3>${game.name}</h3>
+        <p>Instant play · Fullscreen</p>
+      `;
+      card.onclick = () => window.open(game.url,"_blank");
+      gamesEl.appendChild(card);
+    });
 
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML = `<h3>${game.name}</h3><p>Instant play · Fullscreen</p>`;
-    card.onclick = () => window.open(game.url,"_blank");
-    gamesEl.appendChild(card);
-  });
-
-  document.getElementById("count").textContent = filtered.length;
+  document.getElementById("count").textContent = gamesData.length;
 }
 
 /* Alphabet slider */
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").forEach(l => {
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
   const s = document.createElement("span");
   s.textContent = l;
   s.onclick = () => {
     const el = document.getElementById("sec-"+l);
-    if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+    if (el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
   };
   alpha.appendChild(s);
 });
 
 /* Scroll effects */
 addEventListener("scroll",()=>{
-  if (!hubActive) return;
+  if (!hubActive) {
+    topBtn.classList.remove("show");
+    return;
+  }
   progress.style.width =
     (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
   topBtn.classList.toggle("show", scrollY > 400);
@@ -344,11 +353,11 @@ addEventListener("scroll",()=>{
 
 /* Keyboard jump */
 addEventListener("keydown", e => {
-  if (!hubActive) return;
   const el = document.getElementById("sec-"+e.key.toUpperCase());
-  if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+  if (el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
 
 </body>
 </html>
+
