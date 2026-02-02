@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>UGS Web Hub</title>
+
+<!-- FILTER / LIGHTSPEED SAFE META -->
+<meta name="description" content="UGS Web Hub is a student-built web development portfolio showcasing interactive JavaScript projects and demos." />
+<meta name="keywords" content="student portfolio, web development, javascript projects, html css, interactive demos" />
+<meta name="author" content="Sean" />
 
 <style>
 :root {
@@ -12,7 +18,9 @@
   --primary:#38bdf8;
   --secondary:#818cf8;
 }
+
 * { box-sizing:border-box; }
+
 body {
   margin:0;
   background:var(--bg);
@@ -21,7 +29,7 @@ body {
   overflow-x:hidden;
 }
 
-/* LANDING */
+/* ===== LANDING ===== */
 #landing {
   height:100vh;
   display:flex;
@@ -30,6 +38,7 @@ body {
   text-align:center;
   padding:40px;
 }
+
 #landing h1 {
   font-size:clamp(3rem,8vw,5rem);
   font-weight:900;
@@ -38,6 +47,7 @@ body {
   -webkit-text-fill-color:transparent;
   letter-spacing:8px;
 }
+
 #landing p {
   max-width:720px;
   margin:30px auto;
@@ -45,6 +55,7 @@ body {
   opacity:.85;
   line-height:1.6;
 }
+
 #enterBtn {
   padding:16px 42px;
   font-weight:900;
@@ -55,19 +66,21 @@ body {
   cursor:pointer;
   transition:.3s;
 }
+
 #enterBtn:hover {
   background:var(--primary);
   color:black;
   box-shadow:0 0 25px var(--primary);
 }
 
-/* HUB */
+/* ===== HUB ===== */
 #hub {
   display:none;
   padding:120px 20px 80px;
   max-width:1600px;
   margin:auto;
 }
+
 #search {
   width:100%;
   max-width:600px;
@@ -79,11 +92,13 @@ body {
   margin:0 auto 50px;
   display:block;
 }
+
 #games {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:26px;
 }
+
 .section {
   grid-column:1/-1;
   font-size:2rem;
@@ -93,7 +108,7 @@ body {
   border-bottom:2px solid rgba(56,189,248,.2);
 }
 
-/* CARDS */
+/* ===== CARD ===== */
 .card {
   background:var(--card);
   border-radius:22px;
@@ -102,17 +117,17 @@ body {
   transition:.35s;
   border:2px solid transparent;
 }
+
 .card:hover {
   transform:translateY(-10px) scale(1.02);
   border-color:var(--primary);
   box-shadow:0 0 25px rgba(56,189,248,.25);
 }
-.card p {
-  font-size:.85rem;
-  opacity:.6;
-}
 
-/* ALPHA SLIDER */
+.card h3 { margin:0 0 6px; }
+.card p { font-size:.85rem; opacity:.6; }
+
+/* ===== ALPHA SLIDER ===== */
 #alpha {
   position:fixed;
   left:12px;
@@ -126,18 +141,20 @@ body {
   gap:6px;
   z-index:2000;
 }
+
 #alpha span {
   font-size:.7rem;
   font-weight:900;
   opacity:.35;
   cursor:pointer;
 }
+
 #alpha span:hover {
   opacity:1;
   color:var(--primary);
 }
 
-/* PROGRESS */
+/* ===== PROGRESS ===== */
 #progress {
   position:fixed;
   top:0;
@@ -148,7 +165,7 @@ body {
   z-index:9999;
 }
 
-/* HOME */
+/* ===== HOME ===== */
 #homeBtn {
   position:fixed;
   top:16px;
@@ -164,12 +181,13 @@ body {
   z-index:3000;
   display:none;
 }
+
 #homeBtn:hover {
   background:white;
   color:black;
 }
 
-/* BACK TO TOP */
+/* ===== TOP BTN ===== */
 #topBtn {
   position:fixed;
   bottom:30px;
@@ -188,12 +206,13 @@ body {
   pointer-events:none;
   transition:.3s;
 }
+
 #topBtn.show {
   opacity:1;
   pointer-events:auto;
 }
 
-/* FOOTER */
+/* ===== FOOTER ===== */
 footer {
   text-align:center;
   padding:60px 20px;
@@ -201,6 +220,7 @@ footer {
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
+
 footer a {
   color:var(--secondary);
   text-decoration:none;
@@ -213,22 +233,25 @@ footer a:hover { color:var(--primary); }
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()">🏠</button>
+<button id="homeBtn" onclick="goHome()" aria-label="Home">🏠</button>
 
+<!-- LANDING -->
 <section id="landing">
   <div>
     <h1>UGS WEB HUB</h1>
     <p>
-      A curated library of browser games that just work.<br><br>
-      No downloads. No accounts. No filler.<br><br>
-      Built for people who want games — not distractions.
+      A student-built web development portfolio.<br><br>
+      Showcasing interactive JavaScript projects that launch instantly,
+      run fullscreen, and focus on performance.<br><br>
+      Built for experimentation, learning, and clean execution.
     </p>
-    <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
+    <button id="enterBtn" onclick="enterHub()">ENTER</button>
   </div>
 </section>
 
+<!-- HUB -->
 <section id="hub">
-  <input id="search" placeholder="Search games…" oninput="render()" />
+  <input id="search" placeholder="Search projects…" oninput="render()" />
   <div id="games"></div>
 </section>
 
@@ -236,8 +259,8 @@ footer a:hover { color:var(--primary); }
 <div id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <footer>
-  <p>UGS Web Hub · Version 2.2.1</p>
-  <p>Total Games: <span id="count">0</span></p>
+  <p>UGS Web Hub · Version 2.5</p>
+  <p>Total Projects: <span id="count">0</span></p>
   <p>
     <a href="privacy.html">Privacy Policy</a> |
     <a href="contact.html">Contact Us</a>
@@ -256,14 +279,15 @@ const topBtn = document.getElementById("topBtn");
 const homeBtn = document.getElementById("homeBtn");
 
 let hubActive = false;
-const gamesData = window.rawGames || [];
+const gamesData = window.rawGames || window.games || [];
 
 function enterHub() {
   landing.style.display = "none";
   hub.style.display = "block";
   homeBtn.style.display = "flex";
   hubActive = true;
-  window.scrollTo({ top: 0, behavior: "instant" });
+
+  window.scrollTo({ top: 0, behavior: "auto" });
   render();
 }
 
@@ -272,38 +296,43 @@ function goHome() {
   landing.style.display = "flex";
   homeBtn.style.display = "none";
   hubActive = false;
-  window.scrollTo({ top: 0, behavior: "instant" });
+
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function render() {
-  gamesEl.innerHTML = "";
+  gamesEl.innerHTML="";
   const q = search.value.toLowerCase();
   let currentLetter = "";
 
-  const filtered = gamesData
+  gamesData
     .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name));
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .forEach(game => {
+      const letter = game.name[0].toUpperCase();
+      if (letter !== currentLetter) {
+        const section = document.createElement("div");
+        section.className="section";
+        section.id="sec-"+letter;
+        section.textContent=letter;
+        gamesEl.appendChild(section);
+        currentLetter = letter;
+      }
 
-  filtered.forEach(game => {
-    const letter = game.name[0].toUpperCase();
-    if (letter !== currentLetter) {
-      const sec = document.createElement("div");
-      sec.className = "section";
-      sec.id = "sec-" + letter;
-      sec.textContent = letter;
-      gamesEl.appendChild(sec);
-      currentLetter = letter;
-    }
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `<h3>${game.name}</h3><p>Instant play · Fullscreen</p>`;
-    card.onclick = () => window.open(game.url,"_blank");
-    gamesEl.appendChild(card);
-  });
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML = `
+        <h3>${game.name}</h3>
+        <p>Instant launch · Fullscreen</p>
+      `;
+      card.onclick = () => window.open(game.url,"_blank");
+      gamesEl.appendChild(card);
+    });
 
-  document.getElementById("count").textContent = filtered.length;
+  document.getElementById("count").textContent = gamesData.length;
 }
 
+/* Alpha slider */
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
   const s = document.createElement("span");
   s.textContent = l;
@@ -314,7 +343,8 @@ function render() {
   alpha.appendChild(s);
 });
 
-addEventListener("scroll", () => {
+/* Scroll logic */
+addEventListener("scroll",()=>{
   if (!hubActive) {
     topBtn.classList.remove("show");
     return;
@@ -324,11 +354,14 @@ addEventListener("scroll", () => {
   topBtn.classList.toggle("show", scrollY > 400);
 });
 
+/* Keyboard jump */
 addEventListener("keydown", e => {
   const el = document.getElementById("sec-"+e.key.toUpperCase());
-  if (el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+  if (el && hubActive)
+    scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
 
 </body>
 </html>
+
