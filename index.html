@@ -3,14 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGS Web Hub</title>
 
-<title>UGS Web Hub 2.0 – Clean Browser Games</title>
-
-<meta name="description" content="UGS Web Hub is a fast, clean browser game library. No fake buttons. No junk. Just games.">
-<meta name="keywords" content="browser games, unblocked games, online games">
-<meta name="author" content="Sean">
-
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+<meta name="description" content="UGS Web Hub is a clean, fast browser game platform. No fake buttons. No junk. Just games.">
 
 <style>
 :root {
@@ -18,267 +13,252 @@
   --card:#0f172a;
   --primary:#38bdf8;
   --secondary:#818cf8;
-  --text-muted:#94a3b8;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);color:white;
 }
 
-* { box-sizing:border-box; }
-
-body {
-  margin:0;
-  font-family:Inter,system-ui,sans-serif;
-  background:var(--bg);
-  color:white;
-}
-
-/* ---------- HERO ---------- */
-header {
-  padding:80px 20px 60px;
-  text-align:center;
-}
-
-h1 {
-  font-size:clamp(2.5rem,7vw,5rem);
-  font-weight:900;
+/* Scroll Progress */
+#scrollProgress{
+  position:fixed;top:0;left:0;height:4px;width:0%;
   background:linear-gradient(90deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing:12px;
+  z-index:5000;
 }
 
-.hero-desc {
-  max-width:720px;
-  margin:25px auto 0;
-  color:var(--text-muted);
-  font-size:1.15rem;
-  line-height:1.6;
+/* Landing */
+#landing{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;padding:20px;
 }
-
-.hero-tools {
-  margin-top:30px;
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  flex-wrap:wrap;
+#landing h1{
+  font-size:clamp(3rem,8vw,5rem);
+  background:linear-gradient(90deg,var(--primary),var(--secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:12px;font-weight:900;
 }
-
-.hero-tools button {
-  padding:12px 26px;
-  border-radius:50px;
-  border:1px solid var(--primary);
-  background:rgba(56,189,248,0.1);
-  color:var(--primary);
-  font-weight:800;
+#landing p{color:var(--muted);max-width:600px;font-size:1.1rem}
+#landing button{
+  margin-top:30px;padding:16px 40px;
+  border-radius:50px;border:1px solid var(--primary);
+  background:rgba(56,189,248,.1);
+  color:var(--primary);font-weight:900;
   cursor:pointer;
-  transition:.3s;
 }
 
-.hero-tools button:hover {
-  background:var(--primary);
-  color:black;
-  box-shadow:0 0 20px var(--primary);
-}
-
-/* ---------- NAV ---------- */
-.nav {
-  position:sticky;
-  top:0;
-  z-index:1000;
+/* Nav */
+#nav{
+  position:sticky;top:0;
   background:rgba(2,6,23,.9);
   backdrop-filter:blur(15px);
-  padding:20px;
+  padding:20px;z-index:2000;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
-
-#search {
-  width:100%;
-  max-width:900px;
-  margin:auto;
-  display:block;
-  padding:16px 28px;
-  border-radius:100px;
-  border:1px solid #334155;
-  background:#0f172a;
-  color:white;
-  font-size:1.05rem;
+#search{
+  width:100%;max-width:900px;margin:auto;
+  display:block;padding:16px 26px;
+  border-radius:100px;border:1px solid #334155;
+  background:#0f172a;color:white;
 }
 
-/* ---------- GRID ---------- */
-.container {
-  width:95%;
-  max-width:1600px;
-  margin:auto;
-  padding:40px 0 100px;
-}
-
-.section-header {
-  font-size:2.2rem;
-  font-weight:900;
-  color:var(--primary);
-  margin:60px 0 20px;
+/* Grid */
+#hub{display:none}
+.container{width:95%;max-width:1600px;margin:auto;padding:40px 0 100px}
+.section{
+  font-size:2.2rem;font-weight:900;color:var(--primary);
   border-bottom:2px solid rgba(56,189,248,.2);
+  margin:60px 0 20px;
 }
-
-.grid {
+.grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:28px;
+  gap:26px;
 }
-
-.card {
+.card{
   background:rgba(15,23,42,.75);
-  border-radius:22px;
-  overflow:hidden;
-  border:2px solid rgba(255,255,255,.05);
-  transition:.4s;
-  cursor:pointer;
+  border-radius:22px;cursor:pointer;
+  transition:.4s;border:2px solid rgba(255,255,255,.05);
 }
-
-.card:hover {
+.card:hover{
   transform:translateY(-10px);
   border-color:var(--primary);
   box-shadow:0 0 25px rgba(56,189,248,.25);
 }
-
-.card-img {
-  height:140px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.card-img{
+  height:140px;display:flex;
+  align-items:center;justify-content:center;
   font-size:3rem;
 }
+.card-body{padding:18px}
+.card-title{font-weight:800}
 
-.card-body {
-  padding:18px;
+/* Letter Slider */
+#letterSlider{
+  position:fixed;right:15px;top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;
+  gap:6px;z-index:3000;
 }
-
-.card-title {
-  font-weight:800;
-  margin-bottom:6px;
-}
-
-.card-meta {
-  font-size:.8rem;
-  color:var(--text-muted);
-  display:flex;
-  justify-content:space-between;
-}
-
-.fav {
+#letterSlider span{
+  font-size:.7rem;font-weight:900;
+  color:rgba(255,255,255,.3);
   cursor:pointer;
 }
-
-/* ---------- FOOTER ---------- */
-footer {
-  text-align:center;
-  padding:40px 20px;
-  border-top:1px solid rgba(255,255,255,.1);
-  color:#64748b;
-  font-size:.85rem;
+#letterSlider span:hover{
+  color:var(--primary);transform:scale(1.4);
 }
+
+/* Preview */
+#previewBox{
+  position:fixed;width:260px;height:150px;
+  background:#000;border-radius:16px;
+  overflow:hidden;opacity:0;
+  pointer-events:none;z-index:6000;
+  transition:.2s;
+}
+#previewBox img{width:100%;height:100%;object-fit:cover}
+
+/* Buttons */
+#homeBtn,#toTop{
+  position:fixed;z-index:4000;
+  width:52px;height:52px;
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;cursor:pointer;
+}
+#homeBtn{top:20px;left:20px;background:#fff;color:#000}
+#toTop{
+  bottom:30px;right:30px;
+  background:#fff;color:#000;
+  opacity:0;pointer-events:none;
+  transition:.3s;
+}
+#toTop.show{opacity:1;pointer-events:auto}
 </style>
 </head>
 
 <body>
 
-<header>
+<div id="scrollProgress"></div>
+
+<section id="landing">
   <h1>UGS WEB HUB</h1>
-  <p class="hero-desc">
-    A clean, fast browser game library.  
-    No fake buttons. No junk. Just games.
-  </p>
+  <p>No fake buttons. No junk. Just games.</p>
+  <button onclick="enterHub()">ENTER HUB 🎮</button>
+</section>
 
-  <div class="hero-tools">
-    <button onclick="randomGame()">🎲 Random Game</button>
-    <button onclick="toggleFavorites()">⭐ Favorites</button>
-    <button disabled>⚡ Powered by Titan Infinity</button>
+<div id="hub">
+  <div id="nav">
+    <input id="search" placeholder="Search games…" oninput="render()">
   </div>
-</header>
-
-<div class="nav">
-  <input id="search" placeholder="Search games…" oninput="render()">
+  <div class="container" id="content"></div>
 </div>
 
-<div class="container" id="content"></div>
-
-<footer>
-  UGS Web Hub · Built by Sean · Powered by Titan Infinity  
-  <br>Not affiliated with game publishers
-</footer>
+<div id="letterSlider"></div>
+<div id="previewBox"></div>
+<div id="homeBtn" onclick="goHome()">🏠</div>
+<div id="toTop" onclick="scrollTo({top:0,behavior:'smooth'})">⬆️</div>
 
 <script src="games-data.js"></script>
-
 <script>
-let favorites = JSON.parse(localStorage.getItem("ugs-favs") || "[]");
-let showFavs = false;
+/* ENTER / HOME */
+function enterHub(){
+  landing.style.display="none";
+  hub.style.display="block";
+  render();
+}
+function goHome(){
+  hub.style.display="none";
+  landing.style.display="flex";
+  scrollTo({top:0});
+}
 
-function render() {
-  const q = document.getElementById("search").value.toLowerCase();
-  const container = document.getElementById("content");
-  container.innerHTML = "";
-
-  let games = rawGames.filter(g => g.name.toLowerCase().includes(q));
-  if (showFavs) games = games.filter(g => favorites.includes(g.name));
-
-  const grouped = {};
-  games.forEach(g => {
-    const l = /^[A-Z]/i.test(g.name[0]) ? g.name[0].toUpperCase() : "#";
-    grouped[l] ??= [];
-    grouped[l].push(g);
-  });
-
-  Object.keys(grouped).sort().forEach(letter => {
-    const h = document.createElement("div");
-    h.className = "section-header";
-    h.textContent = letter;
-    container.appendChild(h);
-
-    const grid = document.createElement("div");
-    grid.className = "grid";
-
-    grouped[letter].forEach(game => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.onclick = () => window.open(game.url, "_blank");
-
-      const fav = favorites.includes(game.name) ? "⭐" : "☆";
-
-      card.innerHTML = `
-        <div class="card-img">🎮</div>
-        <div class="card-body">
-          <div class="card-title">${game.name}</div>
-          <div class="card-meta">
-            <span>Browser Game</span>
-            <span class="fav" onclick="event.stopPropagation();toggleFav('${game.name}')">${fav}</span>
-          </div>
-        </div>
-      `;
-      grid.appendChild(card);
+/* Render */
+function render(){
+  const q=search.value.toLowerCase();
+  content.innerHTML="";
+  const groups={};
+  rawGames.filter(g=>g.name.toLowerCase().includes(q))
+    .forEach(g=>{
+      const l=/[A-Z]/i.test(g.name[0])?g.name[0].toUpperCase():"#";
+      (groups[l]??=[]).push(g);
     });
 
-    container.appendChild(grid);
+  const letters=Object.keys(groups).filter(l=>l!=="#").sort();
+  if(groups["#"])letters.push("#");
+  buildSlider(letters);
+
+  letters.forEach(l=>{
+    const h=document.createElement("div");
+    h.className="section";h.id="section-"+l;h.textContent=l;
+    content.appendChild(h);
+
+    const grid=document.createElement("div");
+    grid.className="grid";
+    groups[l].forEach(g=>{
+      const c=document.createElement("div");
+      c.className="card";
+      c.innerHTML=`<div class="card-img">🎮</div>
+                   <div class="card-body"><div class="card-title">${g.name}</div></div>`;
+      c.onclick=()=>open(g.url,"_blank");
+      c.onmouseenter=e=>showPreview(e,g.preview);
+      c.onmouseleave=hidePreview;
+      c.onmousemove=movePreview;
+      grid.appendChild(c);
+    });
+    content.appendChild(grid);
   });
 }
 
-function toggleFav(name) {
-  favorites.includes(name)
-    ? favorites = favorites.filter(f => f !== name)
-    : favorites.push(name);
-  localStorage.setItem("ugs-favs", JSON.stringify(favorites));
-  render();
+/* Slider */
+function buildSlider(letters){
+  letterSlider.innerHTML="";
+  letters.forEach(l=>{
+    const s=document.createElement("span");
+    s.textContent=l;
+    s.onclick=()=>document.getElementById("section-"+l)
+      ?.scrollIntoView({behavior:"smooth"});
+    letterSlider.appendChild(s);
+  });
 }
 
-function toggleFavorites() {
-  showFavs = !showFavs;
-  render();
-}
+/* Keyboard Jump */
+addEventListener("keydown",e=>{
+  const k=e.key.toUpperCase();
+  if(k>="A"&&k<="Z")
+    document.getElementById("section-"+k)
+      ?.scrollIntoView({behavior:"smooth"});
+});
 
-function randomGame() {
-  const g = rawGames[Math.floor(Math.random() * rawGames.length)];
-  window.open(g.url, "_blank");
+/* Preview */
+function showPreview(e,src){
+  if(!src)return;
+  previewBox.innerHTML=`<img src="${src}">`;
+  previewBox.style.opacity=1;
+  movePreview(e);
 }
+function movePreview(e){
+  previewBox.style.left=e.pageX+20+"px";
+  previewBox.style.top=e.pageY+20+"px";
+}
+function hidePreview(){previewBox.style.opacity=0}
 
-render();
+/* Scroll UI */
+addEventListener("scroll",()=>{
+  const h=document.documentElement;
+  scrollProgress.style.width=
+    (h.scrollTop/(h.scrollHeight-innerHeight))*100+"%";
+  toTop.classList.toggle("show",scrollY>400);
+});
+
+/* Offline */
+if("serviceWorker"in navigator)
+  navigator.serviceWorker.register("sw.js");
 </script>
-
 </body>
 </html>
+
