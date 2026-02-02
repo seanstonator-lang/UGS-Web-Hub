@@ -43,7 +43,7 @@ body {
 }
 
 #landing p {
-  max-width:700px;
+  max-width:720px;
   margin:30px auto;
   font-size:1.1rem;
   opacity:.85;
@@ -51,7 +51,7 @@ body {
 }
 
 #enterBtn {
-  padding:16px 40px;
+  padding:16px 42px;
   font-weight:900;
   border-radius:999px;
   border:2px solid var(--primary);
@@ -93,6 +93,16 @@ body {
   gap:26px;
 }
 
+.section {
+  grid-column:1/-1;
+  font-size:2rem;
+  font-weight:900;
+  color:var(--primary);
+  margin-top:40px;
+  border-bottom:2px solid rgba(56,189,248,.2);
+}
+
+/* ===== GAME CARD ===== */
 .card {
   background:var(--card);
   border-radius:22px;
@@ -129,6 +139,7 @@ body {
   display:flex;
   flex-direction:column;
   gap:6px;
+  z-index:2000;
 }
 
 #alpha span {
@@ -183,8 +194,19 @@ body {
 footer {
   text-align:center;
   padding:60px 20px;
-  opacity:.5;
+  opacity:.6;
   font-size:.9rem;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+footer a {
+  color:var(--secondary);
+  text-decoration:none;
+  margin:0 14px;
+}
+
+footer a:hover {
+  color:var(--primary);
 }
 </style>
 </head>
@@ -199,9 +221,9 @@ footer {
     <h1>UGS WEB HUB</h1>
     <p>
       Welcome to <strong>UGS Web Hub</strong>.<br><br>
-      This is a curated collection of browser games that just work.
-      No downloads. No accounts. No clutter.<br><br>
-      Every game here is fullscreen, fast, and hand-picked.
+      A curated library of browser games that just work.
+      No downloads. No accounts. No filler.<br><br>
+      Every game is fullscreen, fast, and hand-picked.
       If it’s here, it earned it.<br><br>
       Built for people who want games — not distractions.
     </p>
@@ -220,18 +242,25 @@ footer {
 
 <footer>
   <p>UGS Web Hub · Version 2.2.1</p>
-  <p>Total Games: <span id="count"></span></p>
+  <p>Total Games: <span id="count">0</span></p>
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="contact.html">Contact Us</a>
+  </p>
 </footer>
 
 <script src="games-data.js"></script>
 <script>
-const hub = document.getElementById("hub");
 const landing = document.getElementById("landing");
+const hub = document.getElementById("hub");
 const gamesEl = document.getElementById("games");
 const search = document.getElementById("search");
+const alpha = document.getElementById("alpha");
 const progress = document.getElementById("progress");
 const topBtn = document.getElementById("topBtn");
-const alpha = document.getElementById("alpha");
+
+/* SUPPORT BOTH rawGames AND games */
+const gamesData = window.rawGames || window.games || [];
 
 function enterHub() {
   landing.style.display="none";
@@ -242,51 +271,60 @@ function enterHub() {
 function render() {
   gamesEl.innerHTML="";
   const q = search.value.toLowerCase();
-  let lastLetter=null;
+  let currentLetter = "";
 
-  games.filter(g=>g.name.toLowerCase().includes(q))
+  gamesData
+    .filter(g => g.name.toLowerCase().includes(q))
     .sort((a,b)=>a.name.localeCompare(b.name))
-    .forEach(g=>{
-      const letter=g.name[0].toUpperCase();
-      if(letter!==lastLetter){
-        const h=document.createElement("h2");
-        h.id="sec-"+letter;
-        h.textContent=letter;
-        h.style.gridColumn="1/-1";
-        gamesEl.appendChild(h);
-        lastLetter=letter;
+    .forEach(game => {
+      const letter = game.name[0].toUpperCase();
+      if (letter !== currentLetter) {
+        const section = document.createElement("div");
+        section.className="section";
+        section.id="sec-"+letter;
+        section.textContent=letter;
+        gamesEl.appendChild(section);
+        currentLetter = letter;
       }
 
-      const c=document.createElement("div");
-      c.className="card";
-      c.innerHTML=`<h3>${g.name}</h3><p>Instant play · Fullscreen</p>`;
-      c.onclick=()=>window.open(g.url,"_blank");
-      gamesEl.appendChild(c);
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML = `
+        <h3>${game.name}</h3>
+        <p>Instant play · Fullscreen</p>
+      `;
+      card.onclick = () => window.open(game.url,"_blank");
+      gamesEl.appendChild(card);
     });
 
-  document.getElementById("count").textContent=games.length;
+  document.getElementById("count").textContent = gamesData.length;
 }
 
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
-  const s=document.createElement("span");
-  s.textContent=l;
-  s.onclick=()=>{
-    const el=document.getElementById("sec-"+l);
-    if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+/* Alphabet slider */
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
+  const s = document.createElement("span");
+  s.textContent = l;
+  s.onclick = () => {
+    const el = document.getElementById("sec-"+l);
+    if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
   };
   alpha.appendChild(s);
 });
 
+/* Scroll effects */
 addEventListener("scroll",()=>{
-  progress.style.width=(scrollY/(document.body.scrollHeight-innerHeight))*100+"%";
-  topBtn.classList.toggle("show",scrollY>400);
+  progress.style.width =
+    (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
+  topBtn.classList.toggle("show", scrollY > 400);
 });
 
-addEventListener("keydown",e=>{
-  const el=document.getElementById("sec-"+e.key.toUpperCase());
-  if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+/* Keyboard jump */
+addEventListener("keydown", e => {
+  const el = document.getElementById("sec-"+e.key.toUpperCase());
+  if (el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
 
 </body>
 </html>
+
