@@ -1,5 +1,4 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
-# Help Google find all 2,000 games at once
-Sitemap: https://ugswebhub.com
+Sitemap: https://ugswebhub.com/sitemap.xml
