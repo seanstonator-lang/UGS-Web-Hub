@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UGS Web Hub</title>
 
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="favicon.png">
+
 <style>
 :root {
   --bg:#020617;
@@ -39,7 +42,7 @@ body {
   background:linear-gradient(90deg,var(--primary),var(--secondary));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  letter-spacing:8px;
+  letter-spacing:6px;
 }
 
 #landing p {
@@ -87,7 +90,6 @@ body {
   display:block;
 }
 
-/* ===== GAMES ===== */
 #games {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
@@ -103,7 +105,7 @@ body {
   border-bottom:2px solid rgba(56,189,248,.2);
 }
 
-/* ===== CARD ===== */
+/* ===== GAME CARD ===== */
 .card {
   background:var(--card);
   border-radius:22px;
@@ -114,12 +116,12 @@ body {
 }
 
 .card:hover {
-  transform:translateY(-10px) scale(1.02);
+  transform:translateY(-8px);
   border-color:var(--primary);
-  box-shadow:0 0 25px rgba(56,189,248,.25);
+  box-shadow:0 0 20px rgba(56,189,248,.25);
 }
 
-/* ===== ALPHABET ===== */
+/* ===== LETTER SLIDER ===== */
 #alpha {
   position:fixed;
   left:12px;
@@ -146,7 +148,7 @@ body {
   color:var(--primary);
 }
 
-/* ===== PROGRESS ===== */
+/* ===== PROGRESS BAR ===== */
 #progress {
   position:fixed;
   top:0;
@@ -157,43 +159,42 @@ body {
   z-index:9999;
 }
 
-/* ===== HOME BUTTON ===== */
+/* ===== HOME BUTTON (FIXED) ===== */
 #homeBtn {
   position:fixed;
   top:16px;
   left:16px;
-  width:52px;
-  height:52px;
-  border-radius:16px;
-  background:#0f172a;
-  border:2px solid var(--primary);
-  color:var(--primary);
-  font-size:1.3rem;
+  padding:12px 22px;
+  border-radius:999px;
+  font-weight:900;
+  letter-spacing:1px;
+  background:black;
+  color:white;
+  border:2px solid white;
   cursor:pointer;
-  display:none;
   z-index:3000;
-  transition:.25s;
+  display:none;
 }
 
 #homeBtn:hover {
-  background:var(--primary);
+  background:white;
   color:black;
 }
 
-/* ===== TOP ===== */
+/* ===== BACK TO TOP ===== */
 #topBtn {
   position:fixed;
   bottom:30px;
   right:30px;
-  width:60px;
-  height:60px;
-  border-radius:20px;
+  width:56px;
+  height:56px;
+  border-radius:16px;
   background:white;
   color:black;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.8rem;
+  font-size:1.6rem;
   cursor:pointer;
   opacity:0;
   pointer-events:none;
@@ -213,34 +214,27 @@ footer {
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
-footer a {
-  color:var(--secondary);
-  text-decoration:none;
-  margin:0 14px;
-}
-footer a:hover { color:var(--primary); }
 </style>
 </head>
 
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()" aria-label="Home">⌂</button>
+<button id="homeBtn" onclick="goHome()">HOME</button>
 
 <section id="landing">
   <div>
     <h1>UGS WEB HUB</h1>
     <p>
-      A curated collection of interactive web projects.<br><br>
-      Built fast. No distractions. No filler.<br><br>
-      Enter when you’re ready.
+      A clean, fast library of browser-based games.<br><br>
+      No installs. No logins. Just play.
     </p>
-    <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
+    <button id="enterBtn" onclick="enterHub()">ENTER HUB</button>
   </div>
 </section>
 
 <section id="hub">
-  <input id="search" placeholder="Search projects…" oninput="render()" />
+  <input id="search" placeholder="Search…" oninput="render()" />
   <div id="games"></div>
 </section>
 
@@ -248,12 +242,8 @@ footer a:hover { color:var(--primary); }
 <div id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <footer>
-  <p>UGS Web Hub · Version 2.6</p>
-  <p>Total Projects: <span id="count">—</span></p>
-  <p>
-    <a href="privacy.html">Privacy Policy</a> |
-    <a href="contact.html">Contact</a>
-  </p>
+  <p>UGS Web Hub · Version 2.5.2</p>
+  <p>Total Games: <span id="count">0</span></p>
 </footer>
 
 <script src="games-data.js"></script>
@@ -266,7 +256,6 @@ const alpha = document.getElementById("alpha");
 const progress = document.getElementById("progress");
 const topBtn = document.getElementById("topBtn");
 const homeBtn = document.getElementById("homeBtn");
-const countEl = document.getElementById("count");
 
 let hubActive = false;
 const gamesData = window.rawGames || [];
@@ -274,11 +263,10 @@ const gamesData = window.rawGames || [];
 function enterHub() {
   landing.style.display = "none";
   hub.style.display = "block";
-  homeBtn.style.display = "flex";
+  homeBtn.style.display = "block";
   alpha.style.display = "flex";
   hubActive = true;
-
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0 });
   render();
 }
 
@@ -287,55 +275,51 @@ function goHome() {
   landing.style.display = "flex";
   homeBtn.style.display = "none";
   alpha.style.display = "none";
-  topBtn.classList.remove("show");
   hubActive = false;
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0 });
 }
 
 function render() {
   gamesEl.innerHTML="";
-  const q = search.value.toLowerCase();
   let currentLetter = "";
+  const q = search.value.toLowerCase();
 
-  const visible = gamesData
+  gamesData
     .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name));
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .forEach(game => {
+      const letter = game.name[0].toUpperCase();
+      if (letter !== currentLetter) {
+        const sec = document.createElement("div");
+        sec.className="section";
+        sec.id="sec-"+letter;
+        sec.textContent=letter;
+        gamesEl.appendChild(sec);
+        currentLetter = letter;
+      }
 
-  visible.forEach(game => {
-    const letter = game.name[0].toUpperCase();
-    if (letter !== currentLetter) {
-      const section = document.createElement("div");
-      section.className="section";
-      section.id="sec-"+letter;
-      section.textContent=letter;
-      gamesEl.appendChild(section);
-      currentLetter = letter;
-    }
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML = `<h3>${game.name}</h3>`;
+      card.onclick = () => window.open(game.url,"_blank");
+      gamesEl.appendChild(card);
+    });
 
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML = `<h3>${game.name}</h3><p>Instant · Fullscreen</p>`;
-    card.onclick = () => window.open(game.url,"_blank");
-    gamesEl.appendChild(card);
-  });
-
-  countEl.textContent = gamesData.length;
+  document.getElementById("count").textContent = gamesData.length;
 }
 
-/* Alphabet */
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
-  const s = document.createElement("span");
-  s.textContent = l;
-  s.onclick = () => {
-    const el = document.getElementById("sec-"+l);
-    if (el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
+  const s=document.createElement("span");
+  s.textContent=l;
+  s.onclick=()=>{
+    const el=document.getElementById("sec-"+l);
+    if(el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
   };
   alpha.appendChild(s);
 });
 
-/* Scroll */
 addEventListener("scroll",()=>{
-  if (!hubActive) return;
+  if(!hubActive) return;
   progress.style.width =
     (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
   topBtn.classList.toggle("show", scrollY > 400);
