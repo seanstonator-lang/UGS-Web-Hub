@@ -244,12 +244,12 @@ const homeBtn=document.getElementById("homeBtn");
 let hubActive=false;
 const gamesData=window.rawGames||[];
 
-/* SMART NAME ENGINE */
+/* SAFE NAME ENGINE (FINAL) */
 function prettifyName(name){
   return name
-    .replace(/([a-z])([0-9])/g,"$1 $2")
-    .replace(/(of|the|and|for|to|with|in|on)(?=[a-z])/g,"$1 ")
-    .replace(/([a-z]{3,})([a-z]{3,})/g,"$1 $2")
+    .replace(/([a-z])([0-9])/gi,"$1 $2")
+    .replace(/([0-9])([a-z])/gi,"$1 $2")
+    .replace(/_/g," ")
     .replace(/\s+/g," ")
     .trim();
 }
