@@ -244,16 +244,6 @@ const homeBtn=document.getElementById("homeBtn");
 let hubActive=false;
 const gamesData=window.rawGames||[];
 
-/* SAFE NAME ENGINE (FINAL) */
-function prettifyName(name){
-  return name
-    .replace(/([a-z])([0-9])/gi,"$1 $2")
-    .replace(/([0-9])([a-z])/gi,"$1 $2")
-    .replace(/_/g," ")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
 function enterHub(){
   landing.style.display="none";
   hub.style.display="block";
@@ -300,7 +290,7 @@ function render(){
       const card=document.createElement("div");
       card.className="card";
       card.innerHTML=`
-        <h3>${prettifyName(game.name)}</h3>
+        <h3>${game.name}</h3>
         <p>Instant play · Fullscreen</p>`;
       card.onclick=()=>open(game.url,"_blank");
       gamesEl.appendChild(card);
