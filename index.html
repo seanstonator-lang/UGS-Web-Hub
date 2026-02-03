@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UGS Web Hub</title>
 
-<!-- FAVICON -->
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
 :root {
@@ -15,19 +15,17 @@
   --primary:#38bdf8;
   --secondary:#818cf8;
 }
-
-* { box-sizing:border-box; }
-
-body {
+*{box-sizing:border-box}
+body{
   margin:0;
   background:var(--bg);
   color:white;
-  font-family:Inter, system-ui, sans-serif;
+  font-family:Inter,system-ui,sans-serif;
   overflow-x:hidden;
 }
 
-/* ===== LANDING ===== */
-#landing {
+/* LANDING */
+#landing{
   height:100vh;
   display:flex;
   align-items:center;
@@ -35,25 +33,22 @@ body {
   text-align:center;
   padding:40px;
 }
-
-#landing h1 {
+#landing h1{
   font-size:clamp(3rem,8vw,5rem);
   font-weight:900;
   background:linear-gradient(90deg,var(--primary),var(--secondary));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  letter-spacing:6px;
+  letter-spacing:8px;
 }
-
-#landing p {
+#landing p{
   max-width:720px;
   margin:30px auto;
   font-size:1.1rem;
   opacity:.85;
   line-height:1.6;
 }
-
-#enterBtn {
+#enterBtn{
   padding:16px 42px;
   font-weight:900;
   border-radius:999px;
@@ -63,22 +58,20 @@ body {
   cursor:pointer;
   transition:.3s;
 }
-
-#enterBtn:hover {
+#enterBtn:hover{
   background:var(--primary);
   color:black;
   box-shadow:0 0 25px var(--primary);
 }
 
-/* ===== HUB ===== */
-#hub {
+/* HUB */
+#hub{
   display:none;
   padding:120px 20px 80px;
   max-width:1600px;
   margin:auto;
 }
-
-#search {
+#search{
   width:100%;
   max-width:600px;
   padding:16px 26px;
@@ -89,14 +82,12 @@ body {
   margin:0 auto 50px;
   display:block;
 }
-
-#games {
+#games{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:26px;
 }
-
-.section {
+.section{
   grid-column:1/-1;
   font-size:2rem;
   font-weight:900;
@@ -105,8 +96,8 @@ body {
   border-bottom:2px solid rgba(56,189,248,.2);
 }
 
-/* ===== GAME CARD ===== */
-.card {
+/* CARD */
+.card{
   background:var(--card);
   border-radius:22px;
   padding:20px;
@@ -114,15 +105,16 @@ body {
   transition:.35s;
   border:2px solid transparent;
 }
-
-.card:hover {
-  transform:translateY(-8px);
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
   border-color:var(--primary);
-  box-shadow:0 0 20px rgba(56,189,248,.25);
+  box-shadow:0 0 25px rgba(56,189,248,.25);
 }
+.card h3{margin:0 0 6px}
+.card p{font-size:.85rem;opacity:.6}
 
-/* ===== LETTER SLIDER ===== */
-#alpha {
+/* ALPHA */
+#alpha{
   position:fixed;
   left:12px;
   top:50%;
@@ -135,39 +127,30 @@ body {
   gap:6px;
   z-index:2000;
 }
-
-#alpha span {
+#alpha span{
   font-size:.7rem;
   font-weight:900;
   opacity:.35;
   cursor:pointer;
 }
+#alpha span:hover{opacity:1;color:var(--primary)}
 
-#alpha span:hover {
-  opacity:1;
-  color:var(--primary);
-}
-
-/* ===== PROGRESS BAR ===== */
-#progress {
+/* UI */
+#progress{
   position:fixed;
-  top:0;
-  left:0;
+  top:0;left:0;
   height:4px;
   background:var(--primary);
   width:0%;
   z-index:9999;
 }
-
-/* ===== HOME BUTTON (FIXED) ===== */
-#homeBtn {
+#homeBtn{
   position:fixed;
   top:16px;
   left:16px;
-  padding:12px 22px;
+  padding:10px 18px;
   border-radius:999px;
   font-weight:900;
-  letter-spacing:1px;
   background:black;
   color:white;
   border:2px solid white;
@@ -175,45 +158,41 @@ body {
   z-index:3000;
   display:none;
 }
+#homeBtn:hover{background:white;color:black}
 
-#homeBtn:hover {
-  background:white;
-  color:black;
-}
-
-/* ===== BACK TO TOP ===== */
-#topBtn {
+#topBtn{
   position:fixed;
   bottom:30px;
   right:30px;
-  width:56px;
-  height:56px;
-  border-radius:16px;
+  width:60px;height:60px;
+  border-radius:20px;
   background:white;
   color:black;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.6rem;
+  font-size:1.8rem;
   cursor:pointer;
   opacity:0;
   pointer-events:none;
   transition:.3s;
 }
+#topBtn.show{opacity:1;pointer-events:auto}
 
-#topBtn.show {
-  opacity:1;
-  pointer-events:auto;
-}
-
-/* ===== FOOTER ===== */
-footer {
+/* FOOTER */
+footer{
   text-align:center;
   padding:60px 20px;
   opacity:.6;
   font-size:.9rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
+footer a{
+  color:var(--secondary);
+  text-decoration:none;
+  margin:0 14px;
+}
+footer a:hover{color:var(--primary)}
 </style>
 </head>
 
@@ -226,106 +205,137 @@ footer {
   <div>
     <h1>UGS WEB HUB</h1>
     <p>
-      A clean, fast library of browser-based games.<br><br>
-      No installs. No logins. Just play.
+      A curated library of browser games that just work.<br><br>
+      No downloads. No accounts. No filler.<br><br>
+      Built for people who want games — not distractions.
     </p>
-    <button id="enterBtn" onclick="enterHub()">ENTER HUB</button>
+    <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
   </div>
 </section>
 
 <section id="hub">
-  <input id="search" placeholder="Search…" oninput="render()" />
+  <input id="search" placeholder="Search games…" oninput="render()" />
   <div id="games"></div>
 </section>
 
 <div id="alpha"></div>
-<div id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<div id="topBtn" onclick="scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <footer>
-  <p>UGS Web Hub · Version 2.5.2</p>
+  <p>UGS Web Hub · Version 2.6</p>
   <p>Total Games: <span id="count">0</span></p>
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="contact.html">Contact Us</a>
+  </p>
 </footer>
 
 <script src="games-data.js"></script>
 <script>
-const landing = document.getElementById("landing");
-const hub = document.getElementById("hub");
-const gamesEl = document.getElementById("games");
-const search = document.getElementById("search");
-const alpha = document.getElementById("alpha");
-const progress = document.getElementById("progress");
-const topBtn = document.getElementById("topBtn");
-const homeBtn = document.getElementById("homeBtn");
+const landing=document.getElementById("landing");
+const hub=document.getElementById("hub");
+const gamesEl=document.getElementById("games");
+const search=document.getElementById("search");
+const alpha=document.getElementById("alpha");
+const progress=document.getElementById("progress");
+const topBtn=document.getElementById("topBtn");
+const homeBtn=document.getElementById("homeBtn");
 
-let hubActive = false;
-const gamesData = window.rawGames || [];
+let hubActive=false;
+const gamesData=window.rawGames||[];
 
-function enterHub() {
-  landing.style.display = "none";
-  hub.style.display = "block";
-  homeBtn.style.display = "block";
-  alpha.style.display = "flex";
-  hubActive = true;
-  window.scrollTo({ top: 0 });
+/* SMART NAME ENGINE */
+function prettifyName(name){
+  return name
+    .replace(/([a-z])([0-9])/g,"$1 $2")
+    .replace(/(of|the|and|for|to|with|in|on)(?=[a-z])/g,"$1 ")
+    .replace(/([a-z]{3,})([a-z]{3,})/g,"$1 $2")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function enterHub(){
+  landing.style.display="none";
+  hub.style.display="block";
+  homeBtn.style.display="block";
+  alpha.style.display="flex";
+  hubActive=true;
+  scrollTo({top:0});
   render();
 }
-
-function goHome() {
-  hub.style.display = "none";
-  landing.style.display = "flex";
-  homeBtn.style.display = "none";
-  alpha.style.display = "none";
-  hubActive = false;
-  window.scrollTo({ top: 0 });
+function goHome(){
+  hub.style.display="none";
+  landing.style.display="flex";
+  homeBtn.style.display="none";
+  alpha.style.display="none";
+  hubActive=false;
+  scrollTo({top:0});
 }
 
-function render() {
+function render(){
   gamesEl.innerHTML="";
-  let currentLetter = "";
-  const q = search.value.toLowerCase();
-
+  const q=search.value.toLowerCase();
+  let currentLetter="";
   gamesData
-    .filter(g => g.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name))
-    .forEach(game => {
-      const letter = game.name[0].toUpperCase();
-      if (letter !== currentLetter) {
-        const sec = document.createElement("div");
+    .filter(g=>g.name.toLowerCase().includes(q))
+    .sort((a,b)=>{
+      const aL=/^[a-z]/i.test(a.name);
+      const bL=/^[a-z]/i.test(b.name);
+      if(aL&&!bL) return -1;
+      if(!aL&&bL) return 1;
+      return a.name.localeCompare(b.name,undefined,{numeric:true});
+    })
+    .forEach(game=>{
+      const letter=/^[a-z]/i.test(game.name)
+        ? game.name[0].toUpperCase()
+        : "#";
+      if(letter!==currentLetter){
+        const sec=document.createElement("div");
         sec.className="section";
         sec.id="sec-"+letter;
         sec.textContent=letter;
         gamesEl.appendChild(sec);
-        currentLetter = letter;
+        currentLetter=letter;
       }
-
-      const card = document.createElement("div");
+      const card=document.createElement("div");
       card.className="card";
-      card.innerHTML = `<h3>${game.name}</h3>`;
-      card.onclick = () => window.open(game.url,"_blank");
+      card.innerHTML=`
+        <h3>${prettifyName(game.name)}</h3>
+        <p>Instant play · Fullscreen</p>`;
+      card.onclick=()=>open(game.url,"_blank");
       gamesEl.appendChild(card);
     });
-
-  document.getElementById("count").textContent = gamesData.length;
+  document.getElementById("count").textContent=gamesData.length;
 }
 
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
+/* ALPHA */
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").forEach(l=>{
   const s=document.createElement("span");
   s.textContent=l;
   s.onclick=()=>{
     const el=document.getElementById("sec-"+l);
-    if(el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+    if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
   };
   alpha.appendChild(s);
 });
 
+/* SCROLL */
 addEventListener("scroll",()=>{
-  if(!hubActive) return;
-  progress.style.width =
-    (scrollY / (document.body.scrollHeight - innerHeight)) * 100 + "%";
-  topBtn.classList.toggle("show", scrollY > 400);
+  if(!hubActive){
+    topBtn.classList.remove("show");
+    return;
+  }
+  progress.style.width=
+    (scrollY/(document.body.scrollHeight-innerHeight))*100+"%";
+  topBtn.classList.toggle("show",scrollY>400);
+});
+
+/* KEYBOARD JUMP */
+addEventListener("keydown",e=>{
+  const el=document.getElementById("sec-"+e.key.toUpperCase());
+  if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
-
 </body>
 </html>
 
