@@ -252,7 +252,7 @@ document.getElementById("count").textContent=gamesData.length;
 enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
 
-/* BACK TO TOP — REAL FIX */
+/* BACK TO TOP */
 topBtn.addEventListener("click",()=>{
   window.scrollTo({top:0,behavior:"smooth"});
 });
@@ -321,9 +321,13 @@ function render(){
   alpha.appendChild(s);
 });
 
-/* SCROLL */
+/* SCROLL — HOTFIX */
 addEventListener("scroll",()=>{
-  if(!hubActive) return;
+  if(!hubActive){
+    topBtn.classList.remove("show");
+    progress.style.width="0%";
+    return;
+  }
   progress.style.width=
     (scrollY/(document.body.scrollHeight-innerHeight))*100+"%";
   topBtn.classList.toggle("show",scrollY>400);
