@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
-:root {
+:root{
   --bg:#020617;
   --card:#0f172a;
   --primary:#38bdf8;
@@ -199,7 +199,7 @@ footer a:hover{color:var(--primary)}
 <body>
 
 <div id="progress"></div>
-<button id="homeBtn" onclick="goHome()">HOME</button>
+<button id="homeBtn">HOME</button>
 
 <section id="landing">
   <div>
@@ -209,17 +209,17 @@ footer a:hover{color:var(--primary)}
       No downloads. No accounts. No filler.<br><br>
       Built for people who want games — not distractions.
     </p>
-    <button id="enterBtn" onclick="enterHub()">ENTER THE HUB</button>
+    <button id="enterBtn">ENTER THE HUB</button>
   </div>
 </section>
 
 <section id="hub">
-  <input id="search" placeholder="Search games…" oninput="render()" />
+  <input id="search" placeholder="Search games…" />
   <div id="games"></div>
 </section>
 
 <div id="alpha"></div>
-<div id="topBtn" onclick="scrollTo({top:0,behavior:'smooth'})">↑</div>
+<div id="topBtn">↑</div>
 
 <footer>
   <p>UGS Web Hub · Version 2.6</p>
@@ -240,9 +240,22 @@ const alpha=document.getElementById("alpha");
 const progress=document.getElementById("progress");
 const topBtn=document.getElementById("topBtn");
 const homeBtn=document.getElementById("homeBtn");
+const enterBtn=document.getElementById("enterBtn");
 
 let hubActive=false;
 const gamesData=window.rawGames||[];
+
+/* GAME COUNT (HOME SAFE) */
+document.getElementById("count").textContent=gamesData.length;
+
+/* NAV */
+enterBtn.onclick=enterHub;
+homeBtn.onclick=goHome;
+
+/* BACK TO TOP — REAL FIX */
+topBtn.addEventListener("click",()=>{
+  window.scrollTo({top:0,behavior:"smooth"});
+});
 
 function enterHub(){
   landing.style.display="none";
@@ -250,7 +263,7 @@ function enterHub(){
   homeBtn.style.display="block";
   alpha.style.display="flex";
   hubActive=true;
-  scrollTo({top:0});
+  window.scrollTo({top:0});
   render();
 }
 function goHome(){
@@ -259,7 +272,7 @@ function goHome(){
   homeBtn.style.display="none";
   alpha.style.display="none";
   hubActive=false;
-  scrollTo({top:0});
+  window.scrollTo({top:0});
 }
 
 function render(){
@@ -295,26 +308,22 @@ function render(){
       card.onclick=()=>open(game.url,"_blank");
       gamesEl.appendChild(card);
     });
-  document.getElementById("count").textContent=gamesData.length;
 }
 
-/* ALPHA */
+/* ALPHA NAV */
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").forEach(l=>{
   const s=document.createElement("span");
   s.textContent=l;
   s.onclick=()=>{
     const el=document.getElementById("sec-"+l);
-    if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+    if(el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
   };
   alpha.appendChild(s);
 });
 
 /* SCROLL */
 addEventListener("scroll",()=>{
-  if(!hubActive){
-    topBtn.classList.remove("show");
-    return;
-  }
+  if(!hubActive) return;
   progress.style.width=
     (scrollY/(document.body.scrollHeight-innerHeight))*100+"%";
   topBtn.classList.toggle("show",scrollY>400);
@@ -323,7 +332,7 @@ addEventListener("scroll",()=>{
 /* KEYBOARD JUMP */
 addEventListener("keydown",e=>{
   const el=document.getElementById("sec-"+e.key.toUpperCase());
-  if(el) scrollTo({top:el.offsetTop-100,behavior:"smooth"});
+  if(el) window.scrollTo({top:el.offsetTop-100,behavior:"smooth"});
 });
 </script>
 </body>
