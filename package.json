@@ -1,7 +1,7 @@
 {
   "name": "ugs-web-hub",
   "version": "1.0.0",
-  "description": "UGS-Web-Hub is a high-scale, personal engineering project dedicated to the preservation and deployment of the Ultimate Game Stash. This repository functions as a centralized command center, hosting a staggering library of over 2,000+ browser-based titles.\r Built with a focus on speed, reliability, and accessibility, the UGS Web Hub transforms a massive local collection into a globally available web experience. By leveraging the power of GitHub Pages and optimized Git version control, this project ensures that the \"Stash\" remains organized, updated, and ready for instant play from any device.",
+  "description": "A browser-based hub for organizing, browsing, and launching the Ultimate Game Stash.",
   "main": "games-data.js",
   "scripts": {
     "test:e2e": "playwright test",
@@ -11,7 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/seanstonator-lang/UGS-Web-Hub.git"
   },
-  "keywords": [],
+  "keywords": [
+    "games",
+    "browser-games",
+    "github-pages",
+    "playwright"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
