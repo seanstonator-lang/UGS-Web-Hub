@@ -29,6 +29,22 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games')).toContainText(/mario/i);
   });
 
+  test('keeps filtered counts logically consistent after search and genre changes', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    const totalCount = Number(await page.locator('#count').textContent());
+    expect(totalCount).toBeGreaterThan(0);
+
+    await page.locator('#search').fill('mario');
+    await page.locator('#genreSelect').selectOption('platformer');
+
+    const visibleCount = Number(await page.locator('#visibleCount').textContent());
+    expect(visibleCount).toBeGreaterThanOrEqual(0);
+    expect(visibleCount).toBeLessThanOrEqual(totalCount);
+    expect(await page.locator('#games .card').count()).toBe(visibleCount);
+  });
+
   test('changes genre from the dropdown and updates summary', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
@@ -78,5 +94,81 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#search')).toHaveValue('');
     await expect(page.locator('#genreSelect')).toHaveValue('all');
     await expect(page.locator('#genreSummaryText')).toHaveText(/All Games/i);
+  });
+
+  test('shows the empty-state spotlight when no games match the search', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await page.locator('#search').fill('zzzz-nothing-should-match-this');
+
+    await expect(page.locator('#visibleCount')).toHaveText('0');
+    await expect(page.locator('#games .card')).toHaveCount(0);
+    await expect(page.locator('#spotlightTitle')).toHaveText(/No Matches Found/i);
+    await expect(page.locator('#spotlightMeta')).toContainText(/Try another search/i);
+    await expect(page.getByRole('button', { name: /No Launch/i })).toBeDisabled();
+  });
+
+  test('loads the privacy policy page with hub navigation links', async ({ page }) => {
+    await page.goto('/privacy.html');
+
+    await expect(page).toHaveTitle(/Privacy Policy \| UGS Web Hub/i);
+    await expect(page.getByRole('heading', { name: /Privacy Policy/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Last Updated/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Back to Hub/i })).toHaveAttribute('href', 'index.html');
+    await expect(page.getByRole('link', { name: /Contact Us/i })).toHaveAttribute('href', 'contact.html');
+  });
+
+  test('loads the contact page with the support form wired up', async ({ page }) => {
+    await page.goto('/contact.html');
+
+    await expect(page).toHaveTitle(/Contact Us \| UGS Web Hub/i);
+    await expect(page.getByRole('heading', { name: /Contact UGS Web Hub/i })).toBeVisible();
+    await expect(page.locator('form')).toHaveAttribute('action', /formspree\.io\/f\/mzdvropy/);
+    await expect(page.locator('#email')).toHaveAttribute('type', 'email');
+    await expect(page.locator('#message')).toBeVisible();
+    await expect(page.getByRole('link', { name: /Back to Hub/i })).toHaveAttribute('href', 'index.html');
+  });
+
+  test('homepage footer links open the support pages', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('link', { name: /Privacy Policy/i }).click();
+    await expect(page).toHaveURL(/\/privacy\.html$/i);
+    await expect(page.getByRole('heading', { name: /Privacy Policy/i })).toBeVisible();
+
+    await page.goto('/');
+    await page.getByRole('link', { name: /Contact Us/i }).click();
+    await expect(page).toHaveURL(/\/contact\.html$/i);
+    await expect(page.getByRole('heading', { name: /Contact UGS Web Hub/i })).toBeVisible();
+  });
+
+  test('back to hub links return from support pages to the homepage', async ({ page }) => {
+    await page.goto('/privacy.html');
+    await page.getByRole('link', { name: /Back to Hub/i }).click();
+    await expect(page).toHaveURL(/\/index\.html$/i);
+    await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
+
+    await page.goto('/contact.html');
+    await page.getByRole('link', { name: /Back to Hub/i }).click();
+    await expect(page).toHaveURL(/\/index\.html$/i);
+    await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
+  });
+
+  test('direct game pages load their embedded player shell', async ({ page }) => {
+    const response = await page.goto('/games/cl1on1soccer.html');
+
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveTitle(/really cool flash game/i);
+    await expect(page.locator('#flash-container')).toBeVisible();
+    await expect(page.locator('#box-top')).toBeVisible();
+    await expect(page.locator('script[src*="ruffle"]')).toHaveCount(1);
+  });
+
+  test('missing pages return the current 404 response', async ({ page }) => {
+    const response = await page.goto('/missing-page.html');
+
+    expect(response?.status()).toBe(404);
+    await expect(page.locator('body')).toHaveText('Not found');
   });
 });
