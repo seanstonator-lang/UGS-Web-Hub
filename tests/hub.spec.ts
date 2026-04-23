@@ -109,6 +109,17 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('button', { name: /No Launch/i })).toBeDisabled();
   });
 
+  test('quick-start collections reshape the hub without typing a search', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await page.getByRole('button', { name: /Brain Burn/i }).click();
+
+    await expect(page.locator('#genreSummaryText')).toHaveText(/Brain Burn/i);
+    await expect(page.locator('#visibleCount')).not.toHaveText('2222');
+    await expect(page.locator('#games .card')).toHaveCount(Number(await page.locator('#visibleCount').textContent()));
+  });
+
   test('saves favorites and filters the hub to the saved lane', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
@@ -137,6 +148,24 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games .card').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
   });
 
+  test('surprise favorites launches from the saved pool', async ({ page, context }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    const firstCard = page.locator('#games .card').first();
+    const title = (await firstCard.locator('h3').textContent())?.trim();
+    await firstCard.getByRole('button', { name: /Add to favorites/i }).click();
+
+    const [popup] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: /Surprise Favorites/i }).click(),
+    ]);
+
+    await popup.waitForLoadState('domcontentloaded');
+    await expect(page.locator('#recentList')).toContainText(title || '');
+    await popup.close();
+  });
+
   test('tracks recently played games and lets you clear the list', async ({ page, context }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
@@ -158,8 +187,30 @@ test.describe('UGS Web Hub', () => {
 
     await expect(page.locator('#recentList')).toContainText(title || '');
     await page.getByRole('button', { name: /Clear Recent/i }).click();
-    await expect(page.locator('#recentList')).toContainText(/Launch a few games/i);
+    await expect(page.locator('#recentList')).toContainText(/Only your last 3 runs stay pinned here/i);
     await expect(page.getByRole('button', { name: /Clear Recent/i })).toBeDisabled();
+  });
+
+  test('keeps only the last three recently played games', async ({ page, context }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    const titles: string[] = [];
+    for (let i = 0; i < 4; i += 1) {
+      const card = page.locator('#games .card').nth(i);
+      titles.push(((await card.locator('h3').textContent()) || '').trim());
+      const [popup] = await Promise.all([
+        context.waitForEvent('page'),
+        card.click(),
+      ]);
+      await popup.close();
+    }
+
+    await expect(page.locator('#recentList .recentItem')).toHaveCount(3);
+    await expect(page.locator('#recentList')).toContainText(titles[3]);
+    await expect(page.locator('#recentList')).toContainText(titles[2]);
+    await expect(page.locator('#recentList')).toContainText(titles[1]);
+    await expect(page.locator('#recentList')).not.toContainText(titles[0]);
   });
 
   test('loads the privacy policy page with hub navigation links', async ({ page }) => {

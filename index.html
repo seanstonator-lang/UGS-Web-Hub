@@ -417,6 +417,48 @@ a{color:inherit}
   margin-top:18px;
   align-items:start;
 }
+.quickCollections{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+.collectionGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.collectionBtn{
+  min-height:58px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.collectionBtn strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:.88rem;
+}
+.collectionBtn span{
+  display:block;
+  color:var(--muted);
+  font-size:.76rem;
+  line-height:1.4;
+}
+.collectionBtn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.18);
+}
+.collectionBtn.is-active{
+  border-color:rgba(255,255,255,.26);
+  background:linear-gradient(135deg,rgba(119,168,255,.16),rgba(94,234,212,.12));
+  box-shadow:0 10px 28px rgba(0,0,0,.22);
+}
 .controlGroup{
   display:grid;
   gap:10px;
@@ -620,6 +662,12 @@ a{color:inherit}
   color:var(--muted);
   font-size:.9rem;
   line-height:1.6;
+}
+.recentMeta{
+  color:var(--muted);
+  font-size:.78rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
 .chipRow{
   display:flex;
@@ -1009,13 +1057,7 @@ footer a:hover{color:var(--secondary)}
     padding:92px 16px 90px;
   }
   #alpha{
-    left:50%;
-    top:auto;
-    bottom:12px;
-    transform:translateX(-50%);
-    flex-direction:row;
-    max-width:calc(100vw - 24px);
-    overflow:auto hidden;
+    display:none !important;
   }
 }
 
@@ -1034,15 +1076,22 @@ footer a:hover{color:var(--secondary)}
     padding:92px 16px 90px;
   }
   #themeFilters,
-  .hubMeta{
+  .hubMeta,
+  .collectionGrid{
     grid-template-columns:1fr;
   }
   .actionRow,
-  .spotlightActions{
+  .spotlightActions,
+  .recentHeader,
+  .recentItem{
     flex-direction:column;
+    align-items:stretch;
   }
   .actionBtn{
     width:100%;
+  }
+  .recentLaunchBtn{
+    min-width:0;
   }
   #games{
     grid-template-columns:1fr;
@@ -1127,6 +1176,7 @@ footer a:hover{color:var(--secondary)}
         <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
         <div class="spotlightActions">
           <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
+          <button class="actionBtn" id="favoriteSurpriseBtn" type="button">Surprise Favorites</button>
           <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
           <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
         </div>
@@ -1147,6 +1197,10 @@ footer a:hover{color:var(--secondary)}
     <div class="hubSearchCard">
       <label class="searchLabel" for="search">Search the stack</label>
   <input id="search" placeholder="Search games…" />
+      <div class="quickCollections">
+        <span class="controlLabel">Quick Start</span>
+        <div class="collectionGrid" id="collectionGrid"></div>
+      </div>
       <div class="controlsStack">
         <div class="controlGroup">
           <span class="controlLabel">Browse Controls</span>
@@ -1212,10 +1266,12 @@ const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
 const genreSelectEl=document.getElementById("genreSelect");
 const themeFiltersEl=document.getElementById("themeFilters");
+const collectionGridEl=document.getElementById("collectionGrid");
 const activeGenreLabelEl=document.getElementById("activeGenreLabel");
 const activeThemeLabelEl=document.getElementById("activeThemeLabel");
 const genreSummaryTextEl=document.getElementById("genreSummaryText");
 const randomBtn=document.getElementById("randomBtn");
+const favoriteSurpriseBtn=document.getElementById("favoriteSurpriseBtn");
 const favoritesFilterBtn=document.getElementById("favoritesFilterBtn");
 const resetBtn=document.getElementById("resetBtn");
 const spotlightTitleEl=document.getElementById("spotlightTitle");
@@ -1229,11 +1285,12 @@ const recentListEl=document.getElementById("recentList");
 let hubActive=false;
 let activeGenre="all";
 let activeTheme="default";
+let activeCollection="all";
 let favoritesOnly=false;
 let spotlightGame=null;
 const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
 const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
-const MAX_RECENT_GAMES=10;
+const MAX_RECENT_GAMES=3;
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
 const TITLE_SMALL_WORDS=new Set([
@@ -1279,6 +1336,38 @@ const THEME_OPTIONS=[
   {key:"sunset-pop",label:"Sunset Pop"},
   {key:"mono-arcade",label:"Mono Arcade"}
 ];
+const COLLECTION_OPTIONS=[
+  {
+    key:"all",
+    label:"Full Vault",
+    blurb:"Everything online and ready.",
+    match:()=>true
+  },
+  {
+    key:"quick-hits",
+    label:"Quick Hits",
+    blurb:"Fast wins and instant fun.",
+    match:game=>["arcade","platformer","sports"].includes(game.genre.name)
+  },
+  {
+    key:"chaos-mode",
+    label:"Chaos Mode",
+    blurb:"Pressure, weirdness, and noise.",
+    match:game=>["action","horror","sandbox"].includes(game.genre.name)
+  },
+  {
+    key:"racing-heat",
+    label:"Racing Heat",
+    blurb:"Speed first. Brakes optional.",
+    match:game=>game.genre.name==="racing"
+  },
+  {
+    key:"brain-burn",
+    label:"Brain Burn",
+    blurb:"Puzzles and strategy locks.",
+    match:game=>["puzzle","strategy"].includes(game.genre.name)
+  }
+];
 const favoriteUrls=loadFavorites();
 let recentGameUrls=loadRecentGames();
 const normalizedGames=gamesData.map(game=>{
@@ -1309,6 +1398,7 @@ genreSelectEl.addEventListener("change",()=>{
   render();
 });
 randomBtn.addEventListener("click",launchRandomGame);
+favoriteSurpriseBtn.addEventListener("click",launchFavoriteSurprise);
 favoritesFilterBtn.addEventListener("click",()=>{
   favoritesOnly=!favoritesOnly;
   render();
@@ -1330,6 +1420,7 @@ spotlightBtn.addEventListener("click",()=>{
 });
 renderFilterControls();
 renderThemeControls();
+renderCollectionControls();
 applyTheme(activeTheme);
 
 /* BACK TO TOP */
@@ -1402,6 +1493,10 @@ function saveRecentGames(){
   }
 }
 
+function getCollectionOption(key){
+  return COLLECTION_OPTIONS.find(option=>option.key===key)||COLLECTION_OPTIONS[0];
+}
+
 function trackRecentGame(url){
   recentGameUrls=[url,...recentGameUrls.filter(item=>item!==url)].slice(0,MAX_RECENT_GAMES);
   saveRecentGames();
@@ -1416,6 +1511,23 @@ function launchGame(game){
   trackRecentGame(game.url);
   renderRecentGames();
   open(game.url,"_blank");
+}
+
+function launchFavoriteSurprise(){
+  const favoritesPool=normalizedGames.filter(game=>isFavorite(game.url));
+  if(!favoritesPool.length){
+    render();
+    return;
+  }
+  const choice=favoritesPool[Math.floor(Math.random()*favoritesPool.length)];
+  spotlightGame=choice;
+  spotlightTitleEl.textContent=choice.displayName;
+  spotlightMetaEl.textContent=`Favorite chaos engaged: ${choice.genre.label}. ${choice.genre.blurb}`;
+  spotlightFavoriteBtn.disabled=false;
+  spotlightFavoriteBtn.textContent="Remove Favorite";
+  spotlightBtn.disabled=false;
+  spotlightBtn.textContent="Launch Favorite Surprise";
+  launchGame(choice);
 }
 
 function isFavorite(url){
@@ -1516,8 +1628,9 @@ function render(){
   renderRecentGames();
   const q=normalizeSearchText(search.value);
   let currentLetter="";
+  const collection=getCollectionOption(activeCollection);
   const filteredGames=normalizedGames
-    .filter(g=>(!favoritesOnly||isFavorite(g.url))&&(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
+    .filter(g=>collection.match(g)&&(!favoritesOnly||isFavorite(g.url))&&(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
     .sort((a,b)=>{
       const aL=/^[a-z]/i.test(a.displayName);
       const bL=/^[a-z]/i.test(b.displayName);
@@ -1534,11 +1647,16 @@ function render(){
   activeThemeLabelEl.textContent=THEME_OPTIONS.find(theme=>theme.key===activeTheme)?.label||"Default";
   genreSummaryTextEl.textContent=favoritesOnly
     ? "Favorites"
-    : (activeGenre==="all"
+    : (activeCollection!=="all"
+      ? collection.label
+      : (activeGenre==="all"
       ? "All Games"
-      : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre));
+      : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre)));
   favoritesFilterBtn.textContent=`Favorites Only: ${favoritesOnly ? "On" : "Off"}`;
   favoritesFilterBtn.classList.toggle("is-active",favoritesOnly);
+  favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
+  favoriteSurpriseBtn.textContent=favoriteUrls.size===0 ? "Save Favorites First" : "Surprise Favorites";
+  renderCollectionChipStates();
   updateSpotlight(filteredGames);
 
   filteredGames.forEach((game,index)=>{
@@ -1581,7 +1699,7 @@ function renderRecentGames(){
   clearRecentBtn.disabled=recentGameUrls.length===0;
 
   if(!recentGameUrls.length){
-    recentListEl.innerHTML='<div class="recentEmpty">Launch a few games and your recent run will stack here for instant replay.</div>';
+    recentListEl.innerHTML='<div class="recentEmpty">Launch any game to start your recent stack. Only your last 3 runs stay pinned here for quick replay.</div>';
     return;
   }
 
@@ -1595,6 +1713,7 @@ function renderRecentGames(){
         <div>
           <strong>${game.displayName}</strong>
           <span>${game.genre.label} locked in for quick relaunch.</span>
+          <div class="recentMeta">Recent lane of 3 max</div>
         </div>
         <button class="actionBtn recentLaunchBtn" type="button">Play Again</button>`;
       item.querySelector("button").onclick=()=>launchGame(game);
@@ -1635,6 +1754,33 @@ function renderThemeControls(){
   });
 }
 
+function renderCollectionControls(){
+  collectionGridEl.innerHTML="";
+  COLLECTION_OPTIONS.forEach(option=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className=`collectionBtn${option.key===activeCollection ? " is-active" : ""}`;
+    button.dataset.collectionKey=option.key;
+    button.innerHTML=`<strong>${option.label}</strong><span>${option.blurb}</span>`;
+    button.onclick=()=>{
+      activeCollection=option.key;
+      favoritesOnly=false;
+      search.value="";
+      activeGenre="all";
+      genreSelectEl.value="all";
+      renderCollectionChipStates();
+      render();
+    };
+    collectionGridEl.appendChild(button);
+  });
+}
+
+function renderCollectionChipStates(){
+  collectionGridEl.querySelectorAll(".collectionBtn").forEach(button=>{
+    button.classList.toggle("is-active",button.dataset.collectionKey===activeCollection);
+  });
+}
+
 function updateChipStates(){
   themeFiltersEl.querySelectorAll(".themeChip").forEach(chip=>{
     chip.classList.toggle("is-active",chip.dataset.themeKey===activeTheme);
@@ -1652,10 +1798,14 @@ function applyTheme(themeKey){
 function updateSpotlight(filteredGames){
   if(!filteredGames.length){
     spotlightGame=null;
+    const collection=getCollectionOption(activeCollection);
     spotlightTitleEl.textContent=favoritesOnly ? "No Favorite Matches" : "No Matches Found";
     spotlightMetaEl.textContent=favoritesOnly
-      ? "Save a few titles, then use Favorites Only to build your own rapid-launch lane."
-      : "Try another search, switch the genre dropdown, or reset the view to reopen the full vault.";
+      ? "Save a few titles, then use Favorites Only or Surprise Favorites to build your own rapid-launch lane."
+      : (activeCollection!=="all"
+        ? `Nothing landed in ${collection.label} with the current filters. Hit Reset View or switch to another quick-start lane.`
+        : "Try another search, switch the genre dropdown, or reset the view to reopen the full vault.");
+    favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
     spotlightFavoriteBtn.disabled=true;
     spotlightFavoriteBtn.textContent="Save to Favorites";
     spotlightBtn.disabled=true;
@@ -1669,6 +1819,8 @@ function updateSpotlight(filteredGames){
     ? "Saved in your favorites lane."
     : "Not saved yet. Lock it in if it deserves a permanent slot.";
   spotlightMetaEl.textContent=`${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view. ${favoriteMeta}`;
+  favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
+  favoriteSurpriseBtn.textContent=favoriteUrls.size===0 ? "Save Favorites First" : "Surprise Favorites";
   spotlightFavoriteBtn.disabled=false;
   spotlightFavoriteBtn.textContent=isFavorite(spotlightGame.url) ? "Remove Favorite" : "Save to Favorites";
   spotlightBtn.disabled=false;
@@ -1677,7 +1829,8 @@ function updateSpotlight(filteredGames){
 
 function launchRandomGame(){
   const q=normalizeSearchText(search.value);
-  const pool=normalizedGames.filter(game=>(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
+  const collection=getCollectionOption(activeCollection);
+  const pool=normalizedGames.filter(game=>collection.match(game)&&(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
   if(!pool.length){
     updateSpotlight([]);
     return;
@@ -1695,8 +1848,10 @@ function launchRandomGame(){
 function resetHubControls(){
   search.value="";
   activeGenre="all";
+  activeCollection="all";
   favoritesOnly=false;
   genreSelectEl.value="all";
+  renderCollectionChipStates();
   render();
 }
 
