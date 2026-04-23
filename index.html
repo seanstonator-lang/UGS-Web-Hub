@@ -426,12 +426,6 @@ a{color:inherit}
   text-transform:uppercase;
   color:var(--secondary);
 }
-.controlSubgrid{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:10px;
-  align-items:end;
-}
 .selectWrap{
   position:relative;
 }
@@ -463,6 +457,26 @@ a{color:inherit}
   outline:none;
   border-color:var(--focus-border);
   box-shadow:0 0 0 4px var(--focus-ring);
+}
+.genrePanel{
+  display:grid;
+  gap:10px;
+}
+.genreSummary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:.82rem;
+}
+.genreSummary strong{
+  color:var(--text);
+  font-size:.95rem;
 }
 .actionRow{
   display:flex;
@@ -858,9 +872,6 @@ footer a:hover{color:var(--secondary)}
   .controlsStack{
     grid-template-columns:1fr;
   }
-  .controlSubgrid{
-    grid-template-columns:1fr;
-  }
   #themeFilters{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
@@ -985,11 +996,14 @@ footer a:hover{color:var(--secondary)}
       <div class="controlsStack">
         <div class="controlGroup">
           <span class="controlLabel">Browse Controls</span>
-          <div class="controlSubgrid">
+          <div class="genrePanel">
             <div class="selectWrap">
               <select class="controlSelect" id="genreSelect" aria-label="Filter games by genre"></select>
             </div>
-            <button class="actionBtn primary" id="randomBtn" type="button">Random Pick</button>
+            <div class="genreSummary">
+              <span>Current lane</span>
+              <strong id="genreSummaryText">All Games</strong>
+            </div>
           </div>
           <div class="actionRow">
             <button class="actionBtn" id="resetBtn" type="button">Reset View</button>
@@ -1011,6 +1025,7 @@ footer a:hover{color:var(--secondary)}
         <h3 id="spotlightTitle">Catalog Ready</h3>
         <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
         <div class="spotlightActions">
+          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
           <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
         </div>
       </div>
@@ -1051,6 +1066,7 @@ const genreSelectEl=document.getElementById("genreSelect");
 const themeFiltersEl=document.getElementById("themeFilters");
 const activeGenreLabelEl=document.getElementById("activeGenreLabel");
 const activeThemeLabelEl=document.getElementById("activeThemeLabel");
+const genreSummaryTextEl=document.getElementById("genreSummaryText");
 const randomBtn=document.getElementById("randomBtn");
 const resetBtn=document.getElementById("resetBtn");
 const spotlightTitleEl=document.getElementById("spotlightTitle");
@@ -1273,6 +1289,9 @@ function render(){
     ? "All"
     : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   activeThemeLabelEl.textContent=THEME_OPTIONS.find(theme=>theme.key===activeTheme)?.label||"Default";
+  genreSummaryTextEl.textContent=activeGenre==="all"
+    ? "All Games"
+    : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   updateSpotlight(filteredGames);
 
   filteredGames.forEach((game,index)=>{
