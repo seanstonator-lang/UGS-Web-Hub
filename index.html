@@ -345,13 +345,13 @@ a{color:inherit}
 /* HUB */
 #hub{
   display:none;
-  padding:112px 24px 90px;
+  padding:112px 24px 90px 84px;
   max-width:1440px;
   margin:auto;
 }
 .hubIntro{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(280px,420px);
+  grid-template-columns:minmax(0,1fr) minmax(360px,520px);
   gap:22px;
   margin-bottom:30px;
 }
@@ -406,7 +406,7 @@ a{color:inherit}
 }
 .controlsStack{
   display:grid;
-  grid-template-columns:minmax(0,1.35fr) minmax(250px,.85fr);
+  grid-template-columns:1fr;
   gap:16px;
   margin-top:18px;
   align-items:start;
@@ -540,7 +540,7 @@ a{color:inherit}
 }
 #themeFilters{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
 }
 .filterChip,
@@ -561,7 +561,12 @@ a{color:inherit}
 }
 .themeChip{
   width:100%;
-  text-align:center;
+  text-align:left;
+  border-radius:16px;
+  min-height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
 }
 .filterChip:hover,
 .themeChip:hover{
@@ -757,7 +762,7 @@ a{color:inherit}
 /* ALPHA */
 #alpha{
   position:fixed;
-  left:18px;
+  left:10px;
   top:50%;
   transform:translateY(-50%);
   background:var(--alpha-bg);
@@ -877,6 +882,9 @@ footer a:hover{color:var(--secondary)}
   }
   #landing{
     padding-top:92px;
+  }
+  #hub{
+    padding:92px 16px 90px;
   }
   #alpha{
     left:50%;
