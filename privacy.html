@@ -1,26 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Privacy Policy - UGS Web Hub</title>
-    <style>body{background:#020617;color:white;font-family:sans-serif;padding:40px;line-height:1.6;max-width:800px;margin:auto;} a{color:#38bdf8;}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | UGS Web Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:rgba(10,22,40,.86);
+      --panel-strong:#102038;
+      --text:#f4fbff;
+      --muted:#9bb4cf;
+      --primary:#5eead4;
+      --secondary:#77a8ff;
+      --accent:#ffd166;
+      --line:rgba(119,168,255,.18);
+      --shadow:0 24px 80px rgba(0,0,0,.34);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:"Space Grotesk","Trebuchet MS",sans-serif;
+      background:
+        radial-gradient(circle at top left,rgba(94,234,212,.18),transparent 26%),
+        radial-gradient(circle at 88% 12%,rgba(119,168,255,.18),transparent 22%),
+        linear-gradient(145deg,#040b16 0%,#0a1425 48%,#030812 100%);
+    }
+    .page{
+      width:min(980px,calc(100vw - 32px));
+      margin:40px auto;
+    }
+    .shell{
+      border-radius:32px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .hero{
+      padding:34px 34px 28px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(119,168,255,.12),rgba(94,234,212,.05));
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);
+      color:var(--accent);
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--secondary),var(--primary));
+      box-shadow:0 0 14px rgba(94,234,212,.45);
+    }
+    h1{
+      margin:18px 0 12px;
+      font-family:"Archivo Expanded","Arial Black",sans-serif;
+      font-size:clamp(2rem,5vw,3.6rem);
+      line-height:1;
+      text-transform:uppercase;
+    }
+    .hero p{
+      max-width:44rem;
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:1rem;
+    }
+    .content{
+      padding:30px 34px 34px;
+      display:grid;
+      gap:18px;
+    }
+    .card{
+      padding:22px;
+      border-radius:24px;
+      background:var(--panel);
+      border:1px solid var(--line);
+    }
+    h2{
+      margin:0 0 10px;
+      font-size:1.05rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--secondary);
+    }
+    p, li{
+      color:var(--muted);
+      line-height:1.75;
+    }
+    ul{
+      margin:10px 0 0;
+      padding-left:20px;
+    }
+    a{
+      color:var(--primary);
+      text-decoration:none;
+    }
+    a:hover{
+      color:var(--accent);
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:10px;
+    }
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:52px;
+      padding:0 22px;
+      border-radius:999px;
+      border:1px solid rgba(119,168,255,.28);
+      background:linear-gradient(135deg,rgba(119,168,255,.16),rgba(94,234,212,.14));
+      color:var(--text);
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    @media (max-width:700px){
+      .page{width:min(980px,calc(100vw - 20px));margin:20px auto}
+      .hero,.content{padding:22px}
+      .card{padding:18px}
+    }
+  </style>
 </head>
 <body>
-    <h1>Privacy Policy</h1>
-    <p>Last updated: February 01, 2026</p>
-    
-    <p>At <strong>UGS Web Hub</strong>, accessible from ugswebhub.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by UGS Web Hub and how we use it.</p>
-
-    <h2>Google AdSense & DoubleClick Cookie</h2>
-    <p>Google is one of the third-party vendors on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to ugswebhub.com and other sites on the internet.</p>
-    <p>Users may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com">https://policies.google.com</a></p>
-
-    <h2>Third-Party Privacy Policies</h2>
-    <p>UGS Web Hub's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information.</p>
-
-    <h2>Consent</h2>
-    <p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
-    <br>
-    <a href="index.html">← Back to Hub</a>
+  <main class="page">
+    <section class="shell">
+      <header class="hero">
+        <span class="eyebrow">Policy</span>
+        <h1>Privacy Policy</h1>
+        <p>UGS Web Hub is built to get people into games quickly. This page covers what limited data may be collected when you use the site and how third-party services may interact with that visit.</p>
+      </header>
+      <div class="content">
+        <section class="card">
+          <h2>Last Updated</h2>
+          <p>April 22, 2026</p>
+        </section>
+        <section class="card">
+          <h2>What We Collect</h2>
+          <p>UGS Web Hub does not ask you to create an account to browse the game library. Standard website data such as analytics, cookies, or ad-related information may still be collected by the services used to operate the site.</p>
+        </section>
+        <section class="card">
+          <h2>Advertising and Cookies</h2>
+          <p>Third-party vendors such as Google may use cookies, including DART cookies, to serve ads based on previous visits to this site or other sites on the web.</p>
+          <p>You can learn more or manage ad personalization through <a href="https://policies.google.com" target="_blank" rel="noreferrer">Google's policies page</a>.</p>
+        </section>
+        <section class="card">
+          <h2>Third-Party Policies</h2>
+          <p>This privacy policy applies to UGS Web Hub itself and does not override the privacy practices of advertisers, analytics providers, embedded game hosts, or other third-party services linked from the site.</p>
+          <ul>
+            <li>Those services may collect data under their own policies.</li>
+            <li>You should review their terms directly if you want detail on their storage or tracking behavior.</li>
+          </ul>
+        </section>
+        <section class="card">
+          <h2>Your Consent</h2>
+          <p>By using UGS Web Hub, you consent to this privacy policy and agree to its terms.</p>
+          <div class="actions">
+            <a class="button" href="index.html">Back to Hub</a>
+            <a class="button" href="contact.html">Contact Us</a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,61 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Support | UGS Hub</title>
-    <style>
-        body {
-            background: #020617; color: white; font-family: 'Inter', sans-serif;
-            display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;
-        }
-        .form-container {
-            background: rgba(15, 23, 42, 0.7); padding: 40px; border-radius: 24px;
-            border: 2px solid rgba(56, 189, 248, 0.1); width: 90%; max-width: 450px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-        }
-        h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-top: 0; }
-        label { display: block; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; font-weight: bold; }
-        
-        input, textarea {
-            width: 100%; padding: 12px; margin-top: 8px; background: #0f172a;
-            border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box;
-        }
-        input:focus, textarea:focus { border-color: #38bdf8; outline: none; }
-
-        button {
-            width: 100%; margin-top: 30px; padding: 15px; background: #38bdf8;
-            border: none; border-radius: 50px; color: #020617; font-weight: 900;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
-        button:hover { background: #818cf8; transform: scale(1.02); box-shadow: 0 0 20px #38bdf8; }
-        
-        .back-link { display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 0.8rem; }
-        .back-link:hover { color: #38bdf8; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | UGS Web Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:rgba(10,22,40,.86);
+      --panel-soft:rgba(15,31,56,.84);
+      --text:#f4fbff;
+      --muted:#9bb4cf;
+      --primary:#5eead4;
+      --secondary:#77a8ff;
+      --accent:#ffd166;
+      --line:rgba(119,168,255,.18);
+      --shadow:0 24px 80px rgba(0,0,0,.34);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:"Space Grotesk","Trebuchet MS",sans-serif;
+      background:
+        radial-gradient(circle at top left,rgba(94,234,212,.18),transparent 26%),
+        radial-gradient(circle at 88% 12%,rgba(119,168,255,.18),transparent 22%),
+        linear-gradient(145deg,#040b16 0%,#0a1425 48%,#030812 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .shell{
+      width:min(1080px,100%);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,430px);
+      gap:24px;
+    }
+    .panel{
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .copy{
+      padding:34px;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);
+      color:var(--accent);
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--secondary),var(--primary));
+      box-shadow:0 0 14px rgba(94,234,212,.45);
+    }
+    h1{
+      margin:18px 0 12px;
+      font-family:"Archivo Expanded","Arial Black",sans-serif;
+      font-size:clamp(2rem,5vw,3.4rem);
+      line-height:1;
+      text-transform:uppercase;
+    }
+    .copy p{
+      color:var(--muted);
+      line-height:1.75;
+      margin:0 0 16px;
+    }
+    .signalList{
+      display:grid;
+      gap:14px;
+      margin-top:26px;
+    }
+    .signal{
+      padding:18px;
+      border-radius:22px;
+      background:var(--panel-soft);
+      border:1px solid var(--line);
+    }
+    .signal strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--secondary);
+      font-size:.92rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .signal span{
+      color:var(--text);
+      line-height:1.6;
+    }
+    .formWrap{
+      padding:28px;
+      background:var(--panel);
+    }
+    .formWrap h2{
+      margin:0 0 8px;
+      font-size:1.2rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:var(--secondary);
+    }
+    .formWrap p{
+      margin:0 0 20px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    label{
+      display:block;
+      margin:16px 0 8px;
+      font-size:.78rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      font-weight:700;
+    }
+    input,textarea{
+      width:100%;
+      border:1px solid rgba(119,168,255,.18);
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:15px 16px;
+      font:inherit;
+      resize:vertical;
+    }
+    input::placeholder,textarea::placeholder{
+      color:rgba(244,251,255,.44);
+    }
+    input:focus,textarea:focus{
+      outline:none;
+      border-color:rgba(94,234,212,.4);
+      box-shadow:0 0 0 4px rgba(94,234,212,.08);
+    }
+    button,.button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:54px;
+      padding:0 22px;
+      border-radius:999px;
+      border:0;
+      background:linear-gradient(135deg,var(--secondary),var(--primary));
+      color:#04101d;
+      font:inherit;
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      cursor:pointer;
+      box-shadow:0 18px 40px rgba(119,168,255,.24);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    button:hover,.button:hover{
+      transform:translateY(-2px);
+      box-shadow:0 26px 52px rgba(119,168,255,.3);
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+    .button.secondary{
+      border:1px solid rgba(119,168,255,.28);
+      background:linear-gradient(135deg,rgba(119,168,255,.16),rgba(94,234,212,.14));
+      color:var(--text);
+      box-shadow:0 18px 40px rgba(8,20,37,.28);
+    }
+    @media (max-width:900px){
+      .shell{grid-template-columns:1fr}
+      body{padding:16px}
+    }
+    @media (max-width:640px){
+      .copy,.formWrap{padding:22px}
+    }
+  </style>
 </head>
 <body>
+  <main class="shell">
+    <section class="panel">
+      <div class="copy">
+        <span class="eyebrow">Support Channel</span>
+        <h1>Contact UGS Web Hub</h1>
+        <p>Use this form to report a bug, suggest a game, flag a broken title, or send any other issue that would make the hub better.</p>
+        <div class="signalList">
+          <div class="signal">
+            <strong>Report Bugs</strong>
+            <span>Broken launch, weird title, bad link, busted layout. Send it.</span>
+          </div>
+          <div class="signal">
+            <strong>Request Games</strong>
+            <span>If there is something missing from the library, this is the lane.</span>
+          </div>
+          <div class="signal">
+            <strong>Keep It Clear</strong>
+            <span>The more detail you include, the faster it is to track the issue down.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="panel formWrap">
+      <h2>Send a Message</h2>
+      <p>Messages go straight through the support form and then bounce back to the site when submitted.</p>
+      <form action="https://formspree.io/f/mzdvropy" method="POST">
+        <label for="email">Your Email</label>
+        <input id="email" type="email" name="email" placeholder="you@example.com" required>
 
-<div class="form-container">
-    <h2>Contact Support</h2>
-    <p style="color: #64748b; font-size: 0.9rem;">Request a game or report a bug.</p>
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" rows="6" placeholder="Tell us what broke, what you want added, or what should be improved." required></textarea>
 
-    <form action="https://formspree.io/f/mzdvropy" method="POST">
-        <label>YOUR EMAIL</label>
-        <input type="email" name="email" placeholder="titan@example.com" required>
+        <input type="hidden" name="_next" value="https://seanstonator-lang.github.io/UGS-Web-Hub/">
 
-        <label>YOUR MESSAGE</label>
-        <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
-
-        <!-- Use this to redirect users back to your site after they submit -->
-        <input type="hidden" name="_next" value="https://seanstonator-lang.github.io">
-
-        <button type="submit">Deploy Message</button>
-    </form>
-
-    <a href="index.html" class="back-link">← Back to Titan Hub</a>
-</div>
-
+        <div class="actions">
+          <button type="submit">Send Message</button>
+          <a class="button secondary" href="index.html">Back to Hub</a>
+        </div>
+      </form>
+    </section>
+  </main>
 </body>
 </html>
-

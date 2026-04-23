@@ -13,17 +13,17 @@
 
 <style>
 :root{
-  --bg:#120f0d;
-  --bg-alt:#201511;
-  --panel:rgba(32,19,15,.84);
-  --panel-solid:#241611;
-  --card:rgba(43,27,20,.9);
-  --card-border:rgba(255,210,160,.14);
-  --text:#fff8ef;
-  --muted:#d0b49a;
-  --primary:#ff8a3d;
-  --secondary:#ffd166;
-  --accent:#7ae7c7;
+  --bg:#07111f;
+  --bg-alt:#102038;
+  --panel:rgba(10,22,40,.84);
+  --panel-solid:#11223b;
+  --card:rgba(13,26,47,.92);
+  --card-border:rgba(113,212,255,.15);
+  --text:#f4fbff;
+  --muted:#9bb4cf;
+  --primary:#5eead4;
+  --secondary:#77a8ff;
+  --accent:#ffd166;
   --shadow:0 24px 80px rgba(0,0,0,.36);
 }
 *{box-sizing:border-box}
@@ -34,10 +34,10 @@ body{
   font-family:"Space Grotesk","Trebuchet MS",sans-serif;
   overflow-x:hidden;
   background:
-    radial-gradient(circle at top left,rgba(255,138,61,.24),transparent 30%),
-    radial-gradient(circle at 85% 12%,rgba(122,231,199,.16),transparent 22%),
-    radial-gradient(circle at 50% 120%,rgba(255,209,102,.18),transparent 30%),
-    linear-gradient(145deg,#100d0c 0%,#1d130f 45%,#0e0a09 100%);
+    radial-gradient(circle at top left,rgba(94,234,212,.2),transparent 28%),
+    radial-gradient(circle at 85% 12%,rgba(119,168,255,.18),transparent 22%),
+    radial-gradient(circle at 50% 120%,rgba(255,209,102,.15),transparent 30%),
+    linear-gradient(145deg,#040b16 0%,#0a1425 46%,#030812 100%);
 }
 body::before,
 body::after{
@@ -53,14 +53,14 @@ body::before{
   height:28rem;
   top:-8rem;
   right:-7rem;
-  background:radial-gradient(circle,rgba(255,138,61,.24),transparent 68%);
+  background:radial-gradient(circle,rgba(119,168,255,.2),transparent 68%);
 }
 body::after{
   width:24rem;
   height:24rem;
   bottom:-7rem;
   left:-6rem;
-  background:radial-gradient(circle,rgba(122,231,199,.16),transparent 70%);
+  background:radial-gradient(circle,rgba(94,234,212,.18),transparent 70%);
 }
 a{color:inherit}
 .eyebrow{
@@ -83,7 +83,7 @@ a{color:inherit}
   height:8px;
   border-radius:999px;
   background:linear-gradient(135deg,var(--secondary),var(--primary));
-  box-shadow:0 0 18px rgba(255,209,102,.7);
+  box-shadow:0 0 18px rgba(94,234,212,.55);
 }
 .statRow{
   display:flex;
@@ -171,36 +171,41 @@ a{color:inherit}
   gap:14px;
   margin-top:30px;
 }
-#enterBtn{
+.heroActions > *{
   padding:18px 28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   font-family:inherit;
   font-size:.94rem;
   font-weight:700;
   letter-spacing:.14em;
   text-transform:uppercase;
   border-radius:999px;
+  text-decoration:none;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
+}
+#enterBtn{
   border:0;
   background:linear-gradient(135deg,var(--secondary),var(--primary));
-  color:#1a110d;
+  color:#04101d;
   cursor:pointer;
-  box-shadow:0 18px 40px rgba(255,138,61,.28);
-  transition:transform .25s ease, box-shadow .25s ease;
+  box-shadow:0 18px 40px rgba(119,168,255,.24);
 }
 #enterBtn:hover{
   transform:translateY(-2px);
-  box-shadow:0 26px 52px rgba(255,138,61,.34);
+  box-shadow:0 26px 52px rgba(119,168,255,.3);
 }
 .ghostBtn{
-  display:inline-flex;
-  align-items:center;
-  padding:18px 24px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(119,168,255,.28);
   color:var(--text);
-  text-decoration:none;
-  background:rgba(255,255,255,.04);
-  font-size:.94rem;
-  font-weight:700;
+  background:linear-gradient(135deg,rgba(119,168,255,.16),rgba(94,234,212,.14));
+  box-shadow:0 18px 40px rgba(8,20,37,.28);
+}
+.ghostBtn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(94,234,212,.4);
+  box-shadow:0 26px 52px rgba(8,20,37,.34);
 }
 .heroPanel{
   padding:28px;
@@ -370,22 +375,37 @@ a{color:inherit}
   overflow:hidden;
   animation:cardRise .45s ease both;
   animation-delay:calc(var(--card-index,0)*18ms);
+  --genre-rgb:94,234,212;
+  --genre-solid:var(--primary);
+  --genre-soft:rgba(94,234,212,.18);
 }
 .card::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(145deg,rgba(255,209,102,.12),transparent 40%,rgba(122,231,199,.08));
+  background:
+    radial-gradient(circle at top right,rgba(var(--genre-rgb),.26),transparent 36%),
+    linear-gradient(145deg,rgba(var(--genre-rgb),.18),transparent 45%,rgba(255,255,255,.04));
   opacity:0;
   transition:opacity .3s ease;
 }
 .card:hover{
   transform:translateY(-8px);
-  border-color:rgba(255,209,102,.34);
-  box-shadow:0 24px 42px rgba(0,0,0,.34);
-  background:rgba(56,33,24,.96);
+  border-color:rgba(var(--genre-rgb),.48);
+  box-shadow:0 24px 46px rgba(0,0,0,.34),0 0 0 1px rgba(var(--genre-rgb),.14);
+  background:linear-gradient(180deg,rgba(14,28,48,.98),rgba(8,18,33,.98));
 }
 .card:hover::before{opacity:1}
+.card.genre-action{--genre-rgb:255,106,136;--genre-solid:#ff6a88}
+.card.genre-racing{--genre-rgb:255,149,0;--genre-solid:#ff9500}
+.card.genre-puzzle{--genre-rgb:115,103,240;--genre-solid:#7367f0}
+.card.genre-strategy{--genre-rgb:0,196,180;--genre-solid:#00c4b4}
+.card.genre-sports{--genre-rgb:48,209,88;--genre-solid:#30d158}
+.card.genre-horror{--genre-rgb:255,59,48;--genre-solid:#ff3b30}
+.card.genre-arcade{--genre-rgb:255,209,102;--genre-solid:#ffd166}
+.card.genre-platformer{--genre-rgb:90,200,250;--genre-solid:#5ac8fa}
+.card.genre-adventure{--genre-rgb:167,139,250;--genre-solid:#a78bfa}
+.card.genre-sandbox{--genre-rgb:116,215,129;--genre-solid:#74d781}
 .cardTop,
 .cardFooter{
   position:relative;
@@ -399,11 +419,20 @@ a{color:inherit}
   border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.07);
-  color:var(--secondary);
+  color:var(--genre-solid);
   font-size:.7rem;
   font-weight:700;
   letter-spacing:.13em;
   text-transform:uppercase;
+}
+.cardTag::before{
+  content:"";
+  width:7px;
+  height:7px;
+  margin-right:8px;
+  border-radius:999px;
+  background:var(--genre-solid);
+  box-shadow:0 0 14px rgba(var(--genre-rgb),.55);
 }
 .card h3{
   margin:0;
@@ -429,7 +458,7 @@ a{color:inherit}
   border-radius:14px;
   display:grid;
   place-items:center;
-  background:rgba(255,255,255,.08);
+  background:rgba(var(--genre-rgb),.16);
   color:var(--text);
   font-size:1rem;
 }
@@ -673,7 +702,7 @@ footer a:hover{color:var(--secondary)}
 <div id="topBtn">↑</div>
 
 <footer>
-  <p>UGS Web Hub · Version 2.6</p>
+  <p>UGS Web Hub · Version 2.7</p>
   <p>Built to make game-hunting feel fast again.</p>
   <p>
     <a href="privacy.html">Privacy Policy</a> |
@@ -727,12 +756,25 @@ const TITLE_HINTS=new Set([
   "tower","tournament","transporter","trigger","turbo","tycoon","ultimate","unblocked","unlocked","us","versus",
   "vietnam","vs","war","wars","wild","with","world","worms"
 ]);
+const GENRE_RULES=[
+  {name:"racing",label:"Speed Run",blurb:"Burn corners and chase the cleanest line.",match:["racing","race","racer","kart","car","cars","driver","driving","motors","moto","bike","bmx","taxi","derby","stunt","stunts"]},
+  {name:"sports",label:"Game Time",blurb:"Score fast and run up the highlight reel.",match:["soccer","football","basket","baseball","tennis","golf","bowl","boxing","pool","ball","sports","skate"]},
+  {name:"horror",label:"Night Shift",blurb:"Dark rooms, bad vibes, full send.",match:["horror","night","dark","ghost","haunt","doom","zombie","dead","evil","blood","monster","creepy","fear","backrooms"]},
+  {name:"strategy",label:"Brain Online",blurb:"Outthink the board before it outthinks you.",match:["war","wars","defense","tycoon","idle","sim","simulator","manager","command","empire","chess","checkers","card","cards"]},
+  {name:"puzzle",label:"Mind Melt",blurb:"Clean solves only. No lucky guesses.",match:["puzzle","maze","escape","2048","match","blocks","block","sudoku","logic","mahjong","word","color","sort"]},
+  {name:"platformer",label:"Jump Tech",blurb:"Tight timing, big leaps, no hesitation.",match:["mario","platform","jump","runner","dash","parkour","tower","square","celeste","ninja","sonic"]},
+  {name:"sandbox",label:"Open Build",blurb:"Mess around, make chaos, own the space.",match:["craft","sandbox","world","builder","building","minecraft","city"]},
+  {name:"action",label:"Adrenaline",blurb:"Pure pressure and zero sitting still.",match:["shooter","shooting","combat","battle","fighter","fight","gun","guns","sniper","assassin","attack","strike","smash","alien"]},
+  {name:"adventure",label:"Quest Mode",blurb:"Maps, mysteries, and just enough danger.",match:["adventure","legend","quest","story","island","journey","zelda","pokemon","temple","cave","dragon"]}
+];
 const normalizedGames=gamesData.map(game=>{
   const displayName=exactTitleMap[game.url]||formatGameTitle(game.name);
+  const genre=getGenreProfile(displayName,game.name);
   return {
     ...game,
     displayName,
-    searchText:normalizeSearchText(`${game.name} ${displayName}`)
+    genre,
+    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label}`)
   };
 });
 
@@ -843,6 +885,20 @@ function formatGameTitle(name){
     .join(" ");
 }
 
+function getGenreProfile(displayName,rawName){
+  const haystack=normalizeSearchText(`${displayName} ${rawName}`);
+  for(const rule of GENRE_RULES){
+    if(rule.match.some(keyword=>haystack.includes(keyword))){
+      return rule;
+    }
+  }
+  return {
+    name:"arcade",
+    label:"Arcade Hit",
+    blurb:"Quick launch, sharp reflexes, instant fun."
+  };
+}
+
 function render(){
   gamesEl.innerHTML="";
   const q=normalizeSearchText(search.value);
@@ -872,21 +928,24 @@ function render(){
         currentLetter=letter;
       }
       const card=document.createElement("div");
-      card.className="card";
+      card.className=`card genre-${game.genre.name}`;
       card.style.setProperty("--card-index",index%18);
       card.innerHTML=`
         <div class="cardTop">
-          <span class="cardTag">${letter === "#" ? "Numbered" : `${letter} File`}</span>
-          <h3>${game.displayName}</h3>
-        </div>
-        <p>Instant play · Fullscreen</p>`;
-      card.innerHTML=`
-        <div class="cardTop">
-          <span class="cardTag">${letter === "#" ? "Numbered" : `${letter} File`}</span>
+          <span class="cardTag">${game.genre.label}</span>
           <h3>${game.displayName}</h3>
         </div>
         <div class="cardFooter">
           <p>Instant play · Fullscreen ready</p>
+          <span class="cardArrow">↗</span>
+        </div>`;
+      card.innerHTML=`
+        <div class="cardTop">
+          <span class="cardTag">${game.genre.label}</span>
+          <h3>${game.displayName}</h3>
+        </div>
+        <div class="cardFooter">
+          <p>${game.genre.blurb}</p>
           <span class="cardArrow">↗</span>
         </div>`;
       card.onclick=()=>open(game.url,"_blank");
