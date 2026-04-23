@@ -426,16 +426,103 @@ a{color:inherit}
   text-transform:uppercase;
   color:var(--secondary);
 }
-.chipRow{
+.controlSubgrid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:end;
+}
+.selectWrap{
+  position:relative;
+}
+.selectWrap::after{
+  content:"v";
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--secondary);
+  font-size:.72rem;
+  font-weight:700;
+  pointer-events:none;
+  text-transform:uppercase;
+}
+.controlSelect{
+  width:100%;
+  min-height:50px;
+  padding:14px 42px 14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font:inherit;
+  font-weight:700;
+  appearance:none;
+}
+.controlSelect:focus{
+  outline:none;
+  border-color:var(--focus-border);
+  box-shadow:0 0 0 4px var(--focus-ring);
+}
+.actionRow{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
 }
-#genreFilters{
-  flex-wrap:nowrap;
-  overflow-x:auto;
-  padding-bottom:4px;
-  scrollbar-width:thin;
+.actionBtn{
+  min-height:50px;
+  padding:12px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  font:inherit;
+  font-size:.8rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.actionBtn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+.actionBtn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+.actionBtn.primary{
+  background:linear-gradient(135deg,rgba(119,168,255,.22),rgba(94,234,212,.16));
+}
+.spotlightCard{
+  margin-top:18px;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  display:grid;
+  gap:12px;
+}
+.spotlightCard h3{
+  margin:0;
+  font-size:1.15rem;
+}
+.spotlightMeta{
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.5;
+}
+.spotlightActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.chipRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
 }
 #themeFilters{
   display:grid;
@@ -771,6 +858,9 @@ footer a:hover{color:var(--secondary)}
   .controlsStack{
     grid-template-columns:1fr;
   }
+  .controlSubgrid{
+    grid-template-columns:1fr;
+  }
   #themeFilters{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
@@ -805,6 +895,13 @@ footer a:hover{color:var(--secondary)}
   #themeFilters,
   .hubMeta{
     grid-template-columns:1fr;
+  }
+  .actionRow,
+  .spotlightActions{
+    flex-direction:column;
+  }
+  .actionBtn{
+    width:100%;
   }
   #games{
     grid-template-columns:1fr;
@@ -887,8 +984,16 @@ footer a:hover{color:var(--secondary)}
   <input id="search" placeholder="Search games…" />
       <div class="controlsStack">
         <div class="controlGroup">
-          <span class="controlLabel">Genre Filters</span>
-          <div class="chipRow" id="genreFilters"></div>
+          <span class="controlLabel">Browse Controls</span>
+          <div class="controlSubgrid">
+            <div class="selectWrap">
+              <select class="controlSelect" id="genreSelect" aria-label="Filter games by genre"></select>
+            </div>
+            <button class="actionBtn primary" id="randomBtn" type="button">Random Pick</button>
+          </div>
+          <div class="actionRow">
+            <button class="actionBtn" id="resetBtn" type="button">Reset View</button>
+          </div>
         </div>
         <div class="controlGroup">
           <span class="controlLabel">Hub Themes</span>
@@ -900,6 +1005,14 @@ footer a:hover{color:var(--secondary)}
         <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
         <span class="metaPill">Genre: <span id="activeGenreLabel">All</span></span>
         <span class="metaPill">Theme: <span id="activeThemeLabel">Default</span></span>
+      </div>
+      <div class="spotlightCard">
+        <span class="controlLabel">Live Spotlight</span>
+        <h3 id="spotlightTitle">Catalog Ready</h3>
+        <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
+        <div class="spotlightActions">
+          <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
+        </div>
       </div>
     </div>
   </div>
@@ -934,14 +1047,20 @@ const previewBtn=document.getElementById("previewBtn");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
-const genreFiltersEl=document.getElementById("genreFilters");
+const genreSelectEl=document.getElementById("genreSelect");
 const themeFiltersEl=document.getElementById("themeFilters");
 const activeGenreLabelEl=document.getElementById("activeGenreLabel");
 const activeThemeLabelEl=document.getElementById("activeThemeLabel");
+const randomBtn=document.getElementById("randomBtn");
+const resetBtn=document.getElementById("resetBtn");
+const spotlightTitleEl=document.getElementById("spotlightTitle");
+const spotlightMetaEl=document.getElementById("spotlightMeta");
+const spotlightBtn=document.getElementById("spotlightBtn");
 
 let hubActive=false;
 let activeGenre="all";
 let activeTheme="default";
+let spotlightGame=null;
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
 const TITLE_SMALL_WORDS=new Set([
@@ -1010,6 +1129,17 @@ previewBtn.onclick=(event)=>{
   enterHub();
 };
 search.addEventListener("input",render);
+genreSelectEl.addEventListener("change",()=>{
+  activeGenre=genreSelectEl.value;
+  render();
+});
+randomBtn.addEventListener("click",launchRandomGame);
+resetBtn.addEventListener("click",resetHubControls);
+spotlightBtn.addEventListener("click",()=>{
+  if(spotlightGame){
+    open(spotlightGame.url,"_blank");
+  }
+});
 renderFilterControls();
 renderThemeControls();
 applyTheme(activeTheme);
@@ -1035,6 +1165,8 @@ function goHome(){
   alpha.style.display="none";
   hubActive=false;
   search.value="";
+  activeGenre="all";
+  genreSelectEl.value="all";
   window.scrollTo({top:0});
   render();
 }
@@ -1141,6 +1273,7 @@ function render(){
     ? "All"
     : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   activeThemeLabelEl.textContent=THEME_OPTIONS.find(theme=>theme.key===activeTheme)?.label||"Default";
+  updateSpotlight(filteredGames);
 
   filteredGames.forEach((game,index)=>{
       const letter=/^[a-z]/i.test(game.displayName)
@@ -1176,20 +1309,14 @@ function renderFilterControls(){
     {name:"all",label:"All Games"},
     ...GENRE_RULES.map(rule=>({name:rule.name,label:rule.label}))
   ];
-  genreFiltersEl.innerHTML="";
+  genreSelectEl.innerHTML="";
   options.forEach(option=>{
-    const button=document.createElement("button");
-    button.type="button";
-    button.className=`filterChip${option.name===activeGenre ? " is-active" : ""}`;
-    button.dataset.genre=option.name;
-    button.textContent=option.label;
-    button.onclick=()=>{
-      activeGenre=option.name;
-      updateChipStates();
-      render();
-    };
-    genreFiltersEl.appendChild(button);
+    const selectOption=document.createElement("option");
+    selectOption.value=option.name;
+    selectOption.textContent=option.label;
+    genreSelectEl.appendChild(selectOption);
   });
+  genreSelectEl.value=activeGenre;
 }
 
 function renderThemeControls(){
@@ -1211,9 +1338,6 @@ function renderThemeControls(){
 }
 
 function updateChipStates(){
-  genreFiltersEl.querySelectorAll(".filterChip").forEach(chip=>{
-    chip.classList.toggle("is-active",chip.dataset.genre===activeGenre);
-  });
   themeFiltersEl.querySelectorAll(".themeChip").forEach(chip=>{
     chip.classList.toggle("is-active",chip.dataset.themeKey===activeTheme);
   });
@@ -1225,6 +1349,45 @@ function applyTheme(themeKey){
     return;
   }
   document.body.setAttribute("data-theme",themeKey);
+}
+
+function updateSpotlight(filteredGames){
+  if(!filteredGames.length){
+    spotlightGame=null;
+    spotlightTitleEl.textContent="No Matches Found";
+    spotlightMetaEl.textContent="Try another search, switch the genre dropdown, or reset the view to reopen the full vault.";
+    spotlightBtn.disabled=true;
+    spotlightBtn.textContent="No Launch";
+    return;
+  }
+
+  spotlightGame=filteredGames[Math.min(2,filteredGames.length-1)];
+  spotlightTitleEl.textContent=spotlightGame.displayName;
+  spotlightMetaEl.textContent=`${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view.`;
+  spotlightBtn.disabled=false;
+  spotlightBtn.textContent="Launch Spotlight";
+}
+
+function launchRandomGame(){
+  const q=normalizeSearchText(search.value);
+  const pool=normalizedGames.filter(game=>(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
+  if(!pool.length){
+    updateSpotlight([]);
+    return;
+  }
+  const choice=pool[Math.floor(Math.random()*pool.length)];
+  spotlightGame=choice;
+  spotlightTitleEl.textContent=choice.displayName;
+  spotlightMetaEl.textContent=`Random lock-in: ${choice.genre.label}. ${choice.genre.blurb}`;
+  spotlightBtn.disabled=false;
+  spotlightBtn.textContent="Launch Random Pick";
+}
+
+function resetHubControls(){
+  search.value="";
+  activeGenre="all";
+  genreSelectEl.value="all";
+  render();
 }
 
 /* ALPHA NAV */
