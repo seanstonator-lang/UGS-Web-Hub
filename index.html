@@ -251,6 +251,7 @@ document.getElementById("count").textContent=gamesData.length;
 /* NAV */
 enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
+search.addEventListener("input",render);
 
 /* BACK TO TOP */
 topBtn.addEventListener("click",()=>{
@@ -272,7 +273,9 @@ function goHome(){
   homeBtn.style.display="none";
   alpha.style.display="none";
   hubActive=false;
+  search.value="";
   window.scrollTo({top:0});
+  render();
 }
 
 function render(){
