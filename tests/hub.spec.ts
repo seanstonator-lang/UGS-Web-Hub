@@ -75,7 +75,7 @@ test.describe('UGS Web Hub', () => {
 
     const [popup] = await Promise.all([
       context.waitForEvent('page'),
-      page.getByRole('button', { name: /Launch/i }).click(),
+      page.locator('#spotlightBtn').click(),
     ]);
 
     await popup.waitForLoadState('domcontentloaded');
@@ -107,6 +107,34 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#spotlightTitle')).toHaveText(/No Matches Found/i);
     await expect(page.locator('#spotlightMeta')).toContainText(/Try another search/i);
     await expect(page.getByRole('button', { name: /No Launch/i })).toBeDisabled();
+  });
+
+  test('saves favorites and filters the hub to the saved lane', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    const firstCard = page.locator('#games .card').first();
+    const favoriteButton = firstCard.getByRole('button', { name: /Add to favorites/i });
+    const title = (await firstCard.locator('h3').textContent())?.trim();
+
+    await favoriteButton.click();
+
+    await expect(page.locator('#favoriteCount')).toHaveText('1');
+    await expect(page.getByRole('button', { name: /Favorites Only: On/i })).toHaveCount(0);
+
+    await page.getByRole('button', { name: /Favorites Only: Off/i }).click();
+
+    await expect(page.getByRole('button', { name: /Favorites Only: On/i })).toBeVisible();
+    await expect(page.locator('#visibleCount')).toHaveText('1');
+    await expect(page.locator('#genreSummaryText')).toHaveText(/Favorites/i);
+    await expect(page.locator('#games .card')).toHaveCount(1);
+    await expect(page.locator('#games')).toContainText(title || '');
+
+    await page.reload();
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await expect(page.locator('#favoriteCount')).toHaveText('1');
+    await expect(page.locator('#games .card').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
   });
 
   test('loads the privacy policy page with hub navigation links', async ({ page }) => {

@@ -522,6 +522,11 @@ a{color:inherit}
 .actionBtn.primary{
   background:linear-gradient(135deg,rgba(119,168,255,.22),rgba(94,234,212,.16));
 }
+.actionBtn.is-active{
+  border-color:rgba(255,255,255,.24);
+  background:linear-gradient(135deg,rgba(255,209,102,.22),rgba(119,168,255,.16));
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
 .spotlightCard{
   margin-top:18px;
   padding:18px;
@@ -667,7 +672,7 @@ a{color:inherit}
 .card{
   background:var(--card);
   border-radius:24px;
-  padding:18px;
+  padding:18px 18px 16px;
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
@@ -714,6 +719,9 @@ a{color:inherit}
 .cardFooter{
   position:relative;
   z-index:1;
+}
+.cardTop{
+  padding-right:56px;
 }
 .cardTag{
   display:inline-flex;
@@ -765,6 +773,34 @@ a{color:inherit}
   background:rgba(var(--genre-rgb),.16);
   color:var(--text);
   font-size:1rem;
+}
+.favoriteBtn{
+  position:absolute;
+  top:16px;
+  right:16px;
+  z-index:2;
+  width:40px;
+  height:40px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  color:var(--muted);
+  font:inherit;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease;
+}
+.favoriteBtn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.2);
+  color:var(--text);
+}
+.favoriteBtn.is-active{
+  color:var(--accent);
+  border-color:rgba(255,209,102,.34);
+  background:rgba(255,209,102,.12);
+  box-shadow:0 12px 24px rgba(0,0,0,.18);
 }
 @keyframes cardRise{
   from{opacity:0;transform:translateY(14px)}
@@ -1029,6 +1065,7 @@ footer a:hover{color:var(--secondary)}
             </div>
           </div>
           <div class="actionRow">
+            <button class="actionBtn" id="favoritesFilterBtn" type="button">Favorites Only: Off</button>
             <button class="actionBtn" id="resetBtn" type="button">Reset View</button>
           </div>
         </div>
@@ -1040,6 +1077,7 @@ footer a:hover{color:var(--secondary)}
       <div class="hubMeta">
         <span class="metaPill">Total: <span id="count">0</span></span>
         <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
+        <span class="metaPill">Favorites: <span id="favoriteCount">0</span></span>
         <span class="metaPill">Genre: <span id="activeGenreLabel">All</span></span>
         <span class="metaPill">Theme: <span id="activeThemeLabel">Default</span></span>
       </div>
@@ -1049,6 +1087,7 @@ footer a:hover{color:var(--secondary)}
         <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
         <div class="spotlightActions">
           <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
+          <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
           <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
         </div>
       </div>
@@ -1092,15 +1131,20 @@ const activeGenreLabelEl=document.getElementById("activeGenreLabel");
 const activeThemeLabelEl=document.getElementById("activeThemeLabel");
 const genreSummaryTextEl=document.getElementById("genreSummaryText");
 const randomBtn=document.getElementById("randomBtn");
+const favoritesFilterBtn=document.getElementById("favoritesFilterBtn");
 const resetBtn=document.getElementById("resetBtn");
 const spotlightTitleEl=document.getElementById("spotlightTitle");
 const spotlightMetaEl=document.getElementById("spotlightMeta");
+const spotlightFavoriteBtn=document.getElementById("spotlightFavoriteBtn");
 const spotlightBtn=document.getElementById("spotlightBtn");
+const favoriteCountEl=document.getElementById("favoriteCount");
 
 let hubActive=false;
 let activeGenre="all";
 let activeTheme="default";
+let favoritesOnly=false;
 let spotlightGame=null;
+const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
 const TITLE_SMALL_WORDS=new Set([
@@ -1146,6 +1190,7 @@ const THEME_OPTIONS=[
   {key:"sunset-pop",label:"Sunset Pop"},
   {key:"mono-arcade",label:"Mono Arcade"}
 ];
+const favoriteUrls=loadFavorites();
 const normalizedGames=gamesData.map(game=>{
   const displayName=exactTitleMap[game.url]||formatGameTitle(game.name);
   const genre=getGenreProfile(displayName,game.name);
@@ -1174,7 +1219,15 @@ genreSelectEl.addEventListener("change",()=>{
   render();
 });
 randomBtn.addEventListener("click",launchRandomGame);
+favoritesFilterBtn.addEventListener("click",()=>{
+  favoritesOnly=!favoritesOnly;
+  render();
+});
 resetBtn.addEventListener("click",resetHubControls);
+spotlightFavoriteBtn.addEventListener("click",()=>{
+  if(!spotlightGame) return;
+  toggleFavorite(spotlightGame.url);
+});
 spotlightBtn.addEventListener("click",()=>{
   if(spotlightGame){
     open(spotlightGame.url,"_blank");
@@ -1206,6 +1259,7 @@ function goHome(){
   hubActive=false;
   search.value="";
   activeGenre="all";
+  favoritesOnly=false;
   genreSelectEl.value="all";
   window.scrollTo({top:0});
   render();
@@ -1213,6 +1267,39 @@ function goHome(){
 
 function normalizeSearchText(value){
   return value.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+
+function loadFavorites(){
+  try{
+    const stored=localStorage.getItem(FAVORITES_STORAGE_KEY);
+    const parsed=stored ? JSON.parse(stored) : [];
+    if(!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter(value=>typeof value==="string"));
+  }catch(error){
+    return new Set();
+  }
+}
+
+function saveFavorites(){
+  try{
+    localStorage.setItem(FAVORITES_STORAGE_KEY,JSON.stringify([...favoriteUrls]));
+  }catch(error){
+    /* local storage can fail in locked-down environments */
+  }
+}
+
+function isFavorite(url){
+  return favoriteUrls.has(url);
+}
+
+function toggleFavorite(url){
+  if(isFavorite(url)){
+    favoriteUrls.delete(url);
+  }else{
+    favoriteUrls.add(url);
+  }
+  saveFavorites();
+  render();
 }
 
 function titleCaseWord(word){
@@ -1299,7 +1386,7 @@ function render(){
   const q=normalizeSearchText(search.value);
   let currentLetter="";
   const filteredGames=normalizedGames
-    .filter(g=>(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
+    .filter(g=>(!favoritesOnly||isFavorite(g.url))&&(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
     .sort((a,b)=>{
       const aL=/^[a-z]/i.test(a.displayName);
       const bL=/^[a-z]/i.test(b.displayName);
@@ -1309,13 +1396,18 @@ function render(){
     });
 
   visibleCountEl.textContent=filteredGames.length;
+  favoriteCountEl.textContent=favoriteUrls.size;
   activeGenreLabelEl.textContent=activeGenre==="all"
     ? "All"
     : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   activeThemeLabelEl.textContent=THEME_OPTIONS.find(theme=>theme.key===activeTheme)?.label||"Default";
-  genreSummaryTextEl.textContent=activeGenre==="all"
-    ? "All Games"
-    : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
+  genreSummaryTextEl.textContent=favoritesOnly
+    ? "Favorites"
+    : (activeGenre==="all"
+      ? "All Games"
+      : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre));
+  favoritesFilterBtn.textContent=`Favorites Only: ${favoritesOnly ? "On" : "Off"}`;
+  favoritesFilterBtn.classList.toggle("is-active",favoritesOnly);
   updateSpotlight(filteredGames);
 
   filteredGames.forEach((game,index)=>{
@@ -1331,9 +1423,11 @@ function render(){
         currentLetter=letter;
       }
       const card=document.createElement("div");
+      const favoriteActive=isFavorite(game.url);
       card.className=`card genre-${game.genre.name}`;
       card.style.setProperty("--card-index",index%18);
       card.innerHTML=`
+        <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${game.displayName}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
           <span class="cardTag">${game.genre.label}</span>
           <h3>${game.displayName}</h3>
@@ -1343,6 +1437,10 @@ function render(){
           <span class="cardArrow">↗</span>
         </div>`;
       card.onclick=()=>open(game.url,"_blank");
+      card.querySelector(".favoriteBtn").onclick=(event)=>{
+        event.stopPropagation();
+        toggleFavorite(game.url);
+      };
       gamesEl.appendChild(card);
     });
 }
@@ -1397,8 +1495,12 @@ function applyTheme(themeKey){
 function updateSpotlight(filteredGames){
   if(!filteredGames.length){
     spotlightGame=null;
-    spotlightTitleEl.textContent="No Matches Found";
-    spotlightMetaEl.textContent="Try another search, switch the genre dropdown, or reset the view to reopen the full vault.";
+    spotlightTitleEl.textContent=favoritesOnly ? "No Favorite Matches" : "No Matches Found";
+    spotlightMetaEl.textContent=favoritesOnly
+      ? "Save a few titles, then use Favorites Only to build your own rapid-launch lane."
+      : "Try another search, switch the genre dropdown, or reset the view to reopen the full vault.";
+    spotlightFavoriteBtn.disabled=true;
+    spotlightFavoriteBtn.textContent="Save to Favorites";
     spotlightBtn.disabled=true;
     spotlightBtn.textContent="No Launch";
     return;
@@ -1406,14 +1508,19 @@ function updateSpotlight(filteredGames){
 
   spotlightGame=filteredGames[Math.min(2,filteredGames.length-1)];
   spotlightTitleEl.textContent=spotlightGame.displayName;
-  spotlightMetaEl.textContent=`${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view.`;
+  const favoriteMeta=isFavorite(spotlightGame.url)
+    ? "Saved in your favorites lane."
+    : "Not saved yet. Lock it in if it deserves a permanent slot.";
+  spotlightMetaEl.textContent=`${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view. ${favoriteMeta}`;
+  spotlightFavoriteBtn.disabled=false;
+  spotlightFavoriteBtn.textContent=isFavorite(spotlightGame.url) ? "Remove Favorite" : "Save to Favorites";
   spotlightBtn.disabled=false;
   spotlightBtn.textContent="Launch Spotlight";
 }
 
 function launchRandomGame(){
   const q=normalizeSearchText(search.value);
-  const pool=normalizedGames.filter(game=>(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
+  const pool=normalizedGames.filter(game=>(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
   if(!pool.length){
     updateSpotlight([]);
     return;
@@ -1422,6 +1529,8 @@ function launchRandomGame(){
   spotlightGame=choice;
   spotlightTitleEl.textContent=choice.displayName;
   spotlightMetaEl.textContent=`Random lock-in: ${choice.genre.label}. ${choice.genre.blurb}`;
+  spotlightFavoriteBtn.disabled=false;
+  spotlightFavoriteBtn.textContent=isFavorite(choice.url) ? "Remove Favorite" : "Save to Favorites";
   spotlightBtn.disabled=false;
   spotlightBtn.textContent="Launch Random Pick";
 }
@@ -1429,6 +1538,7 @@ function launchRandomGame(){
 function resetHubControls(){
   search.value="";
   activeGenre="all";
+  favoritesOnly=false;
   genreSelectEl.value="all";
   render();
 }
