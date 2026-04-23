@@ -354,6 +354,7 @@ a{color:inherit}
   grid-template-columns:minmax(0,1fr) minmax(360px,520px);
   gap:22px;
   margin-bottom:30px;
+  align-items:start;
 }
 .hubTitleCard,
 .hubSearchCard{
@@ -453,6 +454,14 @@ a{color:inherit}
   font-weight:700;
   appearance:none;
 }
+.controlSelect option{
+  background:#10243f;
+  color:#f4fbff;
+}
+.controlSelect option:checked{
+  background:#1b3a60;
+  color:#ffffff;
+}
 .controlSelect:focus{
   outline:none;
   border-color:var(--focus-border);
@@ -460,7 +469,9 @@ a{color:inherit}
 }
 .genrePanel{
   display:grid;
+  grid-template-columns:minmax(220px,320px) minmax(0,1fr);
   gap:10px;
+  align-items:stretch;
 }
 .genreSummary{
   display:flex;
@@ -473,6 +484,7 @@ a{color:inherit}
   background:rgba(255,255,255,.04);
   color:var(--muted);
   font-size:.82rem;
+  min-height:50px;
 }
 .genreSummary strong{
   color:var(--text);
@@ -875,6 +887,9 @@ footer a:hover{color:var(--secondary)}
     grid-template-columns:1fr;
   }
   .controlsStack{
+    grid-template-columns:1fr;
+  }
+  .genrePanel{
     grid-template-columns:1fr;
   }
   #themeFilters{
