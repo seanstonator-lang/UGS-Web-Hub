@@ -550,6 +550,68 @@ a{color:inherit}
   flex-wrap:wrap;
   gap:10px;
 }
+.recentCard{
+  margin-top:18px;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+  display:grid;
+  gap:14px;
+}
+.recentHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.recentHeader p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.5;
+}
+.recentActions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.recentList{
+  display:grid;
+  gap:10px;
+}
+.recentItem{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+.recentItem strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:.94rem;
+}
+.recentItem span{
+  display:block;
+  color:var(--muted);
+  font-size:.8rem;
+}
+.recentLaunchBtn{
+  min-width:112px;
+}
+.recentEmpty{
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px dashed rgba(255,255,255,.12);
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.6;
+}
 .chipRow{
   display:flex;
   flex-wrap:wrap;
@@ -1091,6 +1153,18 @@ footer a:hover{color:var(--secondary)}
           <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
         </div>
       </div>
+      <div class="recentCard">
+        <div class="recentHeader">
+          <div>
+            <span class="controlLabel">Recently Played</span>
+            <p>Your last launches stay parked here for fast reruns.</p>
+          </div>
+          <div class="recentActions">
+            <button class="actionBtn" id="clearRecentBtn" type="button">Clear Recent</button>
+          </div>
+        </div>
+        <div class="recentList" id="recentList"></div>
+      </div>
     </div>
   </div>
   <div id="games"></div>
@@ -1138,6 +1212,8 @@ const spotlightMetaEl=document.getElementById("spotlightMeta");
 const spotlightFavoriteBtn=document.getElementById("spotlightFavoriteBtn");
 const spotlightBtn=document.getElementById("spotlightBtn");
 const favoriteCountEl=document.getElementById("favoriteCount");
+const clearRecentBtn=document.getElementById("clearRecentBtn");
+const recentListEl=document.getElementById("recentList");
 
 let hubActive=false;
 let activeGenre="all";
@@ -1145,6 +1221,8 @@ let activeTheme="default";
 let favoritesOnly=false;
 let spotlightGame=null;
 const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
+const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
+const MAX_RECENT_GAMES=10;
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
 const TITLE_SMALL_WORDS=new Set([
@@ -1191,6 +1269,7 @@ const THEME_OPTIONS=[
   {key:"mono-arcade",label:"Mono Arcade"}
 ];
 const favoriteUrls=loadFavorites();
+let recentGameUrls=loadRecentGames();
 const normalizedGames=gamesData.map(game=>{
   const displayName=exactTitleMap[game.url]||formatGameTitle(game.name);
   const genre=getGenreProfile(displayName,game.name);
@@ -1224,13 +1303,18 @@ favoritesFilterBtn.addEventListener("click",()=>{
   render();
 });
 resetBtn.addEventListener("click",resetHubControls);
+clearRecentBtn.addEventListener("click",()=>{
+  recentGameUrls=[];
+  saveRecentGames();
+  renderRecentGames();
+});
 spotlightFavoriteBtn.addEventListener("click",()=>{
   if(!spotlightGame) return;
   toggleFavorite(spotlightGame.url);
 });
 spotlightBtn.addEventListener("click",()=>{
   if(spotlightGame){
-    open(spotlightGame.url,"_blank");
+    launchGame(spotlightGame);
   }
 });
 renderFilterControls();
@@ -1286,6 +1370,41 @@ function saveFavorites(){
   }catch(error){
     /* local storage can fail in locked-down environments */
   }
+}
+
+function loadRecentGames(){
+  try{
+    const stored=localStorage.getItem(RECENT_STORAGE_KEY);
+    const parsed=stored ? JSON.parse(stored) : [];
+    if(!Array.isArray(parsed)) return [];
+    return parsed.filter(value=>typeof value==="string");
+  }catch(error){
+    return [];
+  }
+}
+
+function saveRecentGames(){
+  try{
+    localStorage.setItem(RECENT_STORAGE_KEY,JSON.stringify(recentGameUrls));
+  }catch(error){
+    /* local storage can fail in locked-down environments */
+  }
+}
+
+function trackRecentGame(url){
+  recentGameUrls=[url,...recentGameUrls.filter(item=>item!==url)].slice(0,MAX_RECENT_GAMES);
+  saveRecentGames();
+}
+
+function getGameByUrl(url){
+  return normalizedGames.find(game=>game.url===url)||null;
+}
+
+function launchGame(game){
+  if(!game) return;
+  trackRecentGame(game.url);
+  renderRecentGames();
+  open(game.url,"_blank");
 }
 
 function isFavorite(url){
@@ -1383,6 +1502,7 @@ function getGenreProfile(displayName,rawName){
 
 function render(){
   gamesEl.innerHTML="";
+  renderRecentGames();
   const q=normalizeSearchText(search.value);
   let currentLetter="";
   const filteredGames=normalizedGames
@@ -1436,12 +1556,38 @@ function render(){
           <p>${game.genre.blurb}</p>
           <span class="cardArrow">↗</span>
         </div>`;
-      card.onclick=()=>open(game.url,"_blank");
+      card.onclick=()=>launchGame(game);
       card.querySelector(".favoriteBtn").onclick=(event)=>{
         event.stopPropagation();
         toggleFavorite(game.url);
       };
       gamesEl.appendChild(card);
+    });
+}
+
+function renderRecentGames(){
+  recentListEl.innerHTML="";
+  clearRecentBtn.disabled=recentGameUrls.length===0;
+
+  if(!recentGameUrls.length){
+    recentListEl.innerHTML='<div class="recentEmpty">Launch a few games and your recent run will stack here for instant replay.</div>';
+    return;
+  }
+
+  recentGameUrls
+    .map(getGameByUrl)
+    .filter(Boolean)
+    .forEach(game=>{
+      const item=document.createElement("div");
+      item.className="recentItem";
+      item.innerHTML=`
+        <div>
+          <strong>${game.displayName}</strong>
+          <span>${game.genre.label} locked in for quick relaunch.</span>
+        </div>
+        <button class="actionBtn recentLaunchBtn" type="button">Play Again</button>`;
+      item.querySelector("button").onclick=()=>launchGame(game);
+      recentListEl.appendChild(item);
     });
 }
 

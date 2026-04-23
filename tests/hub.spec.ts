@@ -137,6 +137,31 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games .card').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
   });
 
+  test('tracks recently played games and lets you clear the list', async ({ page, context }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    const firstCard = page.locator('#games .card').first();
+    const title = (await firstCard.locator('h3').textContent())?.trim();
+
+    const [popup] = await Promise.all([
+      context.waitForEvent('page'),
+      firstCard.click(),
+    ]);
+    await popup.close();
+
+    await expect(page.locator('#recentList')).toContainText(title || '');
+    await expect(page.getByRole('button', { name: /Play Again/i })).toBeVisible();
+
+    await page.reload();
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await expect(page.locator('#recentList')).toContainText(title || '');
+    await page.getByRole('button', { name: /Clear Recent/i }).click();
+    await expect(page.locator('#recentList')).toContainText(/Launch a few games/i);
+    await expect(page.getByRole('button', { name: /Clear Recent/i })).toBeDisabled();
+  });
+
   test('loads the privacy policy page with hub navigation links', async ({ page }) => {
     await page.goto('/privacy.html');
 
