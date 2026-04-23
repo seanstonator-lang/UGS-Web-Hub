@@ -248,15 +248,27 @@ const TITLE_SMALL_WORDS=new Set([
   "a","an","and","as","at","by","for","from","in","into","of","on","or","the","to","vs","with"
 ]);
 const TITLE_HINTS=new Set([
-  "ace","adventure","age","air","alien","among","ancient","angry","animal","apple","arena","armor","asteroids","attack",
-  "awesome","baby","ball","battle","battles","bird","birds","burger","capitalist","classic","combat","contract",
-  "crossing","cup","dark","date","day","death","defense","dimensions","dawn","doom","drive","editor","escape",
-  "fantasy","fight","football","game","goal","golf","hero","hole","idle","io","japan","jump","legend","lite",
-  "lol","madness","mario","masters","mayhem","maze","mazes","mini","minute","minutes","night","ninja","office","panda","pandas",
-  "pirates","planes","player","players","pool","predator","quest","revenge","room","run","runner","seconds",
-  "shooter","shooting","showdown","simulator","slices","sniper","soccer","space","sports","survival","tank",
-  "tanks","taxi","tennis","til","tour","transporter","tycoon","unlocked","us","vietnam","vs","war","wars","wild",
-  "world","worms"
+  "a","ace","adventure","age","air","alien","among","ancient","and","angry","animal","an","apple","arena","armor",
+  "asteroids","as","attack","at","awesome","baby","backyard","bad","ball","base","baseball","basket","basketball",
+  "battle","battles","bear","big","birds","bird","black","blade","blast","bleach","bloons","block","body","boss","boxing","boy",
+  "brain","breakout","brick","bricks","bros","brothers","build","burger","burst","by","caliber","capitalist","captain",
+  "car","cards","castle","cat","challenge","chaos","chicken","city","classic","clicker","club","combat","command",
+  "conquer","contract","cookie","core","cover","craft","crash","crazy","crossing","cup","dark","date","day",
+  "death","defense","deluxe","derby","dimensions","doom","door","dragon","drive","editor","escape","factor","fantasy",
+  "fight","fighter","final","flip","football","force","frvr","frenzy","frog","from","fun","fury","game","gangster",
+  "gangsters","garden","gba","gg","goal","golf","good","grand","great","gun","guns","hero","heroes","hit","hockey",
+  "hole","hominid","house","idle","in","into","io","island","japan","journey","jump","kart","karts","king",
+  "knight","knights","lab","landing","launch","legend","legends","life","lite","live","lol","madness","mama",
+  "mario","master","masters","match","may","mayhem","maze","mazes","mini","minute","minutes","mission","modern",
+  "monster","moon","more","moto","motor","motors","naruto","neon","nes","new","night","ninja","now","of","office",
+  "on","one","orange","or","pack","panda","pandas","parkour","party","pirate","pirates","plane","planes","play",
+  "player","players","pool","post","predator","pro","quest","race","racer","racers","racing","random","remaster",
+  "revenge","ride","robber","rocket","room","rooms","run","runner","school","scratch","seal","secret","seconds",
+  "shadow","shooter","shooting","showdown","sim","simulator","singularity","slices","small","snakes","sniper",
+  "soccer","space","sports","square","stars","story","strategy","street","stunt","stunts","super","superstars",
+  "survival","table","tank","tanks","taxi","td","team","tennis","the","til","time","tiny","to","tour",
+  "tower","tournament","transporter","trigger","turbo","tycoon","ultimate","unblocked","unlocked","us","versus",
+  "vietnam","vs","war","wars","wild","with","world","worms"
 ]);
 const normalizedGames=gamesData.map(game=>{
   const displayName=formatGameTitle(game.name);
@@ -307,10 +319,16 @@ function normalizeSearchText(value){
 function titleCaseWord(word){
   if(!word) return "";
   const lower=word.toLowerCase();
+  if(["gg","io","gba","nes","td","frvr"].includes(lower)) return word.toUpperCase();
   if(TITLE_SMALL_WORDS.has(lower)) return lower;
   if(/^[ivxlcdm]+$/i.test(word)) return word.toUpperCase();
   if(word===word.toUpperCase()&&word.length<=5) return word;
   return lower.charAt(0).toUpperCase()+lower.slice(1);
+}
+
+function capitalizeFirstWord(word){
+  const formatted=titleCaseWord(word);
+  return formatted.charAt(0).toUpperCase()+formatted.slice(1);
 }
 
 function splitHintedWord(word){
@@ -358,7 +376,7 @@ function formatGameTitle(name){
     .map(splitHintedWord)
     .join(" ")
     .split(/\s+/)
-    .map(titleCaseWord)
+    .map((word,index)=>index===0 ? capitalizeFirstWord(word) : titleCaseWord(word))
     .join(" ");
 }
 
