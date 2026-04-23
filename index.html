@@ -231,6 +231,7 @@ footer a:hover{color:var(--primary)}
 </footer>
 
 <script src="games-data.js"></script>
+<script src="games-titles.js"></script>
 <script>
 const landing=document.getElementById("landing");
 const hub=document.getElementById("hub");
@@ -244,6 +245,7 @@ const enterBtn=document.getElementById("enterBtn");
 
 let hubActive=false;
 const gamesData=window.rawGames||[];
+const exactTitleMap=window.gameTitleMap||{};
 const TITLE_SMALL_WORDS=new Set([
   "a","an","and","as","at","by","for","from","in","into","of","on","or","the","to","vs","with"
 ]);
@@ -251,7 +253,7 @@ const TITLE_HINTS=new Set([
   "a","ace","adventure","age","air","alien","among","ancient","and","angry","animal","an","apple","arena","armor",
   "asteroids","as","attack","at","awesome","baby","backyard","bad","ball","base","baseball","basket","basketball",
   "battle","battles","bear","big","birds","bird","black","blade","blast","bleach","bloons","block","body","boss","boxing","boy",
-  "brain","breakout","brick","bricks","bros","brothers","build","burger","burst","by","caliber","capitalist","captain",
+  "brain","breakout","brick","bricks","bros","brothers","build","bullet","bullets","burger","burst","by","caliber","capitalist","captain",
   "car","cards","castle","cat","challenge","chaos","chicken","city","classic","clicker","club","combat","command",
   "conquer","contract","cookie","core","cover","craft","crash","crazy","crossing","cup","dark","date","day",
   "death","defense","deluxe","derby","dimensions","doom","door","dragon","drive","editor","escape","factor","fantasy",
@@ -271,7 +273,7 @@ const TITLE_HINTS=new Set([
   "vietnam","vs","war","wars","wild","with","world","worms"
 ]);
 const normalizedGames=gamesData.map(game=>{
-  const displayName=formatGameTitle(game.name);
+  const displayName=exactTitleMap[game.url]||formatGameTitle(game.name);
   return {
     ...game,
     displayName,
@@ -360,6 +362,7 @@ function splitHintedWord(word){
   const hintedParts=result.parts.filter(part=>TITLE_HINTS.has(part));
   if(hintedParts.length<2) return word;
   if(result.parts.some(part=>!TITLE_HINTS.has(part)&&part.length>2)) return word;
+  if(result.parts.filter(part=>part.length===1).length>1) return word;
 
   return result.parts.join(" ");
 }
