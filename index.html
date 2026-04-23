@@ -7,192 +7,587 @@
 
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#020617;
-  --card:#0f172a;
-  --primary:#38bdf8;
-  --secondary:#818cf8;
+  --bg:#120f0d;
+  --bg-alt:#201511;
+  --panel:rgba(32,19,15,.84);
+  --panel-solid:#241611;
+  --card:rgba(43,27,20,.9);
+  --card-border:rgba(255,210,160,.14);
+  --text:#fff8ef;
+  --muted:#d0b49a;
+  --primary:#ff8a3d;
+  --secondary:#ffd166;
+  --accent:#7ae7c7;
+  --shadow:0 24px 80px rgba(0,0,0,.36);
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:var(--bg);
-  color:white;
-  font-family:Inter,system-ui,sans-serif;
+  color:var(--text);
+  font-family:"Space Grotesk","Trebuchet MS",sans-serif;
   overflow-x:hidden;
+  background:
+    radial-gradient(circle at top left,rgba(255,138,61,.24),transparent 30%),
+    radial-gradient(circle at 85% 12%,rgba(122,231,199,.16),transparent 22%),
+    radial-gradient(circle at 50% 120%,rgba(255,209,102,.18),transparent 30%),
+    linear-gradient(145deg,#100d0c 0%,#1d130f 45%,#0e0a09 100%);
+}
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:auto;
+  pointer-events:none;
+  z-index:-1;
+  filter:blur(8px);
+}
+body::before{
+  width:28rem;
+  height:28rem;
+  top:-8rem;
+  right:-7rem;
+  background:radial-gradient(circle,rgba(255,138,61,.24),transparent 68%);
+}
+body::after{
+  width:24rem;
+  height:24rem;
+  bottom:-7rem;
+  left:-6rem;
+  background:radial-gradient(circle,rgba(122,231,199,.16),transparent 70%);
+}
+a{color:inherit}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.05);
+  color:var(--secondary);
+  font-size:.76rem;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.eyebrow::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--secondary),var(--primary));
+  box-shadow:0 0 18px rgba(255,209,102,.7);
+}
+.statRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:28px;
+}
+.stat{
+  min-width:132px;
+  padding:16px 18px;
+  border-radius:20px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.stat strong{
+  display:block;
+  font-size:1.45rem;
+  font-weight:700;
+}
+.stat span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:.82rem;
 }
 
 /* LANDING */
 #landing{
-  height:100vh;
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  padding:40px;
+  padding:48px 24px 64px;
+}
+.heroShell{
+  width:min(1180px,100%);
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:28px;
+  align-items:stretch;
+}
+.heroCopy,
+.heroPanel{
+  position:relative;
+  overflow:hidden;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  box-shadow:var(--shadow);
+}
+.heroCopy{
+  padding:42px;
+}
+.heroCopy::after,
+.heroPanel::after{
+  content:"";
+  position:absolute;
+  inset:auto -20% -35% auto;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,138,61,.22),transparent 70%);
+  pointer-events:none;
 }
 #landing h1{
-  font-size:clamp(3rem,8vw,5rem);
-  font-weight:900;
-  background:linear-gradient(90deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing:8px;
+  margin:18px 0 18px;
+  font-family:"Archivo Expanded","Arial Black",sans-serif;
+  font-size:clamp(3.2rem,9vw,7rem);
+  line-height:.95;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  text-wrap:balance;
 }
 #landing p{
-  max-width:720px;
-  margin:30px auto;
-  font-size:1.1rem;
-  opacity:.85;
-  line-height:1.6;
+  max-width:40rem;
+  margin:0;
+  color:var(--muted);
+  font-size:1.08rem;
+  line-height:1.7;
+}
+.heroActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:30px;
 }
 #enterBtn{
-  padding:16px 42px;
-  font-weight:900;
+  padding:18px 28px;
+  font-family:inherit;
+  font-size:.94rem;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
   border-radius:999px;
-  border:2px solid var(--primary);
-  background:transparent;
-  color:var(--primary);
+  border:0;
+  background:linear-gradient(135deg,var(--secondary),var(--primary));
+  color:#1a110d;
   cursor:pointer;
-  transition:.3s;
+  box-shadow:0 18px 40px rgba(255,138,61,.28);
+  transition:transform .25s ease, box-shadow .25s ease;
 }
 #enterBtn:hover{
-  background:var(--primary);
-  color:black;
-  box-shadow:0 0 25px var(--primary);
+  transform:translateY(-2px);
+  box-shadow:0 26px 52px rgba(255,138,61,.34);
+}
+.ghostBtn{
+  display:inline-flex;
+  align-items:center;
+  padding:18px 24px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--text);
+  text-decoration:none;
+  background:rgba(255,255,255,.04);
+  font-size:.94rem;
+  font-weight:700;
+}
+.heroPanel{
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:22px;
+}
+.heroPanel h2{
+  margin:10px 0 6px;
+  font-family:"Archivo Expanded","Arial Black",sans-serif;
+  font-size:1.5rem;
+  line-height:1.1;
+  text-transform:uppercase;
+}
+.heroPanel p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+.signalGrid{
+  display:grid;
+  gap:12px;
+}
+.signalCard{
+  padding:16px 18px;
+  border-radius:22px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.08);
+}
+.signalCard strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:.9rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--secondary);
+}
+.signalCard span{
+  color:var(--text);
+  font-size:1rem;
+}
+.heroNote{
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:.84rem;
+  color:var(--muted);
 }
 
 /* HUB */
 #hub{
   display:none;
-  padding:120px 20px 80px;
-  max-width:1600px;
+  padding:112px 24px 90px;
+  max-width:1440px;
   margin:auto;
+}
+.hubIntro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(280px,420px);
+  gap:22px;
+  margin-bottom:30px;
+}
+.hubTitleCard,
+.hubSearchCard{
+  border-radius:28px;
+  padding:24px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+  box-shadow:var(--shadow);
+}
+.hubTitleCard h2{
+  margin:14px 0 10px;
+  font-family:"Archivo Expanded","Arial Black",sans-serif;
+  font-size:clamp(1.8rem,3vw,3rem);
+  text-transform:uppercase;
+  line-height:1;
+}
+.hubTitleCard p,
+.hubSearchCard p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+.searchLabel{
+  display:block;
+  margin-bottom:12px;
+  font-size:.78rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--secondary);
 }
 #search{
   width:100%;
-  max-width:600px;
-  padding:16px 26px;
-  border-radius:999px;
-  border:1px solid #334155;
-  background:#020617;
-  color:white;
-  margin:0 auto 50px;
+  padding:18px 22px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(6,4,4,.28);
+  color:var(--text);
+  margin:0 0 18px;
   display:block;
+  font:inherit;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+#search::placeholder{
+  color:rgba(255,248,239,.46);
+}
+#search:focus{
+  outline:none;
+  border-color:rgba(255,209,102,.44);
+  box-shadow:0 0 0 4px rgba(255,209,102,.08);
+}
+.hubMeta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.metaPill{
+  display:inline-flex;
+  align-items:center;
+  min-height:40px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  color:var(--text);
+  font-size:.82rem;
+  font-weight:700;
 }
 #games{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:26px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:18px;
 }
 .section{
   grid-column:1/-1;
-  font-size:2rem;
-  font-weight:900;
-  color:var(--primary);
-  margin-top:40px;
-  border-bottom:2px solid rgba(56,189,248,.2);
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:34px;
+  padding:8px 2px;
+  font-family:"Archivo Expanded","Arial Black",sans-serif;
+  font-size:1.7rem;
+  color:var(--secondary);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.section::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,rgba(255,209,102,.4),transparent);
 }
 
 /* CARD */
 .card{
   background:var(--card);
-  border-radius:22px;
-  padding:20px;
+  border-radius:24px;
+  padding:18px;
   cursor:pointer;
-  transition:.35s;
-  border:2px solid transparent;
+  transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
+  border:1px solid var(--card-border);
+  min-height:166px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+  animation:cardRise .45s ease both;
+  animation-delay:calc(var(--card-index,0)*18ms);
+}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(145deg,rgba(255,209,102,.12),transparent 40%,rgba(122,231,199,.08));
+  opacity:0;
+  transition:opacity .3s ease;
 }
 .card:hover{
-  transform:translateY(-10px) scale(1.02);
-  border-color:var(--primary);
-  box-shadow:0 0 25px rgba(56,189,248,.25);
+  transform:translateY(-8px);
+  border-color:rgba(255,209,102,.34);
+  box-shadow:0 24px 42px rgba(0,0,0,.34);
+  background:rgba(56,33,24,.96);
 }
-.card h3{margin:0 0 6px}
-.card p{font-size:.85rem;opacity:.6}
+.card:hover::before{opacity:1}
+.cardTop,
+.cardFooter{
+  position:relative;
+  z-index:1;
+}
+.cardTag{
+  display:inline-flex;
+  align-items:center;
+  margin-bottom:14px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
+  color:var(--secondary);
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.card h3{
+  margin:0;
+  font-size:1.08rem;
+  line-height:1.28;
+}
+.cardFooter{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:20px;
+}
+.card p{
+  margin:0;
+  color:var(--muted);
+  font-size:.84rem;
+}
+.cardArrow{
+  flex:0 0 auto;
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  font-size:1rem;
+}
+@keyframes cardRise{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
 /* ALPHA */
 #alpha{
   position:fixed;
-  left:12px;
+  left:14px;
   top:50%;
   transform:translateY(-50%);
-  background:#0f172aee;
-  border-radius:30px;
-  padding:14px 8px;
+  background:rgba(27,17,13,.76);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+  padding:12px 8px;
   display:none;
   flex-direction:column;
-  gap:6px;
+  gap:4px;
   z-index:2000;
+  box-shadow:var(--shadow);
 }
 #alpha span{
-  font-size:.7rem;
-  font-weight:900;
-  opacity:.35;
+  width:28px;
+  height:28px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-size:.72rem;
+  font-weight:700;
+  color:rgba(255,248,239,.45);
   cursor:pointer;
+  transition:background .2s ease,color .2s ease,transform .2s ease;
 }
-#alpha span:hover{opacity:1;color:var(--primary)}
+#alpha span:hover{
+  color:var(--secondary);
+  background:rgba(255,255,255,.06);
+  transform:translateX(2px);
+}
 
 /* UI */
 #progress{
   position:fixed;
   top:0;left:0;
-  height:4px;
-  background:var(--primary);
+  height:3px;
+  background:linear-gradient(90deg,var(--secondary),var(--primary),var(--accent));
   width:0%;
   z-index:9999;
 }
 #homeBtn{
   position:fixed;
-  top:16px;
-  left:16px;
-  padding:10px 18px;
+  top:18px;
+  left:18px;
+  padding:12px 18px;
   border-radius:999px;
-  font-weight:900;
-  background:black;
-  color:white;
-  border:2px solid white;
+  font-family:inherit;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  background:rgba(22,13,10,.88);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.1);
   cursor:pointer;
   z-index:3000;
   display:none;
+  backdrop-filter:blur(14px);
+  box-shadow:var(--shadow);
 }
-#homeBtn:hover{background:white;color:black}
+#homeBtn:hover{
+  background:rgba(255,138,61,.18);
+  border-color:rgba(255,209,102,.34);
+}
 
 #topBtn{
   position:fixed;
   bottom:30px;
   right:30px;
-  width:60px;height:60px;
-  border-radius:20px;
-  background:white;
-  color:black;
+  width:56px;
+  height:56px;
+  border-radius:18px;
+  background:rgba(22,13,10,.88);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.1);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.8rem;
+  font-size:1.4rem;
   cursor:pointer;
   opacity:0;
   pointer-events:none;
-  transition:.3s;
+  transition:.25s ease;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);
 }
 #topBtn.show{opacity:1;pointer-events:auto}
+#topBtn:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,209,102,.34);
+}
 
 /* FOOTER */
 footer{
   text-align:center;
-  padding:60px 20px;
-  opacity:.6;
-  font-size:.9rem;
+  padding:42px 20px 60px;
+  color:var(--muted);
+  font-size:.92rem;
   border-top:1px solid rgba(255,255,255,.08);
 }
 footer a{
-  color:var(--secondary);
+  color:var(--text);
   text-decoration:none;
   margin:0 14px;
 }
-footer a:hover{color:var(--primary)}
+footer a:hover{color:var(--secondary)}
+
+@media (max-width:980px){
+  .heroShell,
+  .hubIntro{
+    grid-template-columns:1fr;
+  }
+  #landing{
+    padding-top:92px;
+  }
+  #alpha{
+    left:50%;
+    top:auto;
+    bottom:12px;
+    transform:translateX(-50%);
+    flex-direction:row;
+    max-width:calc(100vw - 24px);
+    overflow:auto hidden;
+  }
+}
+
+@media (max-width:640px){
+  #landing h1{
+    font-size:clamp(2.5rem,16vw,4.1rem);
+  }
+  .heroCopy,
+  .heroPanel,
+  .hubTitleCard,
+  .hubSearchCard{
+    padding:22px;
+    border-radius:24px;
+  }
+  #hub{
+    padding:92px 16px 90px;
+  }
+  #games{
+    grid-template-columns:1fr;
+  }
+  .card{
+    min-height:auto;
+  }
+}
 </style>
 </head>
 
@@ -202,28 +597,84 @@ footer a:hover{color:var(--primary)}
 <button id="homeBtn">HOME</button>
 
 <section id="landing">
-  <div>
+  <div class="heroShell">
+    <div class="heroCopy">
+      <span class="eyebrow">Arcade Control Room</span>
     <h1>UGS WEB HUB</h1>
     <p>
       A curated library of browser games that just work.<br><br>
       No downloads. No accounts. No filler.<br><br>
       Built for people who want games — not distractions.
     </p>
-    <button id="enterBtn">ENTER THE HUB</button>
+      <div class="statRow">
+        <div class="stat">
+          <strong id="heroCount">0</strong>
+          <span>Play-ready titles</span>
+        </div>
+        <div class="stat">
+          <strong>A-Z</strong>
+          <span>Instant jump nav</span>
+        </div>
+        <div class="stat">
+          <strong>Zero</strong>
+          <span>Install friction</span>
+        </div>
+      </div>
+      <div class="heroActions">
+        <button id="enterBtn">Enter the Hub</button>
+        <a class="ghostBtn" id="previewBtn" href="#hub">See the catalog</a>
+      </div>
+    </div>
+    <aside class="heroPanel">
+      <div>
+        <span class="eyebrow">Signal Feed</span>
+        <h2>Built for fast picks and cleaner browsing</h2>
+        <p>The library is tuned for quick scanning, quick search, and quick launch so the vibe stays on games, not clutter.</p>
+      </div>
+      <div class="signalGrid">
+        <div class="signalCard">
+          <strong>Search Fast</strong>
+          <span>Type anything and the grid narrows instantly.</span>
+        </div>
+        <div class="signalCard">
+          <strong>Jump Clean</strong>
+          <span>Alphabet rail and keyboard shortcuts cut straight to the zone you want.</span>
+        </div>
+        <div class="signalCard">
+          <strong>Catalog First</strong>
+          <span>Exact title mapping keeps the library readable instead of slug soup.</span>
+        </div>
+      </div>
+      <div class="heroNote">All killer, no filler.</div>
+    </aside>
   </div>
 </section>
 
 <section id="hub">
+  <div class="hubIntro">
+    <div class="hubTitleCard">
+      <span class="eyebrow">Library View</span>
+      <h2>Find your next tab destroyer</h2>
+      <p>Search the vault, jump alphabetically, and launch straight into the good stuff.</p>
+    </div>
+    <div class="hubSearchCard">
+      <label class="searchLabel" for="search">Search the stack</label>
   <input id="search" placeholder="Search games…" />
+      <div class="hubMeta">
+        <span class="metaPill">Total: <span id="count">0</span></span>
+        <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
+      </div>
+    </div>
+  </div>
   <div id="games"></div>
 </section>
 
-<div id="alpha"></div>
+<div id="alpha" aria-label="Alphabet navigation"></div>
 <div id="topBtn">↑</div>
 
 <footer>
   <p>UGS Web Hub · Version 2.6</p>
-  <p>Total Games: <span id="count">0</span></p>
+  <p>Built to make game-hunting feel fast again.</p>
   <p>
     <a href="privacy.html">Privacy Policy</a> |
     <a href="contact.html">Contact Us</a>
@@ -242,6 +693,10 @@ const progress=document.getElementById("progress");
 const topBtn=document.getElementById("topBtn");
 const homeBtn=document.getElementById("homeBtn");
 const enterBtn=document.getElementById("enterBtn");
+const previewBtn=document.getElementById("previewBtn");
+const countEl=document.getElementById("count");
+const heroCountEl=document.getElementById("heroCount");
+const visibleCountEl=document.getElementById("visibleCount");
 
 let hubActive=false;
 const gamesData=window.rawGames||[];
@@ -282,11 +737,16 @@ const normalizedGames=gamesData.map(game=>{
 });
 
 /* GAME COUNT (HOME SAFE) */
-document.getElementById("count").textContent=gamesData.length;
+countEl.textContent=gamesData.length;
+heroCountEl.textContent=gamesData.length;
 
 /* NAV */
 enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
+previewBtn.onclick=(event)=>{
+  event.preventDefault();
+  enterHub();
+};
 search.addEventListener("input",render);
 
 /* BACK TO TOP */
@@ -387,7 +847,7 @@ function render(){
   gamesEl.innerHTML="";
   const q=normalizeSearchText(search.value);
   let currentLetter="";
-  normalizedGames
+  const filteredGames=normalizedGames
     .filter(g=>!q||g.searchText.includes(q))
     .sort((a,b)=>{
       const aL=/^[a-z]/i.test(a.displayName);
@@ -395,8 +855,11 @@ function render(){
       if(aL&&!bL) return -1;
       if(!aL&&bL) return 1;
       return a.displayName.localeCompare(b.displayName,undefined,{numeric:true});
-    })
-    .forEach(game=>{
+    });
+
+  visibleCountEl.textContent=filteredGames.length;
+
+  filteredGames.forEach((game,index)=>{
       const letter=/^[a-z]/i.test(game.displayName)
         ? game.displayName[0].toUpperCase()
         : "#";
@@ -410,9 +873,22 @@ function render(){
       }
       const card=document.createElement("div");
       card.className="card";
+      card.style.setProperty("--card-index",index%18);
       card.innerHTML=`
-        <h3>${game.displayName}</h3>
+        <div class="cardTop">
+          <span class="cardTag">${letter === "#" ? "Numbered" : `${letter} File`}</span>
+          <h3>${game.displayName}</h3>
+        </div>
         <p>Instant play · Fullscreen</p>`;
+      card.innerHTML=`
+        <div class="cardTop">
+          <span class="cardTag">${letter === "#" ? "Numbered" : `${letter} File`}</span>
+          <h3>${game.displayName}</h3>
+        </div>
+        <div class="cardFooter">
+          <p>Instant play · Fullscreen ready</p>
+          <span class="cardArrow">↗</span>
+        </div>`;
       card.onclick=()=>open(game.url,"_blank");
       gamesEl.appendChild(card);
     });
