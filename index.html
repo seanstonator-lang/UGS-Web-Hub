@@ -356,6 +356,11 @@ a{color:inherit}
   margin-bottom:30px;
   align-items:start;
 }
+.hubLead{
+  display:grid;
+  gap:18px;
+  align-items:start;
+}
 .hubTitleCard,
 .hubSearchCard{
   border-radius:28px;
@@ -558,6 +563,10 @@ a{color:inherit}
   background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
   display:grid;
   gap:14px;
+}
+.hubLead .spotlightCard,
+.hubLead .recentCard{
+  margin-top:0;
 }
 .recentHeader{
   display:flex;
@@ -1106,10 +1115,34 @@ footer a:hover{color:var(--secondary)}
 
 <section id="hub">
   <div class="hubIntro">
-    <div class="hubTitleCard">
-      <span class="eyebrow">Library View</span>
-      <h2>Find your next tab destroyer</h2>
-      <p>Search the vault, sort by genre, flip the room theme, and launch straight into the good stuff.</p>
+    <div class="hubLead">
+      <div class="hubTitleCard">
+        <span class="eyebrow">Library View</span>
+        <h2>Find your next tab destroyer</h2>
+        <p>Search the vault, sort by genre, flip the room theme, and launch straight into the good stuff.</p>
+      </div>
+      <div class="spotlightCard">
+        <span class="controlLabel">Live Spotlight</span>
+        <h3 id="spotlightTitle">Catalog Ready</h3>
+        <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
+        <div class="spotlightActions">
+          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
+          <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
+          <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
+        </div>
+      </div>
+      <div class="recentCard">
+        <div class="recentHeader">
+          <div>
+            <span class="controlLabel">Recently Played</span>
+            <p>Your last launches stay parked here for fast reruns.</p>
+          </div>
+          <div class="recentActions">
+            <button class="actionBtn" id="clearRecentBtn" type="button">Clear Recent</button>
+          </div>
+        </div>
+        <div class="recentList" id="recentList"></div>
+      </div>
     </div>
     <div class="hubSearchCard">
       <label class="searchLabel" for="search">Search the stack</label>
@@ -1142,28 +1175,6 @@ footer a:hover{color:var(--secondary)}
         <span class="metaPill">Favorites: <span id="favoriteCount">0</span></span>
         <span class="metaPill">Genre: <span id="activeGenreLabel">All</span></span>
         <span class="metaPill">Theme: <span id="activeThemeLabel">Default</span></span>
-      </div>
-      <div class="spotlightCard">
-        <span class="controlLabel">Live Spotlight</span>
-        <h3 id="spotlightTitle">Catalog Ready</h3>
-        <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
-        <div class="spotlightActions">
-          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
-          <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
-          <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
-        </div>
-      </div>
-      <div class="recentCard">
-        <div class="recentHeader">
-          <div>
-            <span class="controlLabel">Recently Played</span>
-            <p>Your last launches stay parked here for fast reruns.</p>
-          </div>
-          <div class="recentActions">
-            <button class="actionBtn" id="clearRecentBtn" type="button">Clear Recent</button>
-          </div>
-        </div>
-        <div class="recentList" id="recentList"></div>
       </div>
     </div>
   </div>
