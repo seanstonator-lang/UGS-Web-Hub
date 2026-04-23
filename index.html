@@ -244,6 +244,28 @@ const enterBtn=document.getElementById("enterBtn");
 
 let hubActive=false;
 const gamesData=window.rawGames||[];
+const TITLE_SMALL_WORDS=new Set([
+  "a","an","and","as","at","by","for","from","in","into","of","on","or","the","to","vs","with"
+]);
+const TITLE_HINTS=new Set([
+  "ace","adventure","age","air","alien","among","ancient","angry","animal","apple","arena","armor","asteroids","attack",
+  "awesome","baby","ball","battle","battles","bird","birds","burger","capitalist","classic","combat","contract",
+  "crossing","cup","dark","date","day","death","defense","dimensions","dawn","doom","drive","editor","escape",
+  "fantasy","fight","football","game","goal","golf","hero","hole","idle","io","japan","jump","legend","lite",
+  "lol","madness","mario","masters","mayhem","maze","mazes","mini","minute","minutes","night","ninja","office","panda","pandas",
+  "pirates","planes","player","players","pool","predator","quest","revenge","room","run","runner","seconds",
+  "shooter","shooting","showdown","simulator","slices","sniper","soccer","space","sports","survival","tank",
+  "tanks","taxi","tennis","til","tour","transporter","tycoon","unlocked","us","vietnam","vs","war","wars","wild",
+  "world","worms"
+]);
+const normalizedGames=gamesData.map(game=>{
+  const displayName=formatGameTitle(game.name);
+  return {
+    ...game,
+    displayName,
+    searchText:normalizeSearchText(`${game.name} ${displayName}`)
+  };
+});
 
 /* GAME COUNT (HOME SAFE) */
 document.getElementById("count").textContent=gamesData.length;
@@ -278,22 +300,84 @@ function goHome(){
   render();
 }
 
+function normalizeSearchText(value){
+  return value.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+
+function titleCaseWord(word){
+  if(!word) return "";
+  const lower=word.toLowerCase();
+  if(TITLE_SMALL_WORDS.has(lower)) return lower;
+  if(/^[ivxlcdm]+$/i.test(word)) return word.toUpperCase();
+  if(word===word.toUpperCase()&&word.length<=5) return word;
+  return lower.charAt(0).toUpperCase()+lower.slice(1);
+}
+
+function splitHintedWord(word){
+  const lower=word.toLowerCase();
+  if(!/^[a-z]+$/.test(lower)||lower.length<6) return word;
+
+  const best=Array(lower.length+1).fill(null);
+  best[0]={score:0,parts:[]};
+
+  for(let end=1;end<=lower.length;end++){
+    for(let start=Math.max(0,end-20);start<end;start++){
+      const previous=best[start];
+      if(!previous) continue;
+
+      const part=lower.slice(start,end);
+      const hinted=TITLE_HINTS.has(part);
+      const score=previous.score+(hinted ? part.length*part.length : -6-part.length);
+      const candidate={score,parts:[...previous.parts,part]};
+
+      if(!best[end]||candidate.score>best[end].score){
+        best[end]=candidate;
+      }
+    }
+  }
+
+  const result=best[lower.length];
+  if(!result||result.parts.length<2) return word;
+
+  const hintedParts=result.parts.filter(part=>TITLE_HINTS.has(part));
+  if(hintedParts.length<2) return word;
+  if(result.parts.some(part=>!TITLE_HINTS.has(part)&&part.length>2)) return word;
+
+  return result.parts.join(" ");
+}
+
+function formatGameTitle(name){
+  return name
+    .replace(/[_-]+/g," ")
+    .replace(/([a-z])([A-Z])/g,"$1 $2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g,"$1 $2")
+    .replace(/([a-zA-Z])(\d)/g,"$1 $2")
+    .replace(/(\d)([a-zA-Z])/g,"$1 $2")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(splitHintedWord)
+    .join(" ")
+    .split(/\s+/)
+    .map(titleCaseWord)
+    .join(" ");
+}
+
 function render(){
   gamesEl.innerHTML="";
-  const q=search.value.toLowerCase();
+  const q=normalizeSearchText(search.value);
   let currentLetter="";
-  gamesData
-    .filter(g=>g.name.toLowerCase().includes(q))
+  normalizedGames
+    .filter(g=>!q||g.searchText.includes(q))
     .sort((a,b)=>{
-      const aL=/^[a-z]/i.test(a.name);
-      const bL=/^[a-z]/i.test(b.name);
+      const aL=/^[a-z]/i.test(a.displayName);
+      const bL=/^[a-z]/i.test(b.displayName);
       if(aL&&!bL) return -1;
       if(!aL&&bL) return 1;
-      return a.name.localeCompare(b.name,undefined,{numeric:true});
+      return a.displayName.localeCompare(b.displayName,undefined,{numeric:true});
     })
     .forEach(game=>{
-      const letter=/^[a-z]/i.test(game.name)
-        ? game.name[0].toUpperCase()
+      const letter=/^[a-z]/i.test(game.displayName)
+        ? game.displayName[0].toUpperCase()
         : "#";
       if(letter!==currentLetter){
         const sec=document.createElement("div");
@@ -306,7 +390,7 @@ function render(){
       const card=document.createElement("div");
       card.className="card";
       card.innerHTML=`
-        <h3>${game.name}</h3>
+        <h3>${game.displayName}</h3>
         <p>Instant play · Fullscreen</p>`;
       card.onclick=()=>open(game.url,"_blank");
       gamesEl.appendChild(card);
