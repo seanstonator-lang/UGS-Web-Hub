@@ -1,7 +1,7 @@
 {
   "name": "ugs-web-hub",
   "version": "1.0.0",
-  "description": "A browser-based hub for organizing, browsing, and launching the Ultimate Game Stash.",
+  "description": "A browser-based portal for browsing, filtering, and launching the Ultimate Game Stash game library.",
   "main": "games-data.js",
   "scripts": {
     "test:e2e": "playwright test",
@@ -12,6 +12,8 @@
     "url": "git+https://github.com/seanstonator-lang/UGS-Web-Hub.git"
   },
   "keywords": [
+    "ultimate-game-stash",
+    "game-hub",
     "games",
     "browser-games",
     "github-pages",

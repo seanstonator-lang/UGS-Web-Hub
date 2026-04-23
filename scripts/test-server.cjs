@@ -24,6 +24,18 @@ function send(res, status, body, contentType = 'text/plain; charset=utf-8') {
   res.end(body);
 }
 
+function sendFile(res, filePath, status = 200) {
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      send(res, status === 404 ? 404 : 500, status === 404 ? 'Not found' : 'Server error');
+      return;
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    send(res, status, data, mimeTypes[ext] || 'application/octet-stream');
+  });
+}
+
 function resolveRequestPath(urlPath) {
   const cleanPath = decodeURIComponent(urlPath.split('?')[0]);
   const relativePath = cleanPath === '/' ? '/index.html' : cleanPath;
@@ -44,15 +56,18 @@ const server = http.createServer((req, res) => {
     filePath = path.join(filePath, 'index.html');
   }
 
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      send(res, 404, 'Not found');
+  if (!fs.existsSync(filePath)) {
+    const notFoundPath = path.join(root, '404.html');
+    if (fs.existsSync(notFoundPath)) {
+      sendFile(res, notFoundPath, 404);
       return;
     }
 
-    const ext = path.extname(filePath).toLowerCase();
-    send(res, 200, data, mimeTypes[ext] || 'application/octet-stream');
-  });
+    send(res, 404, 'Not found');
+    return;
+  }
+
+  sendFile(res, filePath, 200);
 });
 
 server.listen(port, () => {

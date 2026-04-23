@@ -2,7 +2,9 @@
 
 [![Playwright Tests](https://github.com/seanstonator-lang/UGS-Web-Hub/actions/workflows/playwright.yml/badge.svg)](https://github.com/seanstonator-lang/UGS-Web-Hub/actions/workflows/playwright.yml)
 
-UGS Web Hub is a fast, browser-based game portal built to organize and launch a massive library of web games from one clean hub.
+Ultimate Game Stash Web Hub is a fast browser-based portal for browsing, filtering, and launching a large library of web games from one clean hub.
+
+Live site: [ugswebhub.com](https://ugswebhub.com)
 
 ## What It Is
 

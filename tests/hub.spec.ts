@@ -135,9 +135,9 @@ test.describe('UGS Web Hub', () => {
   test('loads the about page with the main site links', async ({ page }) => {
     await page.goto('/about.html');
 
-    await expect(page).toHaveTitle(/About Us \| UGS Web Hub/i);
+    await expect(page).toHaveTitle(/About \| UGS Web Hub/i);
     await expect(page.getByRole('heading', { name: /About UGS Web Hub/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /What This Project Does/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /What It Is/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /Back to Hub/i })).toHaveAttribute('href', 'index.html');
     await expect(page.getByRole('link', { name: /Privacy Policy/i })).toHaveAttribute('href', 'privacy.html');
     await expect(page.getByRole('link', { name: /Contact Us/i })).toHaveAttribute('href', 'contact.html');
@@ -187,6 +187,8 @@ test.describe('UGS Web Hub', () => {
     const response = await page.goto('/missing-page.html');
 
     expect(response?.status()).toBe(404);
-    await expect(page.locator('body')).toHaveText('Not found');
+    await expect(page).toHaveTitle(/Page Not Found \| UGS Web Hub/i);
+    await expect(page.getByRole('heading', { name: /Page Not Found/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Back to Hub/i })).toHaveAttribute('href', 'index.html');
   });
 });

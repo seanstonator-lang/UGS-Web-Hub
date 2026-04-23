@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | UGS Web Hub</title>
+  <title>Page Not Found | UGS Web Hub</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -11,7 +12,7 @@
     :root{
       --bg:#07111f;
       --panel:rgba(10,22,40,.86);
-      --panel-strong:#102038;
+      --panel-soft:rgba(255,255,255,.04);
       --text:#f4fbff;
       --muted:#9bb4cf;
       --primary:#5eead4;
@@ -24,22 +25,23 @@
     body{
       margin:0;
       min-height:100vh;
+      display:grid;
+      place-items:center;
       color:var(--text);
       font-family:"Space Grotesk","Trebuchet MS",sans-serif;
       background:
-        radial-gradient(circle at top left,rgba(94,234,212,.18),transparent 26%),
-        radial-gradient(circle at 88% 12%,rgba(119,168,255,.18),transparent 22%),
+        radial-gradient(circle at top left,rgba(94,234,212,.18),transparent 28%),
+        radial-gradient(circle at 88% 12%,rgba(119,168,255,.18),transparent 24%),
+        radial-gradient(circle at 50% 110%,rgba(255,209,102,.14),transparent 30%),
         linear-gradient(145deg,#040b16 0%,#0a1425 48%,#030812 100%);
-    }
-    .page{
-      width:min(980px,calc(100vw - 32px));
-      margin:40px auto;
+      padding:24px;
     }
     .shell{
+      width:min(900px,100%);
       border-radius:32px;
+      overflow:hidden;
       border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-      overflow:hidden;
       box-shadow:var(--shadow);
     }
     .hero{
@@ -70,17 +72,25 @@
       box-shadow:0 0 14px rgba(94,234,212,.45);
     }
     h1{
-      margin:18px 0 12px;
+      margin:18px 0 14px;
       font-family:"Archivo Expanded","Arial Black",sans-serif;
-      font-size:clamp(2rem,5vw,3.6rem);
+      font-size:clamp(2.2rem,5vw,4rem);
       line-height:1;
       text-transform:uppercase;
     }
-    .hero p{
-      max-width:44rem;
+    .code{
+      display:inline-block;
+      margin-bottom:16px;
+      color:var(--secondary);
+      font-size:.92rem;
+      font-weight:700;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+    }
+    p{
       margin:0;
       color:var(--muted);
-      line-height:1.7;
+      line-height:1.75;
       font-size:1rem;
     }
     .content{
@@ -96,21 +106,16 @@
     }
     h2{
       margin:0 0 10px;
-      font-size:1.05rem;
+      font-size:1.02rem;
       letter-spacing:.08em;
       text-transform:uppercase;
       color:var(--secondary);
-    }
-    p{
-      color:var(--muted);
-      line-height:1.75;
-      margin:0;
     }
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
-      margin-top:10px;
+      margin-top:12px;
     }
     .button{
       display:inline-flex;
@@ -128,51 +133,41 @@
       text-transform:uppercase;
       text-decoration:none;
     }
+    .button:hover{
+      background:linear-gradient(135deg,rgba(119,168,255,.24),rgba(94,234,212,.2));
+    }
+    .hint{
+      background:var(--panel-soft);
+    }
     @media (max-width:700px){
-      .page{width:min(980px,calc(100vw - 20px));margin:20px auto}
       .hero,.content{padding:22px}
       .card{padding:18px}
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="shell">
-      <header class="hero">
-        <span class="eyebrow">About</span>
-        <h1>About UGS Web Hub</h1>
-        <p>UGS Web Hub is a personal project built to turn a huge web game collection into something fast, organized, and genuinely fun to explore.</p>
-      </header>
-      <div class="content">
-        <section class="card">
-          <h2>What It Is</h2>
-          <p>Ultimate Game Stash Web Hub is a browser-based portal for browsing, filtering, and launching a big library of web games from one clean place. Instead of digging through scattered links or messy folders, the goal is to make the whole collection feel easy to use.</p>
-        </section>
-        <section class="card">
-          <h2>Why It Exists</h2>
-          <p>This project started from a simple idea: a huge game stash should feel exciting, not chaotic. The hub is built to help people find something fun fast, move through the library without friction, and jump straight into a game without wasting time.</p>
-        </section>
-        <section class="card">
-          <h2>What It Focuses On</h2>
-          <p>Fast loading, clear navigation, useful filters, direct game launching, and a clean visual style. Every update is meant to make the library easier to browse, easier to maintain, and more polished overall.</p>
-        </section>
-        <section class="card">
-          <h2>What&apos;s Next</h2>
-          <p>The plan is to keep sharpening the experience with more polish, stronger navigation, better edge-case handling, and features that make the hub feel even more intentional as the library grows.</p>
-        </section>
-        <section class="card">
-          <h2>How It Stays Sharp</h2>
-          <p>The site is backed by Playwright end-to-end coverage and automated GitHub checks, which helps new updates move fast without accidentally breaking the core hub experience.</p>
-        </section>
-        <section class="card">
-          <h2>Explore More</h2>
-          <div class="actions">
-            <a class="button" href="index.html">Back to Hub</a>
-            <a class="button" href="privacy.html">Privacy Policy</a>
-            <a class="button" href="contact.html">Contact Us</a>
-          </div>
-        </section>
-      </div>
+  <main class="shell">
+    <header class="hero">
+      <span class="eyebrow">Lost In The Hub</span>
+      <span class="code">Error 404</span>
+      <h1>Page Not Found</h1>
+      <p>The link you followed does not point to a live page right now. The hub is still online, and the fastest move is to jump back to the main launch surface.</p>
+    </header>
+    <section class="content">
+      <section class="card">
+        <h2>What Happened</h2>
+        <p>This page may have moved, the URL may be incorrect, or the content may not exist yet. Either way, you did not hit a dead end, just a bad route.</p>
+      </section>
+      <section class="card hint">
+        <h2>Get Back On Track</h2>
+        <p>Head back to the main hub, read more about the project, or use the support pages if you were looking for site info.</p>
+        <div class="actions">
+          <a class="button" href="index.html">Back to Hub</a>
+          <a class="button" href="about.html">About</a>
+          <a class="button" href="contact.html">Contact</a>
+          <a class="button" href="privacy.html">Privacy</a>
+        </div>
+      </section>
     </section>
   </main>
 </body>
