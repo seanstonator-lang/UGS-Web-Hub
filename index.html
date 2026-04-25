@@ -516,9 +516,17 @@ a{color:inherit}
 }
 .genrePanel{
   display:grid;
-  grid-template-columns:minmax(220px,320px) minmax(0,1fr);
+  grid-template-columns:minmax(320px,1.3fr) minmax(0,1fr);
   gap:10px;
   align-items:stretch;
+}
+.filterSelectGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.filterSelectGrid.is-emulated{
+  grid-template-columns:repeat(3,minmax(0,1fr));
 }
 .genreSummary{
   display:flex;
@@ -1047,6 +1055,10 @@ footer a:hover{color:var(--secondary)}
   .genrePanel{
     grid-template-columns:1fr;
   }
+  .filterSelectGrid,
+  .filterSelectGrid.is-emulated{
+    grid-template-columns:1fr;
+  }
   #themeFilters{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
@@ -1205,8 +1217,16 @@ footer a:hover{color:var(--secondary)}
         <div class="controlGroup">
           <span class="controlLabel">Browse Controls</span>
           <div class="genrePanel">
-            <div class="selectWrap">
-              <select class="controlSelect" id="genreSelect" aria-label="Filter games by genre"></select>
+            <div class="filterSelectGrid" id="filterSelectGrid">
+              <div class="selectWrap">
+                <select class="controlSelect" id="platformSelect" aria-label="Filter games by platform type"></select>
+              </div>
+              <div class="selectWrap">
+                <select class="controlSelect" id="genreSelect" aria-label="Filter games by genre"></select>
+              </div>
+              <div class="selectWrap" id="systemSelectWrap" hidden>
+                <select class="controlSelect" id="systemSelect" aria-label="Filter emulated games by system"></select>
+              </div>
             </div>
             <div class="genreSummary">
               <span>Current lane</span>
@@ -1227,6 +1247,7 @@ footer a:hover{color:var(--secondary)}
         <span class="metaPill">Total: <span id="count">0</span></span>
         <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
         <span class="metaPill">Favorites: <span id="favoriteCount">0</span></span>
+        <span class="metaPill">Platform: <span id="activePlatformLabel">Full Vault</span></span>
         <span class="metaPill">Genre: <span id="activeGenreLabel">All</span></span>
         <span class="metaPill">Theme: <span id="activeThemeLabel">Default</span></span>
       </div>
@@ -1264,9 +1285,14 @@ const previewBtn=document.getElementById("previewBtn");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
+const platformSelectEl=document.getElementById("platformSelect");
 const genreSelectEl=document.getElementById("genreSelect");
+const systemSelectEl=document.getElementById("systemSelect");
+const systemSelectWrapEl=document.getElementById("systemSelectWrap");
+const filterSelectGridEl=document.getElementById("filterSelectGrid");
 const themeFiltersEl=document.getElementById("themeFilters");
 const collectionGridEl=document.getElementById("collectionGrid");
+const activePlatformLabelEl=document.getElementById("activePlatformLabel");
 const activeGenreLabelEl=document.getElementById("activeGenreLabel");
 const activeThemeLabelEl=document.getElementById("activeThemeLabel");
 const genreSummaryTextEl=document.getElementById("genreSummaryText");
@@ -1283,7 +1309,9 @@ const clearRecentBtn=document.getElementById("clearRecentBtn");
 const recentListEl=document.getElementById("recentList");
 
 let hubActive=false;
+let activePlatform="all";
 let activeGenre="all";
+let activeSystem="all";
 let activeTheme="default";
 let activeCollection="all";
 let favoritesOnly=false;
@@ -1293,6 +1321,12 @@ const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
 const MAX_RECENT_GAMES=3;
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
+const PLATFORM_OPTIONS=[
+  {key:"all",label:"Full Vault"},
+  {key:"html5",label:"HTML5"},
+  {key:"flash",label:"Flash"},
+  {key:"emulated",label:"Emulation"}
+];
 const TITLE_SMALL_WORDS=new Set([
   "a","an","and","as","at","by","for","from","in","into","of","on","or","the","to","vs","with"
 ]);
@@ -1373,13 +1407,27 @@ let recentGameUrls=loadRecentGames();
 const normalizedGames=gamesData.map(game=>{
   const displayName=exactTitleMap[game.url]||formatGameTitle(game.name);
   const genre=getGenreProfile(displayName,game.name);
+  const type=typeof game.type==="string" ? game.type : "html5";
+  const system=typeof game.system==="string" ? game.system : "";
   return {
     ...game,
     displayName,
     genre,
-    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label}`)
+    type,
+    system,
+    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system}`)
   };
 });
+const EMULATED_SYSTEM_OPTIONS=[
+  {key:"all",label:"All Systems"},
+  ...Array.from(new Set(
+    normalizedGames
+      .filter(game=>game.type==="emulated"&&game.system)
+      .map(game=>game.system)
+  ))
+    .sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))
+    .map(system=>({key:system,label:system}))
+];
 
 /* GAME COUNT (HOME SAFE) */
 countEl.textContent=gamesData.length;
@@ -1393,8 +1441,20 @@ previewBtn.onclick=(event)=>{
   enterHub();
 };
 search.addEventListener("input",render);
+platformSelectEl.addEventListener("change",()=>{
+  activePlatform=platformSelectEl.value;
+  if(activePlatform!=="emulated"){
+    activeSystem="all";
+  }
+  renderFilterControls();
+  render();
+});
 genreSelectEl.addEventListener("change",()=>{
   activeGenre=genreSelectEl.value;
+  render();
+});
+systemSelectEl.addEventListener("change",()=>{
+  activeSystem=systemSelectEl.value;
   render();
 });
 randomBtn.addEventListener("click",launchRandomGame);
@@ -1444,10 +1504,14 @@ function goHome(){
   alpha.style.display="none";
   hubActive=false;
   search.value="";
+  activePlatform="all";
   activeGenre="all";
+  activeSystem="all";
   favoritesOnly=false;
+  platformSelectEl.value="all";
   genreSelectEl.value="all";
   window.scrollTo({top:0});
+  renderFilterControls();
   render();
 }
 
@@ -1495,6 +1559,16 @@ function saveRecentGames(){
 
 function getCollectionOption(key){
   return COLLECTION_OPTIONS.find(option=>option.key===key)||COLLECTION_OPTIONS[0];
+}
+
+function getPlatformLabel(key){
+  return PLATFORM_OPTIONS.find(option=>option.key===key)?.label||"Full Vault";
+}
+
+function matchesPlatformFilters(game){
+  if(activePlatform!=="all"&&game.type!==activePlatform) return false;
+  if(activePlatform==="emulated"&&activeSystem!=="all"&&game.system!==activeSystem) return false;
+  return true;
 }
 
 function trackRecentGame(url){
@@ -1630,7 +1704,7 @@ function render(){
   let currentLetter="";
   const collection=getCollectionOption(activeCollection);
   const filteredGames=normalizedGames
-    .filter(g=>collection.match(g)&&(!favoritesOnly||isFavorite(g.url))&&(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
+    .filter(g=>collection.match(g)&&matchesPlatformFilters(g)&&(!favoritesOnly||isFavorite(g.url))&&(activeGenre==="all"||g.genre.name===activeGenre)&&(!q||g.searchText.includes(q)))
     .sort((a,b)=>{
       const aL=/^[a-z]/i.test(a.displayName);
       const bL=/^[a-z]/i.test(b.displayName);
@@ -1641,17 +1715,20 @@ function render(){
 
   visibleCountEl.textContent=filteredGames.length;
   favoriteCountEl.textContent=favoriteUrls.size;
+  activePlatformLabelEl.textContent=activePlatform==="emulated"&&activeSystem!=="all"
+    ? `${getPlatformLabel(activePlatform)} / ${activeSystem}`
+    : getPlatformLabel(activePlatform);
   activeGenreLabelEl.textContent=activeGenre==="all"
     ? "All"
     : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   activeThemeLabelEl.textContent=THEME_OPTIONS.find(theme=>theme.key===activeTheme)?.label||"Default";
-  genreSummaryTextEl.textContent=favoritesOnly
-    ? "Favorites"
-    : (activeCollection!=="all"
-      ? collection.label
-      : (activeGenre==="all"
-      ? "All Games"
-      : (GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre)));
+  const laneParts=[];
+  if(favoritesOnly) laneParts.push("Favorites");
+  else if(activeCollection!=="all") laneParts.push(collection.label);
+  else laneParts.push(activePlatform==="all" ? "All Games" : getPlatformLabel(activePlatform));
+  if(activeSystem!=="all"&&activePlatform==="emulated") laneParts.push(activeSystem);
+  if(activeGenre!=="all") laneParts.push(GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
+  genreSummaryTextEl.textContent=laneParts.join(" / ");
   favoritesFilterBtn.textContent=`Favorites Only: ${favoritesOnly ? "On" : "Off"}`;
   favoritesFilterBtn.classList.toggle("is-active",favoritesOnly);
   favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
@@ -1678,7 +1755,7 @@ function render(){
       card.innerHTML=`
         <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${game.displayName}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
-          <span class="cardTag">${game.genre.label}</span>
+          <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}</span>
           <h3>${game.displayName}</h3>
         </div>
         <div class="cardFooter">
@@ -1722,6 +1799,15 @@ function renderRecentGames(){
 }
 
 function renderFilterControls(){
+  platformSelectEl.innerHTML="";
+  PLATFORM_OPTIONS.forEach(option=>{
+    const selectOption=document.createElement("option");
+    selectOption.value=option.key;
+    selectOption.textContent=option.label;
+    platformSelectEl.appendChild(selectOption);
+  });
+  platformSelectEl.value=activePlatform;
+
   const options=[
     {name:"all",label:"All Games"},
     ...GENRE_RULES.map(rule=>({name:rule.name,label:rule.label}))
@@ -1734,6 +1820,18 @@ function renderFilterControls(){
     genreSelectEl.appendChild(selectOption);
   });
   genreSelectEl.value=activeGenre;
+
+  systemSelectEl.innerHTML="";
+  EMULATED_SYSTEM_OPTIONS.forEach(option=>{
+    const selectOption=document.createElement("option");
+    selectOption.value=option.key;
+    selectOption.textContent=option.label;
+    systemSelectEl.appendChild(selectOption);
+  });
+  systemSelectEl.value=activePlatform==="emulated" ? activeSystem : "all";
+  const emulatedMode=activePlatform==="emulated";
+  systemSelectWrapEl.hidden=!emulatedMode;
+  filterSelectGridEl.classList.toggle("is-emulated",emulatedMode);
 }
 
 function renderThemeControls(){
@@ -1766,8 +1864,12 @@ function renderCollectionControls(){
       activeCollection=option.key;
       favoritesOnly=false;
       search.value="";
+      activePlatform="all";
       activeGenre="all";
+      activeSystem="all";
+      platformSelectEl.value="all";
       genreSelectEl.value="all";
+      renderFilterControls();
       renderCollectionChipStates();
       render();
     };
@@ -1804,7 +1906,7 @@ function updateSpotlight(filteredGames){
       ? "Save a few titles, then use Favorites Only or Surprise Favorites to build your own rapid-launch lane."
       : (activeCollection!=="all"
         ? `Nothing landed in ${collection.label} with the current filters. Hit Reset View or switch to another quick-start lane.`
-        : "Try another search, switch the genre dropdown, or reset the view to reopen the full vault.");
+        : "Try another search, switch the platform or genre controls, or reset the view to reopen the full vault.");
     favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
     spotlightFavoriteBtn.disabled=true;
     spotlightFavoriteBtn.textContent="Save to Favorites";
@@ -1830,7 +1932,7 @@ function updateSpotlight(filteredGames){
 function launchRandomGame(){
   const q=normalizeSearchText(search.value);
   const collection=getCollectionOption(activeCollection);
-  const pool=normalizedGames.filter(game=>collection.match(game)&&(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
+  const pool=normalizedGames.filter(game=>collection.match(game)&&matchesPlatformFilters(game)&&(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
   if(!pool.length){
     updateSpotlight([]);
     return;
@@ -1847,10 +1949,14 @@ function launchRandomGame(){
 
 function resetHubControls(){
   search.value="";
+  activePlatform="all";
   activeGenre="all";
+  activeSystem="all";
   activeCollection="all";
   favoritesOnly=false;
+  platformSelectEl.value="all";
   genreSelectEl.value="all";
+  renderFilterControls();
   renderCollectionChipStates();
   render();
 }

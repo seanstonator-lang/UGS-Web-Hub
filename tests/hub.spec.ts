@@ -56,6 +56,39 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#spotlightMeta')).toContainText(/title/i);
   });
 
+  test('defaults to the full vault and lets you filter by platform type', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await expect(page.locator('#platformSelect')).toHaveValue('all');
+    await expect(page.locator('#activePlatformLabel')).toHaveText(/Full Vault/i);
+
+    const totalCount = Number(await page.locator('#count').textContent());
+    await page.locator('#platformSelect').selectOption('flash');
+    const flashCount = Number(await page.locator('#visibleCount').textContent());
+
+    expect(flashCount).toBeGreaterThan(0);
+    expect(flashCount).toBeLessThan(totalCount);
+    await expect(page.locator('#activePlatformLabel')).toHaveText(/Flash/i);
+    await expect(page.locator('#genreSummaryText')).toHaveText(/Flash/i);
+  });
+
+  test('shows emulation system filtering when emulation is selected', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+
+    await page.locator('#platformSelect').selectOption('emulated');
+
+    await expect(page.locator('#systemSelectWrap')).toBeVisible();
+    await page.locator('#systemSelect').selectOption({ index: 1 });
+
+    const chosenSystem = await page.locator('#systemSelect').inputValue();
+    expect(chosenSystem).not.toBe('all');
+    await expect(page.locator('#activePlatformLabel')).toContainText(chosenSystem);
+    await expect(page.locator('#genreSummaryText')).toContainText(chosenSystem);
+    await expect(page.locator('#visibleCount')).not.toHaveText('0');
+  });
+
   test('switches themes from the hub theme controls', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();

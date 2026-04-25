@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
 
 const root = __dirname;
 const gamesDataPath = path.join(root, "games-data.js");
@@ -52,8 +53,9 @@ const KNOWN_TITLE_SUFFIXES = [
 
 function parseGamesData() {
   const text = fs.readFileSync(gamesDataPath, "utf8");
-  return [...text.matchAll(/\{\s*"name":\s*"([^"]+)",\s*"url":\s*"([^"]+)"\s*\}/g)]
-    .map(([, name, url]) => ({ name, url }));
+  const sandbox = {};
+  vm.runInNewContext(text, sandbox);
+  return Array.isArray(sandbox.rawGames) ? sandbox.rawGames : [];
 }
 
 function normalizeSearchText(value) {
