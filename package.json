@@ -4,7 +4,8 @@
   "description": "A browser-based portal for browsing, filtering, and launching the Ultimate Game Stash game library.",
   "main": "games-data.js",
   "scripts": {
-    "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js",
+    "build:card-media": "node generate-game-card-media.js",
+    "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js && node generate-game-card-media.js",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
   },

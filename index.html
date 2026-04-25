@@ -828,9 +828,10 @@ a{color:inherit}
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at top right,rgba(var(--genre-rgb),.26),transparent 36%),
-    linear-gradient(145deg,rgba(var(--genre-rgb),.18),transparent 45%,rgba(255,255,255,.04));
-  opacity:0;
+    linear-gradient(180deg,rgba(7,14,24,.14) 0%,rgba(7,14,24,.24) 28%,rgba(7,14,24,.86) 100%),
+    radial-gradient(circle at top right,rgba(var(--genre-rgb),.22),transparent 36%),
+    linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
+  opacity:.94;
   transition:opacity .3s ease;
 }
 .card:hover{
@@ -839,7 +840,29 @@ a{color:inherit}
   box-shadow:0 24px 46px rgba(0,0,0,.34),0 0 0 1px rgba(var(--genre-rgb),.14);
   background:linear-gradient(180deg,rgba(14,28,48,.98),rgba(8,18,33,.98));
 }
-.card:hover::before{opacity:1}
+.card:hover::before{opacity:.98}
+.cardMedia{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+}
+.cardMedia img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.03);
+  filter:saturate(1.04) contrast(1.05) brightness(.74);
+  opacity:.96;
+  transition:transform .3s ease,filter .3s ease;
+}
+.card:hover .cardMedia img{
+  transform:scale(1.08);
+  filter:saturate(1.08) contrast(1.08) brightness(.82);
+}
+.card.no-media .cardMedia{
+  display:none;
+}
 .card.genre-action{--genre-rgb:255,106,136;--genre-solid:#ff6a88}
 .card.genre-racing{--genre-rgb:255,149,0;--genre-solid:#ff9500}
 .card.genre-puzzle{--genre-rgb:115,103,240;--genre-solid:#7367f0}
@@ -861,6 +884,7 @@ a{color:inherit}
 .cardTag{
   display:inline-flex;
   align-items:center;
+  max-width:100%;
   margin-bottom:14px;
   padding:7px 11px;
   border-radius:999px;
@@ -871,6 +895,7 @@ a{color:inherit}
   font-weight:700;
   letter-spacing:.13em;
   text-transform:uppercase;
+  overflow-wrap:anywhere;
 }
 .cardTag::before{
   content:"";
@@ -885,6 +910,8 @@ a{color:inherit}
   margin:0;
   font-size:1.08rem;
   line-height:1.28;
+  text-shadow:0 10px 24px rgba(0,0,0,.45);
+  overflow-wrap:anywhere;
 }
 .cardFooter{
   display:flex;
@@ -897,6 +924,9 @@ a{color:inherit}
   margin:0;
   color:var(--muted);
   font-size:.84rem;
+  line-height:1.55;
+  text-shadow:0 8px 18px rgba(0,0,0,.4);
+  overflow-wrap:anywhere;
 }
 .cardArrow{
   flex:0 0 auto;
@@ -1282,6 +1312,7 @@ footer a:hover{color:var(--secondary)}
 
 <script src="games-data.js"></script>
 <script src="games-titles.js"></script>
+<script src="game-card-media.js"></script>
 <script>
 const landing=document.getElementById("landing");
 const hub=document.getElementById("hub");
@@ -1332,6 +1363,7 @@ const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
 const MAX_RECENT_GAMES=3;
 const gamesData=window.rawGames||[];
 const exactTitleMap=window.gameTitleMap||{};
+const cardMediaMap=window.gameCardMediaMap||{};
 const PLATFORM_OPTIONS=[
   {key:"all",label:"Full Vault"},
   {key:"html5",label:"HTML5"},
@@ -1400,6 +1432,7 @@ const normalizedGames=gamesData.map(game=>{
     genre,
     type,
     system,
+    cardMedia:cardMediaMap[game.url]||"",
     searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system}`)
   };
 });
@@ -1556,6 +1589,10 @@ function matchesPlatformFilters(game){
   return true;
 }
 
+function getCardMediaUrl(game){
+  return game.cardMedia||"";
+}
+
 function trackRecentGame(url){
   recentGameUrls=[url,...recentGameUrls.filter(item=>item!==url)].slice(0,MAX_RECENT_GAMES);
   saveRecentGames();
@@ -1670,9 +1707,14 @@ function render(){
       }
       const card=document.createElement("div");
       const favoriteActive=isFavorite(game.url);
+      const cardMediaUrl=getCardMediaUrl(game);
       card.className=`card genre-${game.genre.name}`;
+      if(!cardMediaUrl){
+        card.classList.add("no-media");
+      }
       card.style.setProperty("--card-index",index%18);
       card.innerHTML=`
+        ${cardMediaUrl ? `<div class="cardMedia"><img src="${cardMediaUrl}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></div>` : ""}
         <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${game.displayName}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
           <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}</span>
@@ -1687,6 +1729,13 @@ function render(){
         event.stopPropagation();
         toggleFavorite(game.url);
       };
+      const mediaImage=card.querySelector(".cardMedia img");
+      if(mediaImage){
+        mediaImage.onerror=()=>{
+          card.classList.add("no-media");
+          mediaImage.remove();
+        };
+      }
       gamesEl.appendChild(card);
     });
 }
