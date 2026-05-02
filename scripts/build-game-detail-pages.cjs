@@ -200,7 +200,7 @@ function renderGamePage(game) {
         <p class="lead">${escapeHtml(buildOverview(title, genre, game))}</p>
         <div class="actions">
           <a class="button primary" href="${escapeHtml(playHref)}" rel="nofollow">Play ${escapeHtml(title)}</a>
-          <a class="button" href="../index.html#hub">Browse Library</a>
+          <a class="button" href="../index.html?hub=1#hub">Browse Library</a>
         </div>
       </div>
       <div class="heroMedia">

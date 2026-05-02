@@ -99,22 +99,17 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#activeThemeLabel')).toHaveText(/Neon Grid/i);
   });
 
-  test('random pick updates spotlight and launch opens a game tab', async ({ page, context }) => {
+  test('random pick updates spotlight and launch opens the library page in the same tab', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
 
     await page.getByRole('button', { name: /^Random Pick$/i }).click();
     await expect(page.locator('#spotlightTitle')).not.toHaveText(/Catalog Ready/i);
 
-    const [popup] = await Promise.all([
-      context.waitForEvent('page'),
-      page.locator('#spotlightBtn').click(),
-    ]);
-
-    await popup.waitForLoadState('domcontentloaded');
-    await expect(popup).toHaveURL(/\/library\//i);
-    await expect(popup.getByRole('link', { name: /^Play /i })).toHaveAttribute('href', /\.\.\/games\//i);
-    await popup.close();
+    await page.locator('#spotlightBtn').click();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page).toHaveURL(/\/library\//i);
+    await expect(page.getByRole('link', { name: /^Play /i })).toHaveAttribute('href', /\.\.\/games\//i);
   });
 
   test('reset view clears search and genre filter', async ({ page }) => {
@@ -182,7 +177,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games .card').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
   });
 
-  test('surprise favorites launches from the saved pool', async ({ page, context }) => {
+  test('surprise favorites launches from the saved pool', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
 
@@ -190,29 +185,26 @@ test.describe('UGS Web Hub', () => {
     const title = (await firstCard.locator('h3').textContent())?.trim();
     await firstCard.getByRole('button', { name: /Add to favorites/i }).click();
 
-    const [popup] = await Promise.all([
-      context.waitForEvent('page'),
-      page.getByRole('button', { name: /Surprise Favorites/i }).click(),
-    ]);
-
-    await popup.waitForLoadState('domcontentloaded');
+    await page.getByRole('button', { name: /Surprise Favorites/i }).click();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page).toHaveURL(/\/library\//i);
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
     await expect(page.locator('#recentList')).toContainText(title || '');
-    await popup.close();
   });
 
-  test('tracks recently played games and lets you clear the list', async ({ page, context }) => {
+  test('tracks recently played games and lets you clear the list', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
 
     const firstCard = page.locator('#games .card').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
 
-    const [popup] = await Promise.all([
-      context.waitForEvent('page'),
-      firstCard.click(),
-    ]);
-    await popup.close();
-
+    await firstCard.click();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page).toHaveURL(/\/library\//i);
+    await page.goto('/');
+    await page.getByRole('button', { name: /Enter the Hub/i }).click();
     await expect(page.locator('#recentList')).toContainText(title || '');
     await expect(page.getByRole('button', { name: /Play Again/i })).toBeVisible();
 
@@ -225,7 +217,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('button', { name: /Clear Recent/i })).toBeDisabled();
   });
 
-  test('keeps only the last three recently played games', async ({ page, context }) => {
+  test('keeps only the last three recently played games', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Enter the Hub/i }).click();
 
@@ -233,11 +225,11 @@ test.describe('UGS Web Hub', () => {
     for (let i = 0; i < 4; i += 1) {
       const card = page.locator('#games .card').nth(i);
       titles.push(((await card.locator('h3').textContent()) || '').trim());
-      const [popup] = await Promise.all([
-        context.waitForEvent('page'),
-        card.click(),
-      ]);
-      await popup.close();
+      await card.click();
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page).toHaveURL(/\/library\//i);
+      await page.goto('/');
+      await page.getByRole('button', { name: /Enter the Hub/i }).click();
     }
 
     await expect(page.locator('#recentList .recentItem')).toHaveCount(3);
@@ -347,7 +339,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('link', { name: /Play 1 On 1 Soccer/i })).toHaveAttribute('href', '../games/cl1on1soccer.html');
 
     await page.getByRole('link', { name: /Browse Library/i }).click();
-    await expect(page).toHaveURL(/\/index\.html#hub$/i);
+    await expect(page).toHaveURL(/\/index\.html\?hub=1#hub$/i);
     await expect(page.getByRole('heading', { name: /Find your next tab destroyer/i })).toBeVisible();
     await expect(page.locator('#games .card').first()).toBeVisible();
   });

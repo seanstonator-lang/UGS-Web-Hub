@@ -1551,15 +1551,16 @@ function goHome(){
   platformSelectEl.value="all";
   genreSelectEl.value="all";
   window.scrollTo({top:0});
-  if(location.hash==="#hub"){
-    history.replaceState(null,"",location.pathname+location.search);
+  if(location.hash==="#hub"||new URLSearchParams(location.search).has("hub")){
+    history.replaceState(null,"",location.pathname);
   }
   renderFilterControls();
   render();
 }
 
-function openHubFromHash(){
-  if(location.hash==="#hub"&&!hubActive){
+function openHubFromDeepLink(){
+  const params=new URLSearchParams(location.search);
+  if((location.hash==="#hub"||params.has("hub"))&&!hubActive){
     enterHub();
   }
 }
@@ -1657,7 +1658,7 @@ function launchGame(game){
   if(!game) return;
   trackRecentGame(game.url);
   renderRecentGames();
-  open(getGameDetailUrl(game),"_blank");
+  location.href=getGameDetailUrl(game);
 }
 
 function launchFavoriteSurprise(){
@@ -1992,8 +1993,8 @@ function resetHubControls(){
   alpha.appendChild(s);
 });
 
-addEventListener("hashchange",openHubFromHash);
-openHubFromHash();
+addEventListener("hashchange",openHubFromDeepLink);
+openHubFromDeepLink();
 
 /* SCROLL — HOTFIX */
 addEventListener("scroll",()=>{
