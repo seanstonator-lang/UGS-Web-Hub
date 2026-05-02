@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest an improvement for the hub.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What should change?
+      description: Describe the feature or improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why would this help?
+      description: Explain the user value or maintenance value.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Hub browsing
+        - Search and filters
+        - Favorites or recently played
+        - Library pages
+        - Game launch flow
+        - Static content pages
+        - Scripts or automation
+        - Tests or CI
+        - Other
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes

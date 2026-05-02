@@ -27,6 +27,17 @@ Live site: [ugswebhub.com](https://ugswebhub.com)
 - `scripts/` contains import, media enrichment, and content generation tools.
 - `tests/` contains Playwright coverage for hub, library, and static-page flows.
 
+## Maintainer Docs
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Operations](docs/OPERATIONS.md)
+- [Release checklist](docs/RELEASE_CHECKLIST.md)
+- [Repository settings](docs/REPO_SETTINGS.md)
+- [Contributing](CONTRIBUTING.md)
+- [Support](SUPPORT.md)
+- [Security](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+
 ## Stack
 
 - HTML, CSS, and vanilla JavaScript

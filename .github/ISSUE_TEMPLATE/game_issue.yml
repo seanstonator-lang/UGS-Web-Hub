@@ -1,0 +1,38 @@
+name: Game issue
+description: Report a broken, mislabeled, or low-quality game entry.
+title: "[Game]: "
+labels:
+  - game-catalog
+body:
+  - type: input
+    id: game
+    attributes:
+      label: Game title
+      placeholder: 1 On 1 Soccer
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Game or library URL
+      placeholder: https://ugswebhub.com/library/cl1on1soccer.html
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      options:
+        - Broken launch
+        - Wrong title
+        - Bad card media
+        - Wrong genre or platform
+        - Content problem on library page
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Include what happened and what should be corrected.
+    validations:
+      required: true

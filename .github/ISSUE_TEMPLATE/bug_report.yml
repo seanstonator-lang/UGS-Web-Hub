@@ -1,0 +1,40 @@
+name: Bug report
+description: Report something broken in UGS Web Hub.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly.
+      placeholder: The page, game, search, or launch flow did not work as expected.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page or game URL
+      placeholder: https://ugswebhub.com/library/example.html
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the hub
+        2. Search for a game
+        3. Click the result
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Chrome on Windows, Safari on iPhone, etc.
