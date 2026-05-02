@@ -18,6 +18,8 @@ const waitAfterLoadMs = Number(process.env.MEDIA_LOCAL_WAIT_MS || 800);
 const navTimeoutMs = Number(process.env.MEDIA_LOCAL_NAV_TIMEOUT_MS || 25000);
 const retryCommitTimeoutMs = Number(process.env.MEDIA_LOCAL_RETRY_COMMIT_TIMEOUT_MS || 8000);
 const checkpointEvery = Math.max(1, Number(process.env.MEDIA_LOCAL_CHECKPOINT_EVERY || 25));
+const pageRecycleEvery = Math.max(1, Number(process.env.MEDIA_LOCAL_PAGE_RECYCLE_EVERY || 40));
+const failStreakRecycleThreshold = Math.max(1, Number(process.env.MEDIA_LOCAL_FAIL_STREAK_RECYCLE || 4));
 const dryRun = process.env.MEDIA_LOCAL_DRY_RUN === "1";
 
 const viewWidth = Number(process.env.MEDIA_LOCAL_WIDTH || 960);
@@ -121,16 +123,21 @@ async function captureAll() {
 
   const server = await maybeStartServer();
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({
-    viewport: {
-      width: viewWidth,
-      height: viewHeight,
-    },
-  });
+  async function createFreshPage() {
+    return browser.newPage({
+      viewport: {
+        width: viewWidth,
+        height: viewHeight,
+      },
+    });
+  }
+
+  let page = await createFreshPage();
 
   let captured = 0;
   let failed = 0;
   let processedSinceCheckpoint = 0;
+  let consecutiveFails = 0;
 
   console.log(`Base URL: ${baseUrl}`);
   console.log(`Games in catalog: ${games.length}`);
@@ -165,10 +172,33 @@ async function captureAll() {
 
       mediaMap[game.url] = relativeOut;
       captured += 1;
+      consecutiveFails = 0;
       console.log(`[${i + 1}/${targets.length}] ok   ${game.url} -> ${relativeOut}`);
     } catch (error) {
       failed += 1;
+      consecutiveFails += 1;
       console.log(`[${i + 1}/${targets.length}] fail ${game.url} :: ${error.message}`);
+
+      if (consecutiveFails >= failStreakRecycleThreshold) {
+        try {
+          await page.close();
+        } catch (closeError) {
+          // ignore
+        }
+        page = await createFreshPage();
+        consecutiveFails = 0;
+        console.log(`recovery: recycled page after fail streak at ${i + 1}/${targets.length}`);
+      }
+    }
+
+    if (consecutiveFails === 0 && (i + 1) % pageRecycleEvery === 0) {
+      try {
+        await page.close();
+      } catch (closeError) {
+        // ignore
+      }
+      page = await createFreshPage();
+      console.log(`maintenance: recycled page at ${i + 1}/${targets.length}`);
     }
 
     processedSinceCheckpoint += 1;
