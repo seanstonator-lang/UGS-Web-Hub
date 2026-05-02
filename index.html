@@ -815,9 +815,9 @@ a{color:inherit}
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
-  min-height:412px;
+  min-height:430px;
   display:grid;
-  grid-template-rows:210px 1fr;
+  grid-template-rows:210px minmax(220px,auto);
   position:relative;
   overflow:hidden;
   animation:cardRise .45s ease both;
@@ -891,9 +891,9 @@ a{color:inherit}
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
-  gap:10px;
-  padding:16px 18px 20px;
-  min-height:202px;
+  gap:12px;
+  padding:18px 18px 20px;
+  min-height:220px;
   background:
     linear-gradient(180deg,rgba(7,14,24,.18) 0%,rgba(7,14,24,.44) 36%,rgba(7,14,24,.9) 100%),
     linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
@@ -902,7 +902,7 @@ a{color:inherit}
   display:inline-flex;
   align-items:center;
   max-width:100%;
-  margin-bottom:14px;
+  margin-bottom:0;
   padding:7px 11px;
   border-radius:999px;
   background:rgba(255,255,255,.06);
@@ -937,6 +937,8 @@ a{color:inherit}
   align-items:start;
   gap:12px;
   margin-top:auto;
+  width:100%;
+  padding-top:10px;
 }
 .card p{
   margin:0;
@@ -1751,10 +1753,10 @@ function render(){
         <div class="cardTop">
           <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}</span>
           <h3>${game.displayName}</h3>
-        </div>
-        <div class="cardFooter">
+          <div class="cardFooter">
           <p>${getCardFlavorText(game)}</p>
           <span class="cardArrow">↗</span>
+          </div>
         </div>`;
       card.onclick=()=>launchGame(game);
       card.querySelector(".favoriteBtn").onclick=(event)=>{
