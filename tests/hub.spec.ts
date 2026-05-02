@@ -345,6 +345,11 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('heading', { name: /What To Expect/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Playing Notes/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /Play 1 On 1 Soccer/i })).toHaveAttribute('href', '../games/cl1on1soccer.html');
+
+    await page.getByRole('link', { name: /Browse Library/i }).click();
+    await expect(page).toHaveURL(/\/index\.html#hub$/i);
+    await expect(page.getByRole('heading', { name: /Find your next tab destroyer/i })).toBeVisible();
+    await expect(page.locator('#games .card').first()).toBeVisible();
   });
 
   test('missing pages return the current 404 response', async ({ page }) => {

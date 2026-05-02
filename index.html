@@ -1551,8 +1551,17 @@ function goHome(){
   platformSelectEl.value="all";
   genreSelectEl.value="all";
   window.scrollTo({top:0});
+  if(location.hash==="#hub"){
+    history.replaceState(null,"",location.pathname+location.search);
+  }
   renderFilterControls();
   render();
+}
+
+function openHubFromHash(){
+  if(location.hash==="#hub"&&!hubActive){
+    enterHub();
+  }
 }
 
 function normalizeSearchText(value){
@@ -1982,6 +1991,9 @@ function resetHubControls(){
   };
   alpha.appendChild(s);
 });
+
+addEventListener("hashchange",openHubFromHash);
+openHubFromHash();
 
 /* SCROLL — HOTFIX */
 addEventListener("scroll",()=>{
