@@ -351,7 +351,7 @@ a{color:inherit}
 }
 .hubIntro{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(360px,520px);
+  grid-template-columns:minmax(0,1fr) minmax(400px,560px);
   gap:22px;
   margin-bottom:30px;
   align-items:start;
@@ -413,7 +413,7 @@ a{color:inherit}
 .controlsStack{
   display:grid;
   grid-template-columns:1fr;
-  gap:16px;
+  gap:18px;
   margin-top:18px;
   align-items:start;
 }
@@ -461,9 +461,9 @@ a{color:inherit}
 }
 .controlGroup{
   display:grid;
-  gap:10px;
-  padding:14px;
-  border-radius:20px;
+  gap:12px;
+  padding:16px;
+  border-radius:22px;
   background:rgba(255,255,255,.035);
   border:1px solid rgba(255,255,255,.07);
 }
@@ -516,14 +516,14 @@ a{color:inherit}
 }
 .genrePanel{
   display:grid;
-  grid-template-columns:minmax(320px,1.3fr) minmax(0,1fr);
-  gap:10px;
+  grid-template-columns:minmax(340px,1.35fr) minmax(0,1fr);
+  gap:12px;
   align-items:stretch;
 }
 .filterSelectGrid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+  gap:12px;
 }
 .filterSelectGrid.is-emulated{
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -540,7 +540,7 @@ a{color:inherit}
   background:rgba(255,255,255,.04);
   color:var(--muted);
   font-size:.82rem;
-  min-height:50px;
+  min-height:56px;
 }
 .genreSummary span{
   flex:0 0 auto;
@@ -556,7 +556,7 @@ a{color:inherit}
 .actionRow{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
 }
 .actionBtn{
   min-height:50px;
@@ -761,9 +761,9 @@ a{color:inherit}
 .themeChip[data-theme-key="mono-arcade"] span{background:linear-gradient(135deg,#73ffa6,#c4ff4d,#f7ff8a)}
 .hubMeta{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
-  margin-top:16px;
+  margin-top:18px;
 }
 .metaPill{
   display:flex;
@@ -777,6 +777,10 @@ a{color:inherit}
   color:var(--text);
   font-size:.82rem;
   font-weight:700;
+  gap:8px;
+}
+.metaPill span{
+  margin-left:auto;
 }
 #games{
   display:grid;
@@ -1019,7 +1023,7 @@ a{color:inherit}
 #homeBtn{
   position:fixed;
   top:18px;
-  right:18px;
+  left:18px;
   padding:12px 18px;
   border-radius:999px;
   font-family:inherit;
@@ -1098,6 +1102,9 @@ footer a:hover{color:var(--secondary)}
     grid-template-columns:1fr;
   }
   #themeFilters{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .hubMeta{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
   #landing{
