@@ -15,6 +15,8 @@ const replaceAll = process.env.MEDIA_LOCAL_REPLACE_ALL === "1";
 const maxGames = Number(process.env.MEDIA_LOCAL_MAX_GAMES || 0);
 const delayMs = Number(process.env.MEDIA_LOCAL_DELAY_MS || 250);
 const waitAfterLoadMs = Number(process.env.MEDIA_LOCAL_WAIT_MS || 800);
+const navTimeoutMs = Number(process.env.MEDIA_LOCAL_NAV_TIMEOUT_MS || 25000);
+const retryCommitTimeoutMs = Number(process.env.MEDIA_LOCAL_RETRY_COMMIT_TIMEOUT_MS || 8000);
 const dryRun = process.env.MEDIA_LOCAL_DRY_RUN === "1";
 
 const viewWidth = Number(process.env.MEDIA_LOCAL_WIDTH || 960);
@@ -141,7 +143,13 @@ async function captureAll() {
     const relativeOut = path.relative(root, absOut).replace(/\\/g, "/");
 
     try {
-      await page.goto(gameUrl, { waitUntil: "domcontentloaded", timeout: 25000 });
+      try {
+        await page.goto(gameUrl, { waitUntil: "domcontentloaded", timeout: navTimeoutMs });
+      } catch (firstError) {
+        // Some pages never reach DOMContentLoaded due to heavy boot scripts.
+        // Retry with a lighter readiness target so we can still capture a useful card image.
+        await page.goto(gameUrl, { waitUntil: "commit", timeout: retryCommitTimeoutMs });
+      }
       await sleep(waitAfterLoadMs);
 
       if (!dryRun) {
