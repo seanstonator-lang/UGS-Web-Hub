@@ -15,17 +15,31 @@ const replaceAll = process.env.MEDIA_LOCAL_REPLACE_ALL === "1";
 const maxGames = Number(process.env.MEDIA_LOCAL_MAX_GAMES || 0);
 const delayMs = Number(process.env.MEDIA_LOCAL_DELAY_MS || 250);
 const waitAfterLoadMs = Number(process.env.MEDIA_LOCAL_WAIT_MS || 800);
+const waitAfterPlayClickMs = Number(process.env.MEDIA_LOCAL_WAIT_AFTER_PLAY_CLICK_MS || 1500);
 const navTimeoutMs = Number(process.env.MEDIA_LOCAL_NAV_TIMEOUT_MS || 25000);
 const retryCommitTimeoutMs = Number(process.env.MEDIA_LOCAL_RETRY_COMMIT_TIMEOUT_MS || 8000);
 const checkpointEvery = Math.max(1, Number(process.env.MEDIA_LOCAL_CHECKPOINT_EVERY || 25));
 const pageRecycleEvery = Math.max(1, Number(process.env.MEDIA_LOCAL_PAGE_RECYCLE_EVERY || 40));
 const failStreakRecycleThreshold = Math.max(1, Number(process.env.MEDIA_LOCAL_FAIL_STREAK_RECYCLE || 4));
+const onlyBadHash = process.env.MEDIA_LOCAL_ONLY_BAD_HASH === "1";
 const dryRun = process.env.MEDIA_LOCAL_DRY_RUN === "1";
 
 const viewWidth = Number(process.env.MEDIA_LOCAL_WIDTH || 960);
 const viewHeight = Number(process.env.MEDIA_LOCAL_HEIGHT || 540);
 const jpegQuality = Number(process.env.MEDIA_LOCAL_JPEG_QUALITY || 72);
 const fallbackImage = "favicon.png";
+const badHashes = new Set(
+  (process.env.MEDIA_LOCAL_BAD_HASHES || "de8b4f10d0fd53d1940621c909c55178ea206598,928c73c8db193737531379f4c2294ab33b8d6d27")
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean)
+);
+
+function sha1File(filePath) {
+  const crypto = require("crypto");
+  const buffer = fs.readFileSync(filePath);
+  return crypto.createHash("sha1").update(buffer).digest("hex");
+}
 
 function parseGames() {
   const text = fs.readFileSync(gamesDataPath, "utf8");
@@ -60,6 +74,12 @@ function safeSlug(gameUrl) {
 
 function shouldCapture(game, mediaMap) {
   const current = mediaMap[game.url];
+  if (onlyBadHash) {
+    if (!current || !current.startsWith("card-media/generated/")) return false;
+    const abs = path.join(root, current.replace(/\//g, path.sep));
+    if (!fs.existsSync(abs)) return false;
+    return badHashes.has(sha1File(abs));
+  }
   if (!current) return true;
   if (replaceAll) return true;
   if (onlyFallbacks) return current === fallbackImage;
@@ -168,6 +188,24 @@ async function captureAll() {
           quality: jpegQuality,
           fullPage: false,
         });
+
+        let currentHash = sha1File(absOut);
+        if (badHashes.has(currentHash)) {
+          const clicked = await clickPlayIfVisible();
+          if (clicked) {
+            await page.screenshot({
+              path: absOut,
+              type: "jpeg",
+              quality: jpegQuality,
+              fullPage: false,
+            });
+            currentHash = sha1File(absOut);
+          }
+        }
+
+        if (badHashes.has(currentHash)) {
+          throw new Error(`placeholder capture hash ${currentHash}`);
+        }
       }
 
       mediaMap[game.url] = relativeOut;
@@ -236,3 +274,25 @@ captureAll().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+  async function clickPlayIfVisible() {
+    const playCandidates = [
+      page.getByRole("button", { name: /^play$/i }),
+      page.getByText(/^play$/i),
+      page.locator("[class*='play'], [id*='play']"),
+    ];
+
+    for (const locator of playCandidates) {
+      try {
+        const count = await locator.count();
+        if (count > 0) {
+          await locator.first().click({ timeout: 1200, force: true });
+          await sleep(waitAfterPlayClickMs);
+          return true;
+        }
+      } catch (error) {
+        // ignore and try next
+      }
+    }
+
+    return false;
+  }
