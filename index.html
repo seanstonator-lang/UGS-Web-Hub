@@ -811,14 +811,13 @@ a{color:inherit}
 .card{
   background:var(--card);
   border-radius:24px;
-  padding:18px 18px 16px;
+  padding:0;
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
-  min-height:166px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+  min-height:332px;
+  display:grid;
+  grid-template-rows:180px 1fr;
   position:relative;
   overflow:hidden;
   animation:cardRise .45s ease both;
@@ -828,15 +827,7 @@ a{color:inherit}
   --genre-soft:rgba(94,234,212,.18);
 }
 .card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(180deg,rgba(7,14,24,.14) 0%,rgba(7,14,24,.24) 28%,rgba(7,14,24,.86) 100%),
-    radial-gradient(circle at top right,rgba(var(--genre-rgb),.22),transparent 36%),
-    linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
-  opacity:.94;
-  transition:opacity .3s ease;
+  content:none;
 }
 .card:hover{
   transform:translateY(-8px);
@@ -844,18 +835,27 @@ a{color:inherit}
   box-shadow:0 24px 46px rgba(0,0,0,.34),0 0 0 1px rgba(var(--genre-rgb),.14);
   background:linear-gradient(180deg,rgba(14,28,48,.98),rgba(8,18,33,.98));
 }
-.card:hover::before{opacity:.98}
 .cardMedia{
+  position:relative;
+  z-index:1;
+  grid-row:1;
+  overflow:hidden;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.cardMedia::after{
+  content:"";
   position:absolute;
   inset:0;
-  z-index:0;
-  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(7,14,24,.08) 0%,rgba(7,14,24,.2) 45%,rgba(7,14,24,.62) 100%),
+    radial-gradient(circle at top right,rgba(var(--genre-rgb),.22),transparent 38%);
+  pointer-events:none;
 }
 .cardMedia img{
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:scale(1.03);
+  transform:scale(1.04);
   filter:saturate(1.04) contrast(1.05) brightness(.74);
   opacity:.96;
   transition:transform .3s ease,filter .3s ease;
@@ -866,6 +866,10 @@ a{color:inherit}
 }
 .card.no-media .cardMedia{
   display:none;
+}
+.card.no-media{
+  min-height:166px;
+  grid-template-rows:1fr;
 }
 .card.genre-action{--genre-rgb:255,106,136;--genre-solid:#ff6a88}
 .card.genre-racing{--genre-rgb:255,149,0;--genre-solid:#ff9500}
@@ -880,10 +884,18 @@ a{color:inherit}
 .cardTop,
 .cardFooter{
   position:relative;
-  z-index:1;
+  z-index:2;
 }
 .cardTop{
-  padding-right:56px;
+  grid-row:2;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:16px 18px 16px;
+  min-height:152px;
+  background:
+    linear-gradient(180deg,rgba(7,14,24,.18) 0%,rgba(7,14,24,.44) 36%,rgba(7,14,24,.9) 100%),
+    linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
 }
 .cardTag{
   display:inline-flex;
@@ -922,7 +934,7 @@ a{color:inherit}
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin-top:20px;
+  margin-top:16px;
 }
 .card p{
   margin:0;
@@ -1023,7 +1035,7 @@ a{color:inherit}
 #homeBtn{
   position:fixed;
   top:18px;
-  left:18px;
+  right:18px;
   padding:12px 18px;
   border-radius:999px;
   font-family:inherit;
@@ -1194,7 +1206,6 @@ footer a:hover{color:var(--secondary)}
       </div>
       <div class="heroActions">
         <button id="enterBtn">Enter the Hub</button>
-        <a class="ghostBtn" id="previewBtn" href="#hub">See the catalog</a>
       </div>
     </div>
     <aside class="heroPanel">
@@ -1330,7 +1341,6 @@ const progress=document.getElementById("progress");
 const topBtn=document.getElementById("topBtn");
 const homeBtn=document.getElementById("homeBtn");
 const enterBtn=document.getElementById("enterBtn");
-const previewBtn=document.getElementById("previewBtn");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
@@ -1461,10 +1471,6 @@ heroCountEl.textContent=gamesData.length;
 /* NAV */
 enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
-previewBtn.onclick=(event)=>{
-  event.preventDefault();
-  enterHub();
-};
 search.addEventListener("input",render);
 platformSelectEl.addEventListener("change",()=>{
   activePlatform=platformSelectEl.value;
