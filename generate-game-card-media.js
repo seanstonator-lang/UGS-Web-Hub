@@ -184,12 +184,11 @@ function pickBestAsset(game) {
 function buildMediaMap() {
   const games = parseGamesData();
   const mediaMap = {};
+  const fallbackImage = "favicon.png";
 
   for (const game of games) {
     const asset = pickBestAsset(game);
-    if (asset) {
-      mediaMap[game.url] = asset;
-    }
+    mediaMap[game.url] = asset || fallbackImage;
   }
 
   return mediaMap;
