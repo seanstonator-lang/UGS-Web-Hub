@@ -815,9 +815,9 @@ a{color:inherit}
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
-  min-height:332px;
+  min-height:372px;
   display:grid;
-  grid-template-rows:180px 1fr;
+  grid-template-rows:196px 1fr;
   position:relative;
   overflow:hidden;
   animation:cardRise .45s ease both;
@@ -891,8 +891,8 @@ a{color:inherit}
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  padding:16px 18px 16px;
-  min-height:152px;
+  padding:16px 18px 18px;
+  min-height:176px;
   background:
     linear-gradient(180deg,rgba(7,14,24,.18) 0%,rgba(7,14,24,.44) 36%,rgba(7,14,24,.9) 100%),
     linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
@@ -931,6 +931,7 @@ a{color:inherit}
 }
 .cardFooter{
   display:flex;
+  flex:1 1 auto;
   align-items:center;
   justify-content:space-between;
   gap:10px;
@@ -939,10 +940,16 @@ a{color:inherit}
 .card p{
   margin:0;
   color:var(--muted);
-  font-size:.84rem;
-  line-height:1.55;
+  font-size:.87rem;
+  line-height:1.48;
   text-shadow:0 8px 18px rgba(0,0,0,.4);
   overflow-wrap:anywhere;
+  flex:1 1 auto;
+  min-width:0;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .cardArrow{
   flex:0 0 auto;
@@ -1606,6 +1613,21 @@ function getCardMediaUrl(game){
   return game.cardMedia||"";
 }
 
+function getCardFlavorText(game){
+  const seed=(game.displayName||game.name||"").toLowerCase();
+  const templates=[
+    `Jump into ${game.displayName} and push the run further.`,
+    `${game.displayName}: ${game.genre.label} energy, no slowdown.`,
+    `Dial in ${game.displayName} and chase a cleaner score.`,
+    `${game.genre.label} lane active in ${game.displayName}.`
+  ];
+  let hash=0;
+  for(let i=0;i<seed.length;i+=1){
+    hash=(hash+seed.charCodeAt(i)*(i+3))%templates.length;
+  }
+  return templates[hash];
+}
+
 function trackRecentGame(url){
   recentGameUrls=[url,...recentGameUrls.filter(item=>item!==url)].slice(0,MAX_RECENT_GAMES);
   saveRecentGames();
@@ -1734,7 +1756,7 @@ function render(){
           <h3>${game.displayName}</h3>
         </div>
         <div class="cardFooter">
-          <p>${game.genre.blurb}</p>
+          <p>${getCardFlavorText(game)}</p>
           <span class="cardArrow">↗</span>
         </div>`;
       card.onclick=()=>launchGame(game);
