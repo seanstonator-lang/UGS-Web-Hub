@@ -7,7 +7,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page).toHaveTitle(/UGS Web Hub/i);
     await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
 
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await expect(page.getByRole('heading', { name: /Find your next tab destroyer/i })).toBeVisible();
     await expect(page.locator('#games .card').first()).toBeVisible();
@@ -17,7 +17,7 @@ test.describe('UGS Web Hub', () => {
 
   test('filters the catalog with search', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const visibleCount = page.locator('#visibleCount');
     const search = page.locator('#search');
@@ -31,7 +31,7 @@ test.describe('UGS Web Hub', () => {
 
   test('keeps filtered counts logically consistent after search and genre changes', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const totalCount = Number(await page.locator('#count').textContent());
     expect(totalCount).toBeGreaterThan(0);
@@ -47,7 +47,7 @@ test.describe('UGS Web Hub', () => {
 
   test('changes genre from the dropdown and updates summary', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.locator('#genreSelect').selectOption('platformer');
 
@@ -58,7 +58,7 @@ test.describe('UGS Web Hub', () => {
 
   test('defaults to the full vault and lets you filter by platform type', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await expect(page.locator('#platformSelect')).toHaveValue('all');
     await expect(page.locator('#activePlatformLabel')).toHaveText(/Full Vault/i);
@@ -75,7 +75,7 @@ test.describe('UGS Web Hub', () => {
 
   test('shows emulation system filtering when emulation is selected', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.locator('#platformSelect').selectOption('emulated');
 
@@ -91,7 +91,7 @@ test.describe('UGS Web Hub', () => {
 
   test('switches themes from the hub theme controls', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.getByRole('button', { name: /Neon Grid/i }).click();
 
@@ -101,7 +101,7 @@ test.describe('UGS Web Hub', () => {
 
   test('random pick updates spotlight and launch opens a game tab', async ({ page, context }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.getByRole('button', { name: /^Random Pick$/i }).click();
     await expect(page.locator('#spotlightTitle')).not.toHaveText(/Catalog Ready/i);
@@ -118,7 +118,7 @@ test.describe('UGS Web Hub', () => {
 
   test('reset view clears search and genre filter', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.locator('#search').fill('mario');
     await page.locator('#genreSelect').selectOption('platformer');
@@ -131,7 +131,7 @@ test.describe('UGS Web Hub', () => {
 
   test('shows the empty-state spotlight when no games match the search', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.locator('#search').fill('zzzz-nothing-should-match-this');
 
@@ -144,7 +144,7 @@ test.describe('UGS Web Hub', () => {
 
   test('quick-start collections reshape the hub without typing a search', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await page.getByRole('button', { name: /Brain Burn/i }).click();
 
@@ -155,7 +155,7 @@ test.describe('UGS Web Hub', () => {
 
   test('saves favorites and filters the hub to the saved lane', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const firstCard = page.locator('#games .card').first();
     const favoriteButton = firstCard.getByRole('button', { name: /Add to favorites/i });
@@ -175,7 +175,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games')).toContainText(title || '');
 
     await page.reload();
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await expect(page.locator('#favoriteCount')).toHaveText('1');
     await expect(page.locator('#games .card').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
@@ -183,7 +183,7 @@ test.describe('UGS Web Hub', () => {
 
   test('surprise favorites launches from the saved pool', async ({ page, context }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const firstCard = page.locator('#games .card').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
@@ -201,7 +201,7 @@ test.describe('UGS Web Hub', () => {
 
   test('tracks recently played games and lets you clear the list', async ({ page, context }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const firstCard = page.locator('#games .card').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
@@ -216,7 +216,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('button', { name: /Play Again/i })).toBeVisible();
 
     await page.reload();
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     await expect(page.locator('#recentList')).toContainText(title || '');
     await page.getByRole('button', { name: /Clear Recent/i }).click();
@@ -226,7 +226,7 @@ test.describe('UGS Web Hub', () => {
 
   test('keeps only the last three recently played games', async ({ page, context }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.getByRole('button', { name: /Launch Vault/i }).click();
 
     const titles: string[] = [];
     for (let i = 0; i < 4; i += 1) {

@@ -815,10 +815,10 @@ a{color:inherit}
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
-  min-height:166px;
+  min-height:240px;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
+  justify-content:flex-end;
   position:relative;
   overflow:hidden;
   animation:cardRise .45s ease both;
@@ -832,16 +832,16 @@ a{color:inherit}
   position:absolute;
   inset:0;
   background:
-    linear-gradient(180deg,rgba(7,14,24,.14) 0%,rgba(7,14,24,.24) 28%,rgba(7,14,24,.86) 100%),
-    radial-gradient(circle at top right,rgba(var(--genre-rgb),.22),transparent 36%),
+    linear-gradient(180deg,rgba(7,14,24,.04) 0%,rgba(7,14,24,.28) 45%,rgba(7,14,24,.94) 100%),
+    radial-gradient(circle at top right,rgba(var(--genre-rgb),.26),transparent 40%),
     linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
-  opacity:.94;
+  opacity:.98;
   transition:opacity .3s ease;
 }
 .card:hover{
-  transform:translateY(-8px);
-  border-color:rgba(var(--genre-rgb),.48);
-  box-shadow:0 24px 46px rgba(0,0,0,.34),0 0 0 1px rgba(var(--genre-rgb),.14);
+  transform:translateY(-7px) scale(1.01);
+  border-color:rgba(var(--genre-rgb),.54);
+  box-shadow:0 26px 56px rgba(0,0,0,.38),0 0 0 1px rgba(var(--genre-rgb),.18);
   background:linear-gradient(180deg,rgba(14,28,48,.98),rgba(8,18,33,.98));
 }
 .card:hover::before{opacity:.98}
@@ -855,17 +855,21 @@ a{color:inherit}
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:scale(1.03);
-  filter:saturate(1.04) contrast(1.05) brightness(.74);
-  opacity:.96;
+  transform:scale(1.02);
+  filter:saturate(1.08) contrast(1.08) brightness(.78);
+  opacity:.98;
   transition:transform .3s ease,filter .3s ease;
 }
 .card:hover .cardMedia img{
-  transform:scale(1.08);
-  filter:saturate(1.08) contrast(1.08) brightness(.82);
+  transform:scale(1.07);
+  filter:saturate(1.14) contrast(1.1) brightness(.86);
 }
 .card.no-media .cardMedia{
   display:none;
+}
+.card.no-media{
+  min-height:166px;
+  justify-content:space-between;
 }
 .card.genre-action{--genre-rgb:255,106,136;--genre-solid:#ff6a88}
 .card.genre-racing{--genre-rgb:255,149,0;--genre-solid:#ff9500}
@@ -883,7 +887,13 @@ a{color:inherit}
   z-index:1;
 }
 .cardTop{
-  padding-right:56px;
+  padding:14px 14px 10px;
+  border-radius:18px;
+  backdrop-filter:blur(6px);
+  background:linear-gradient(180deg,rgba(6,12,22,.2),rgba(6,12,22,.52));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 26px rgba(0,0,0,.24);
+  margin-right:48px;
 }
 .cardTag{
   display:inline-flex;
@@ -912,7 +922,7 @@ a{color:inherit}
 }
 .card h3{
   margin:0;
-  font-size:1.08rem;
+  font-size:1.02rem;
   line-height:1.28;
   text-shadow:0 10px 24px rgba(0,0,0,.45);
   overflow-wrap:anywhere;
@@ -922,21 +932,22 @@ a{color:inherit}
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin-top:20px;
+  margin-top:12px;
+  padding:0 2px;
 }
 .card p{
   margin:0;
-  color:var(--muted);
-  font-size:.84rem;
+  color:#d5e8ff;
+  font-size:.8rem;
   line-height:1.55;
   text-shadow:0 8px 18px rgba(0,0,0,.4);
   overflow-wrap:anywhere;
 }
 .cardArrow{
   flex:0 0 auto;
-  width:40px;
-  height:40px;
-  border-radius:14px;
+  width:38px;
+  height:38px;
+  border-radius:12px;
   display:grid;
   place-items:center;
   background:rgba(var(--genre-rgb),.16);
@@ -1023,7 +1034,7 @@ a{color:inherit}
 #homeBtn{
   position:fixed;
   top:18px;
-  left:18px;
+  right:18px;
   padding:12px 18px;
   border-radius:999px;
   font-family:inherit;
@@ -1192,9 +1203,8 @@ footer a:hover{color:var(--secondary)}
           <span>Install friction</span>
         </div>
       </div>
-      <div class="heroActions">
-        <button id="enterBtn">Enter the Hub</button>
-        <a class="ghostBtn" id="previewBtn" href="#hub">See the catalog</a>
+      <div class="heroActionSingle">
+        <button id="launchHubBtn" type="button">Launch Vault</button>
       </div>
     </div>
     <aside class="heroPanel">
@@ -1329,8 +1339,7 @@ const alpha=document.getElementById("alpha");
 const progress=document.getElementById("progress");
 const topBtn=document.getElementById("topBtn");
 const homeBtn=document.getElementById("homeBtn");
-const enterBtn=document.getElementById("enterBtn");
-const previewBtn=document.getElementById("previewBtn");
+const launchHubBtn=document.getElementById("launchHubBtn");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
@@ -1459,12 +1468,8 @@ countEl.textContent=gamesData.length;
 heroCountEl.textContent=gamesData.length;
 
 /* NAV */
-enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
-previewBtn.onclick=(event)=>{
-  event.preventDefault();
-  enterHub();
-};
+launchHubBtn.onclick=enterHub;
 search.addEventListener("input",render);
 platformSelectEl.addEventListener("change",()=>{
   activePlatform=platformSelectEl.value;
@@ -1968,3 +1973,25 @@ addEventListener("keydown",e=>{
 </script>
 </body>
 </html>
+.heroActionSingle{
+  margin-top:30px;
+}
+.heroActionSingle button{
+  padding:16px 26px;
+  border:0;
+  border-radius:999px;
+  font:inherit;
+  font-size:.9rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  cursor:pointer;
+  color:#04101d;
+  background:linear-gradient(135deg,var(--secondary),var(--primary));
+  box-shadow:0 18px 40px var(--button-strong-shadow);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.heroActionSingle button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 26px 52px var(--button-strong-shadow-hover);
+}
