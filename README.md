@@ -59,6 +59,12 @@ Run the end-to-end suite:
 npm run test:e2e
 ```
 
+Run local link, sitemap, and browser checks:
+
+```bash
+npm run check
+```
+
 Run Playwright with a visible browser:
 
 ```bash
