@@ -5,6 +5,10 @@
   "main": "games-data.js",
   "scripts": {
     "build:card-media": "node generate-game-card-media.js",
+    "build:card-media:local": "node scripts/build-local-card-media.cjs",
+    "build:card-media:local:dry": "set MEDIA_LOCAL_DRY_RUN=1&& node scripts/build-local-card-media.cjs",
+    "enrich:card-media": "node scripts/enrich-card-media-from-search.cjs",
+    "enrich:card-media:dry": "set MEDIA_DRY_RUN=1&& node scripts/enrich-card-media-from-search.cjs",
     "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js && node generate-game-card-media.js",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
