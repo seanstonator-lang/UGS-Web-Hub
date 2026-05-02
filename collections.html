@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Editorial UGS Web Hub collections for quick browser games, puzzle sessions, racing games, action picks, and replay-friendly favorites.">
+  <title>Game Collections | UGS Web Hub</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--panel:#101d30;--text:#f4fbff;--muted:#a8bdd5;--line:rgba(119,168,255,.22);--primary:#5eead4;--secondary:#77a8ff;--accent:#ffd166;--shadow:0 24px 70px rgba(0,0,0,.32)}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--text);font-family:"Space Grotesk","Trebuchet MS",sans-serif;background:linear-gradient(145deg,#06101d 0%,#0d1b2e 52%,#06111f 100%)}
+    a{color:inherit}
+    .wrap{width:min(1120px,calc(100vw - 32px));margin:0 auto;padding:30px 0 58px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+    .brand{font-family:"Archivo Expanded","Arial Black",sans-serif;text-transform:uppercase;text-decoration:none}
+    .nav{display:flex;flex-wrap:wrap;gap:10px}
+    .nav a,.button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);text-decoration:none;font-size:.78rem;font-weight:700;text-transform:uppercase}
+    .hero{padding:28px 0 34px;border-bottom:1px solid var(--line);margin-bottom:26px}
+    .eyebrow{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    h1{margin:16px 0 14px;font-family:"Archivo Expanded","Arial Black",sans-serif;font-size:clamp(2.2rem,7vw,5.2rem);line-height:1;text-transform:uppercase}
+    .lead{max-width:780px;color:var(--muted);line-height:1.8;font-size:1.05rem;margin:0}
+    .collections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    section{border:1px solid var(--line);border-radius:8px;background:rgba(16,29,48,.78);padding:22px;box-shadow:0 14px 34px rgba(0,0,0,.18)}
+    h2{margin:0 0 10px;color:var(--secondary);font-size:1rem;text-transform:uppercase;letter-spacing:.08em}
+    p{color:var(--muted);line-height:1.75;margin:0}
+    .meta{display:block;margin-top:14px;color:var(--accent);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em}
+    footer{margin-top:26px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px}
+    @media (max-width:920px){.collections{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}}
+    @media (max-width:640px){.collections{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="brand" href="index.html">UGS Web Hub</a>
+      <nav class="nav" aria-label="Site navigation">
+        <a href="index.html">Hub</a>
+        <a href="guides.html">Guides</a>
+        <a href="advertising.html">Standards</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+    <header class="hero">
+      <span class="eyebrow">Editorial Collections</span>
+      <h1>Game Collections</h1>
+      <p class="lead">These collections explain the browsing lanes used across UGS Web Hub. They help visitors choose a kind of session before opening a game, which gives the site useful editorial structure beyond a simple grid of links.</p>
+    </header>
+    <div class="collections">
+      <section>
+        <h2>Quick Hits</h2>
+        <p>Short-session games are best when you want something that starts fast, teaches itself quickly, and does not punish a messy first attempt. Arcade, platformer, and sports titles usually fit this lane.</p>
+        <span class="meta">Best for 2-10 minutes</span>
+      </section>
+      <section>
+        <h2>Brain Burn</h2>
+        <p>This lane is for puzzles, strategy games, idle systems, and anything that rewards patience. These picks work best when the fun comes from figuring out the rules instead of reacting instantly.</p>
+        <span class="meta">Best for planning</span>
+      </section>
+      <section>
+        <h2>Racing Heat</h2>
+        <p>Racing games make sense when the goal is clear: improve a line, shave down a time, or survive a chaotic track. The best racing picks are readable even when they move fast.</p>
+        <span class="meta">Best for speed</span>
+      </section>
+      <section>
+        <h2>Chaos Mode</h2>
+        <p>Action, horror, and sandbox picks live here when they create pressure or surprise. The point is not always perfection; sometimes the best session is the one where the game gets strange quickly.</p>
+        <span class="meta">Best for intensity</span>
+      </section>
+      <section>
+        <h2>Quest Mode</h2>
+        <p>Adventure games are slower and more exploratory. They usually reward scanning the screen, testing objects, and letting the game reveal its rules instead of forcing a speedrun mindset.</p>
+        <span class="meta">Best for discovery</span>
+      </section>
+      <section>
+        <h2>Replay Stack</h2>
+        <p>Favorites and recently played lists turn the library into a personal shelf. When a title earns a second run, saving it is better than trying to rediscover it later in a large catalog.</p>
+        <span class="meta">Best for return visits</span>
+      </section>
+    </div>
+    <footer>
+      <a class="button" href="index.html">Back to Hub</a>
+      <a class="button" href="guides.html">Read Guides</a>
+      <a class="button" href="privacy.html">Privacy Policy</a>
+      <a class="button" href="contact.html">Contact Us</a>
+    </footer>
+  </main>
+</body>
+</html>

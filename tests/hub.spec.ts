@@ -112,7 +112,8 @@ test.describe('UGS Web Hub', () => {
     ]);
 
     await popup.waitForLoadState('domcontentloaded');
-    await expect(popup).toHaveURL(/\/games\//i);
+    await expect(popup).toHaveURL(/\/library\//i);
+    await expect(popup.getByRole('link', { name: /^Play /i })).toHaveAttribute('href', /\.\.\/games\//i);
     await popup.close();
   });
 
@@ -280,9 +281,24 @@ test.describe('UGS Web Hub', () => {
     await expect(page.getByRole('link', { name: /Contact Us/i })).toHaveAttribute('href', 'contact.html');
   });
 
-  test('homepage footer links open the support pages', async ({ page }) => {
+  test('homepage footer links open the support and content pages', async ({ page }) => {
     await page.goto('/');
 
+    await page.getByRole('link', { name: /Guides/i }).click();
+    await expect(page).toHaveURL(/\/guides\.html$/i);
+    await expect(page.getByRole('heading', { name: /Browser Game Guides/i })).toBeVisible();
+
+    await page.goto('/');
+    await page.getByRole('link', { name: /Collections/i }).click();
+    await expect(page).toHaveURL(/\/collections\.html$/i);
+    await expect(page.getByRole('heading', { name: /Game Collections/i })).toBeVisible();
+
+    await page.goto('/');
+    await page.getByRole('link', { name: /Standards/i }).click();
+    await expect(page).toHaveURL(/\/advertising\.html$/i);
+    await expect(page.getByRole('heading', { name: /Advertising & Content Standards/i })).toBeVisible();
+
+    await page.goto('/');
     await page.getByRole('link', { name: /About Us/i }).click();
     await expect(page).toHaveURL(/\/about\.html$/i);
     await expect(page.getByRole('heading', { name: /About UGS Web Hub/i })).toBeVisible();
@@ -318,6 +334,17 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#flash-container')).toBeVisible();
     await expect(page.locator('#box-top')).toBeVisible();
     await expect(page.locator('script[src*="ruffle"]')).toHaveCount(1);
+  });
+
+  test('library game pages provide publisher content before launch', async ({ page }) => {
+    const response = await page.goto('/library/cl1on1soccer.html');
+
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveTitle(/1 On 1 Soccer \| UGS Web Hub Library/i);
+    await expect(page.getByRole('heading', { name: /1 On 1 Soccer/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /What To Expect/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Playing Notes/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Play 1 On 1 Soccer/i })).toHaveAttribute('href', '../games/cl1on1soccer.html');
   });
 
   test('missing pages return the current 404 response', async ({ page }) => {

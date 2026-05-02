@@ -11,6 +11,9 @@
     "enrich:card-media:bing:dry": "set BING_MEDIA_DRY_RUN=1&& node scripts/enrich-card-media-from-bing.cjs",
     "enrich:card-media": "node scripts/enrich-card-media-from-search.cjs",
     "enrich:card-media:dry": "set MEDIA_DRY_RUN=1&& node scripts/enrich-card-media-from-search.cjs",
+    "build:game-pages": "node scripts/build-game-detail-pages.cjs",
+    "build:sitemap": "node generate-sitemap.js",
+    "build:content": "node scripts/build-game-detail-pages.cjs && node generate-sitemap.js",
     "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js && node generate-game-card-media.js",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"

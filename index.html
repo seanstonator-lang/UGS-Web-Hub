@@ -1328,9 +1328,12 @@ footer a:hover{color:var(--secondary)}
   <p>UGS Web Hub · Version 3.0</p>
   <p>Built to make game-hunting feel fast again.</p>
   <p>
+    <a href="guides.html">Guides</a> |
+    <a href="collections.html">Collections</a> |
     <a href="about.html">About Us</a> |
     <a href="privacy.html">Privacy Policy</a> |
-    <a href="contact.html">Contact Us</a>
+    <a href="contact.html">Contact Us</a> |
+    <a href="advertising.html">Standards</a>
   </p>
 </footer>
 
@@ -1612,6 +1615,11 @@ function getCardMediaUrl(game){
   return game.cardMedia||"";
 }
 
+function getGameDetailUrl(game){
+  const fileName=game.url.split("/").pop();
+  return `library/${fileName}`;
+}
+
 function getCardFlavorText(game){
   const seed=(game.displayName||game.name||"").toLowerCase();
   const templates=[
@@ -1640,7 +1648,7 @@ function launchGame(game){
   if(!game) return;
   trackRecentGame(game.url);
   renderRecentGames();
-  open(game.url,"_blank");
+  open(getGameDetailUrl(game),"_blank");
 }
 
 function launchFavoriteSurprise(){
