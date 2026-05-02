@@ -2,19 +2,30 @@
 
 [![Playwright Tests](https://github.com/seanstonator-lang/UGS-Web-Hub/actions/workflows/playwright.yml/badge.svg)](https://github.com/seanstonator-lang/UGS-Web-Hub/actions/workflows/playwright.yml)
 
-Ultimate Game Stash Web Hub is a fast browser-based portal for browsing, filtering, and launching a large library of web games from one clean hub.
+UGS Web Hub is a personal project built to turn the Ultimate Game Stash into a fast, searchable, and polished web hub.
 
 Live site: [ugswebhub.com](https://ugswebhub.com)
 
-## What It Is
+## Current Features
 
-This repo powers the Ultimate Game Stash front end, including:
+- Fast searchable game catalog with genre, platform, and system filters
+- Quick-start collections for different play moods
+- Favorites and recently played lists saved in the browser
+- Spotlight, random pick, favorite surprise, and same-tab launch flows
+- Generated library detail pages with publisher-friendly content before launch
+- Card media enrichment pipeline for stronger visual browsing
+- Support and content pages: about, guides, collections, standards, privacy, contact, and 404
+- Sitemap generation for the hub, static pages, and library pages
+- Playwright end-to-end tests running locally and in GitHub Actions
 
-- a landing page and searchable game hub
-- genre filtering and theme switching
-- direct launch links into individual game pages
-- privacy and contact support pages
-- Playwright end-to-end coverage for the main user flows
+## Project Layout
+
+- `index.html` is the main hub experience.
+- `games/` contains the playable game pages.
+- `library/` contains generated game detail pages.
+- `card-media/` stores generated and enriched card artwork.
+- `scripts/` contains import, media enrichment, and content generation tools.
+- `tests/` contains Playwright coverage for hub, library, and static-page flows.
 
 ## Stack
 
@@ -23,7 +34,7 @@ This repo powers the Ultimate Game Stash front end, including:
 - Playwright for end-to-end testing
 - GitHub Actions for automatic test runs on pushes and pull requests
 
-## Local Testing
+## Useful Commands
 
 Install dependencies:
 
@@ -43,6 +54,18 @@ Run Playwright with a visible browser:
 npm run test:e2e:headed
 ```
 
+Regenerate library pages and sitemaps:
+
+```bash
+npm run build:content
+```
+
+Regenerate card media data:
+
+```bash
+npm run build:card-media
+```
+
 ## Project Goal
 
-Keep the library fast to browse, easy to maintain, and safe to update without breaking the main hub experience.
+Keep the Ultimate Game Stash easy to browse, safe to update, and strong enough to scale as the library grows.
