@@ -17,6 +17,7 @@ const delayMs = Number(process.env.MEDIA_LOCAL_DELAY_MS || 250);
 const waitAfterLoadMs = Number(process.env.MEDIA_LOCAL_WAIT_MS || 800);
 const navTimeoutMs = Number(process.env.MEDIA_LOCAL_NAV_TIMEOUT_MS || 25000);
 const retryCommitTimeoutMs = Number(process.env.MEDIA_LOCAL_RETRY_COMMIT_TIMEOUT_MS || 8000);
+const checkpointEvery = Math.max(1, Number(process.env.MEDIA_LOCAL_CHECKPOINT_EVERY || 25));
 const dryRun = process.env.MEDIA_LOCAL_DRY_RUN === "1";
 
 const viewWidth = Number(process.env.MEDIA_LOCAL_WIDTH || 960);
@@ -129,6 +130,7 @@ async function captureAll() {
 
   let captured = 0;
   let failed = 0;
+  let processedSinceCheckpoint = 0;
 
   console.log(`Base URL: ${baseUrl}`);
   console.log(`Games in catalog: ${games.length}`);
@@ -167,6 +169,13 @@ async function captureAll() {
     } catch (error) {
       failed += 1;
       console.log(`[${i + 1}/${targets.length}] fail ${game.url} :: ${error.message}`);
+    }
+
+    processedSinceCheckpoint += 1;
+    if (!dryRun && processedSinceCheckpoint >= checkpointEvery) {
+      writeMediaMap(mediaMap);
+      processedSinceCheckpoint = 0;
+      console.log(`checkpoint: saved progress at ${i + 1}/${targets.length}`);
     }
 
     await sleep(delayMs);
