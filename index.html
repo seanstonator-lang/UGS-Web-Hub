@@ -815,9 +815,9 @@ a{color:inherit}
   cursor:pointer;
   transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
   border:1px solid var(--card-border);
-  min-height:372px;
+  min-height:412px;
   display:grid;
-  grid-template-rows:196px 1fr;
+  grid-template-rows:210px 1fr;
   position:relative;
   overflow:hidden;
   animation:cardRise .45s ease both;
@@ -890,9 +890,10 @@ a{color:inherit}
   grid-row:2;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  padding:16px 18px 18px;
-  min-height:176px;
+  justify-content:flex-start;
+  gap:10px;
+  padding:16px 18px 20px;
+  min-height:202px;
   background:
     linear-gradient(180deg,rgba(7,14,24,.18) 0%,rgba(7,14,24,.44) 36%,rgba(7,14,24,.9) 100%),
     linear-gradient(145deg,rgba(var(--genre-rgb),.16),transparent 45%,rgba(255,255,255,.03));
@@ -925,31 +926,27 @@ a{color:inherit}
 .card h3{
   margin:0;
   font-size:1.08rem;
-  line-height:1.28;
+  line-height:1.32;
   text-shadow:0 10px 24px rgba(0,0,0,.45);
   overflow-wrap:anywhere;
 }
 .cardFooter{
-  display:flex;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
   flex:1 1 auto;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:16px;
+  align-items:start;
+  gap:12px;
+  margin-top:auto;
 }
 .card p{
   margin:0;
   color:var(--muted);
   font-size:.87rem;
-  line-height:1.48;
+  line-height:1.54;
   text-shadow:0 8px 18px rgba(0,0,0,.4);
   overflow-wrap:anywhere;
   flex:1 1 auto;
   min-width:0;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
 }
 .cardArrow{
   flex:0 0 auto;
