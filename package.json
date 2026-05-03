@@ -17,7 +17,8 @@
     "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js && node generate-game-card-media.js",
     "check:links": "node scripts/check-links.cjs",
     "check:sitemap": "node scripts/check-sitemap.cjs",
-    "check": "npm run check:links && npm run check:sitemap && npm run test:e2e",
+    "check:rulesets": "node scripts/check-rulesets.cjs",
+    "check": "npm run check:links && npm run check:sitemap && npm run check:rulesets && npm run test:e2e",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
   },

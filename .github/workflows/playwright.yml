@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Run repository checks
-        run: npm run check:links && npm run check:sitemap
+        run: npm run check:links && npm run check:sitemap && npm run check:rulesets
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium

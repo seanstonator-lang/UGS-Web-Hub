@@ -4,6 +4,7 @@ Notable project changes are tracked here. The repository history remains the sou
 
 ## Unreleased
 
+- Added a versioned GitHub ruleset template and ruleset validator.
 - Added project governance docs and GitHub templates.
 - Added repository settings guidance for description, website, topics, and homepage sections.
 - Tightened CI metadata and documentation around the current test suite.
