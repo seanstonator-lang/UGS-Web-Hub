@@ -33,3 +33,9 @@ Enable these repository homepage sections:
 ## Pages
 
 The project uses GitHub Pages with the custom domain in `CNAME`.
+
+## Ruleset
+
+Use the recommended main-branch ruleset in `.github/rulesets/main-branch-protection.json`.
+
+The matching guide is in `docs/GITHUB_RULESET.md`.
