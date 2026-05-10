@@ -37,33 +37,34 @@ test.describe('UGS Web Hub static pages', () => {
 
   test('homepage footer links open the support and content pages', async ({ page }) => {
     await page.goto('/');
+    const footer = page.getByRole('contentinfo');
 
-    await page.getByRole('link', { name: /Guides/i }).click();
+    await footer.getByRole('link', { name: /Guides/i }).click();
     await expect(page).toHaveURL(/\/guides\.html$/i);
     await expect(page.getByRole('heading', { name: /Browser Game Guides/i })).toBeVisible();
 
     await page.goto('/');
-    await page.getByRole('link', { name: /Collections/i }).click();
+    await footer.getByRole('link', { name: /Collections/i }).click();
     await expect(page).toHaveURL(/\/collections\.html$/i);
     await expect(page.getByRole('heading', { name: /Game Collections/i })).toBeVisible();
 
     await page.goto('/');
-    await page.getByRole('link', { name: /Standards/i }).click();
+    await footer.getByRole('link', { name: /Standards/i }).click();
     await expect(page).toHaveURL(/\/advertising\.html$/i);
     await expect(page.getByRole('heading', { name: /Advertising & Content Standards/i })).toBeVisible();
 
     await page.goto('/');
-    await page.getByRole('link', { name: /About Us/i }).click();
+    await footer.getByRole('link', { name: /About Us/i }).click();
     await expect(page).toHaveURL(/\/about\.html$/i);
     await expect(page.getByRole('heading', { name: /About UGS Web Hub/i })).toBeVisible();
 
     await page.goto('/');
-    await page.getByRole('link', { name: /Privacy Policy/i }).click();
+    await footer.getByRole('link', { name: /Privacy Policy/i }).click();
     await expect(page).toHaveURL(/\/privacy\.html$/i);
     await expect(page.getByRole('heading', { name: /Privacy Policy/i })).toBeVisible();
 
     await page.goto('/');
-    await page.getByRole('link', { name: /Contact Us/i }).click();
+    await footer.getByRole('link', { name: /Contact Us/i }).click();
     await expect(page).toHaveURL(/\/contact\.html$/i);
     await expect(page.getByRole('heading', { name: /Contact UGS Web Hub/i })).toBeVisible();
   });
