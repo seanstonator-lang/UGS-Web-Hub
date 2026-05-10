@@ -7,90 +7,224 @@
   <link rel="icon" href="favicon.png">
   <style>
     :root{
-      --bg:#07111d;
-      --panel:#101b2b;
-      --panel-2:#162438;
-      --line:rgba(255,255,255,.08);
-      --text:#edf3ff;
-      --muted:#aebad0;
-      --accent:#5eead4;
-      --accent-2:#77a8ff;
-      --warm:#ffd166;
-      --shadow:0 24px 54px rgba(0,0,0,.34);
+      --bg:#07111f;
+      --bg-alt:#102038;
+      --panel:rgba(10,22,40,.84);
+      --panel-solid:#11223b;
+      --card:rgba(13,26,47,.92);
+      --card-border:rgba(113,212,255,.15);
+      --text:#f4fbff;
+      --muted:#9bb4cf;
+      --primary:#5eead4;
+      --secondary:#77a8ff;
+      --accent:#ffd166;
+      --shadow:0 24px 80px rgba(0,0,0,.36);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       min-height:100vh;
-      font-family:Arial,sans-serif;
       color:var(--text);
+      font-family:"Space Grotesk","Trebuchet MS",sans-serif;
       background:
-        radial-gradient(circle at top left,rgba(94,234,212,.12),transparent 28%),
-        radial-gradient(circle at top right,rgba(119,168,255,.12),transparent 32%),
-        linear-gradient(180deg,#0b1320,#07111d 60%);
+        radial-gradient(circle at top left,rgba(94,234,212,.16),transparent 26%),
+        radial-gradient(circle at 85% 10%,rgba(119,168,255,.16),transparent 22%),
+        radial-gradient(circle at 50% 120%,rgba(255,209,102,.12),transparent 30%),
+        linear-gradient(145deg,#040b16 0%,#0a1425 46%,#030812 100%);
+      padding:24px;
       display:grid;
       place-items:center;
-      padding:24px;
     }
     .shell{
-      width:min(920px,100%);
-      border-radius:32px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      width:min(1180px,100%);
+      border-radius:34px;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 18% 0%,rgba(94,234,212,.08),transparent 30%),
+        radial-gradient(circle at 80% 15%,rgba(255,209,102,.08),transparent 24%),
+        linear-gradient(180deg,rgba(14,18,28,.96),rgba(7,11,18,.98));
       box-shadow:var(--shadow);
       overflow:hidden;
+      position:relative;
     }
-    .hero{
-      padding:30px;
-      display:grid;
-      gap:24px;
+    .shell::before{
+      content:"";
+      position:absolute;
+      inset:0;
       background-image:radial-gradient(rgba(176,194,255,.12) 1.1px,transparent 1.1px);
       background-size:24px 24px;
+      opacity:.42;
+      pointer-events:none;
+    }
+    .content{
+      position:relative;
+      z-index:1;
+      display:grid;
+      gap:26px;
+      padding:28px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding-bottom:18px;
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
     .brand{
       display:flex;
       align-items:center;
       gap:14px;
     }
-    .brand img{
-      width:54px;
-      height:54px;
-      border-radius:18px;
-      background:linear-gradient(135deg,rgba(94,234,212,.18),rgba(119,168,255,.16));
-      padding:8px;
-      border:1px solid var(--line);
+    .brandGlyph{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,rgba(94,234,212,.24),rgba(119,168,255,.2));
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .brandGlyph img{
+      width:30px;
+      height:30px;
+      object-fit:contain;
+    }
+    .brandCopy strong{
+      display:block;
+      font-size:1.35rem;
+      letter-spacing:.02em;
+    }
+    .brandCopy span{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:10px;
+    }
+    .nav a{
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      text-decoration:none;
+      font-size:.84rem;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);
+      gap:24px;
+      align-items:stretch;
+    }
+    .heroCard,
+    .sideCard{
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      box-shadow:0 18px 40px rgba(4,8,16,.26);
+      padding:26px;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.11);
+      background:rgba(255,255,255,.05);
+      color:var(--secondary);
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--secondary),var(--primary));
+      box-shadow:0 0 18px rgba(94,234,212,.55);
     }
     h1{
-      margin:0;
-      font-size:clamp(2rem,6vw,3.4rem);
-      line-height:1;
+      margin:18px 0 12px;
+      font-family:"Archivo Expanded","Arial Black",sans-serif;
+      font-size:clamp(2.2rem,5vw,4rem);
+      line-height:.95;
       letter-spacing:.04em;
       text-transform:uppercase;
     }
-    .sub{
-      margin:6px 0 0;
+    p{
+      margin:0;
       color:var(--muted);
       line-height:1.7;
-      max-width:48rem;
     }
-    .status{
-      padding:18px 20px;
-      border-radius:24px;
-      background:rgba(0,0,0,.18);
-      border:1px solid var(--line);
+    .queryShell{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      gap:14px;
+      align-items:center;
+      padding:16px 18px;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(135deg,rgba(13,21,34,.96),rgba(9,15,25,.94));
     }
-    .status strong{
-      display:block;
-      margin-bottom:8px;
-      font-size:.84rem;
-      letter-spacing:.12em;
+    .queryMark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,rgba(94,234,212,.95),rgba(119,168,255,.95));
+      color:#0b1526;
+      font-size:.95rem;
+      font-weight:900;
+      letter-spacing:.08em;
+    }
+    .queryInput{
+      width:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font:inherit;
+      font-size:1rem;
+    }
+    .queryInput::placeholder{
+      color:rgba(226,235,255,.52);
+    }
+    .queryBtn{
+      min-width:124px;
+      height:50px;
+      padding:0 18px;
+      border-radius:18px;
+      border:0;
+      background:linear-gradient(135deg,var(--secondary),var(--primary));
+      color:#04101d;
+      font:inherit;
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.14em;
       text-transform:uppercase;
-      color:var(--accent);
+      cursor:pointer;
+      box-shadow:0 18px 36px rgba(94,234,212,.2);
     }
-    .actions{
+    .actionRow{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
+      margin-top:22px;
     }
     .btn{
       display:inline-flex;
@@ -103,88 +237,285 @@
       font-weight:700;
       letter-spacing:.12em;
       text-transform:uppercase;
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.1);
       color:var(--text);
       background:rgba(255,255,255,.04);
+      font-size:.84rem;
     }
     .btn.primary{
       border:0;
-      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
       color:#06101c;
-      box-shadow:0 18px 36px rgba(94,234,212,.2);
     }
-    .grid{
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:24px;
+    }
+    .stat{
+      min-width:0;
+      padding:16px 18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .stat strong{
+      display:block;
+      font-size:1.2rem;
+    }
+    .stat span{
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:.8rem;
+      line-height:1.45;
+    }
+    .sideCard{
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+    .signal{
+      padding:16px 18px;
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .signal strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:.9rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--secondary);
+    }
+    .queryPreview{
+      padding:16px 18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .queryPreview strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:.82rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .queryValue{
+      color:var(--text);
+      font-size:1rem;
+      line-height:1.6;
+      word-break:break-word;
+    }
+    .helperGrid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:14px;
     }
-    .card{
+    .helperCard{
       padding:18px;
       border-radius:22px;
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
     }
-    .card strong{
+    .helperCard strong{
       display:block;
       margin-bottom:8px;
       font-size:.84rem;
       letter-spacing:.1em;
       text-transform:uppercase;
-      color:var(--warm);
+      color:var(--accent);
     }
-    .card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.6;
+    .helperCard p{
+      font-size:.92rem;
     }
     code{
       padding:2px 6px;
       border-radius:8px;
       background:rgba(255,255,255,.06);
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.08);
     }
-    @media (max-width:800px){
-      .grid{grid-template-columns:1fr}
+    @media (max-width:960px){
+      .hero,
+      .helperGrid,
+      .stats{
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width:640px){
+      body{
+        padding:16px;
+      }
+      .content{
+        padding:18px;
+      }
+      .topbar{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .nav{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .nav a{
+        flex:1 1 calc(50% - 10px);
+        text-align:center;
+      }
+      .queryShell{
+        grid-template-columns:1fr;
+      }
+      .queryBtn{
+        width:100%;
+      }
     }
   </style>
 </head>
 <body>
   <main class="shell">
-    <section class="hero">
-      <div class="brand">
-        <img src="favicon.png" alt="UGS Web Hub logo">
-        <div>
-          <h1>UGS DogeUB</h1>
-          <p class="sub">The actual DogeUB app is bundled inside this repo. It runs as a local Node app on your machine, then opens in the browser from <code>http://127.0.0.1:2345</code>.</p>
+    <div class="content">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brandGlyph">
+            <img src="favicon.png" alt="UGS Web Hub logo">
+          </div>
+          <div class="brandCopy">
+            <strong>UGS DogeUB</strong>
+            <span>Bundled proxy flow</span>
+          </div>
         </div>
+        <nav class="nav" aria-label="DogeUB navigation">
+          <a href="index.html">Home</a>
+          <a href="index.html?hub=1">Games Hub</a>
+          <a href="ugs-singlefile-launcher.html">Portable</a>
+        </nav>
       </div>
 
-      <div class="status">
-        <strong>How To Use It</strong>
-        <p class="sub">Run <code>run-dogeub.bat</code> from the repo root. The first launch installs dependencies and builds DogeUB. After that, it starts the proxy app and serves the real DogeUB interface locally.</p>
-      </div>
+      <section class="hero">
+        <div class="heroCard">
+          <span class="eyebrow">DogeUB Launch</span>
+          <h1>Take the same front-door search into DogeUB</h1>
+          <p>The landing-page bar now feeds into this launcher. Drop in a search or URL, then open the local DogeUB app from the same UGS surface instead of bouncing through a detached utility page.</p>
 
-      <div class="actions">
-        <a class="btn primary" href="http://127.0.0.1:2345" target="_blank" rel="noreferrer">Open DogeUB</a>
-        <span class="btn">Run <code>run-dogeub.bat</code></span>
-        <a class="btn" href="index.html">Back To UGS Hub</a>
-      </div>
+          <div class="queryShell">
+            <div class="queryMark">D</div>
+            <input id="queryInput" class="queryInput" type="text" placeholder="Search the web or enter a URL with DogeUB">
+            <button id="openQueryBtn" class="queryBtn" type="button">Open DogeUB</button>
+          </div>
 
-      <div class="grid">
-        <div class="card">
+          <div class="actionRow">
+            <a id="openDogeUbLink" class="btn primary" href="http://127.0.0.1:2345" target="_blank" rel="noreferrer">Open Local DogeUB</a>
+            <button id="copyQueryBtn" class="btn" type="button">Copy Query</button>
+            <a class="btn" href="run-dogeub.bat">Run DogeUB Batch</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>127.0.0.1</strong>
+              <span>Local DogeUB target after you run <code>run-dogeub.bat</code>.</span>
+            </div>
+            <div class="stat">
+              <strong>UGS</strong>
+              <span>Same visual flow, same launcher language, less context switching.</span>
+            </div>
+            <div class="stat">
+              <strong>Proxy First</strong>
+              <span>The first search bar on the homepage now points here on purpose.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sideCard">
+          <div>
+            <span class="eyebrow">Current Intent</span>
+          </div>
+          <div class="queryPreview">
+            <strong>Query or URL</strong>
+            <div id="queryValue" class="queryValue">Nothing queued yet. Type something in the DogeUB bar to carry it through.</div>
+          </div>
+          <div class="signal">
+            <strong>How it works</strong>
+            <p>This page keeps the query visible, lets you adjust it, and opens the local DogeUB app at <code>http://127.0.0.1:2345</code>. If DogeUB is not running yet, start it with <code>run-dogeub.bat</code>.</p>
+          </div>
+          <div class="signal">
+            <strong>Games still live here</strong>
+            <p>The game catalog did not disappear. The homepage’s primary field now belongs to DogeUB, and the game hub stays available as its own deliberate route.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="helperGrid">
+        <div class="helperCard">
           <strong>Bundled Source</strong>
-          <p>The full DogeUB app lives in the <code>dogeub/</code> folder, including its React app, proxy server, and assets.</p>
+          <p>The actual app still lives in <code>dogeub/</code>, including the React frontend, proxy server, and assets.</p>
         </div>
-        <div class="card">
-          <strong>One-Click Launch</strong>
-          <p><code>run-dogeub.bat</code> installs, builds, and starts DogeUB if needed so you do not have to remember the commands.</p>
+        <div class="helperCard">
+          <strong>One-Click Start</strong>
+          <p><code>run-dogeub.bat</code> installs, builds, and starts DogeUB if needed so the local launcher stays simple.</p>
         </div>
-        <div class="card">
-          <strong>UGS Entry Point</strong>
-          <p>The landing page and quick menu now link here, so DogeUB is part of the hub instead of just a design reference.</p>
+        <div class="helperCard">
+          <strong>Cleaner Integration</strong>
+          <p>This page now behaves like part of the UGS launcher stack instead of a standalone notice card with a link on it.</p>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
+
+  <script>
+    const queryInput=document.getElementById("queryInput");
+    const queryValue=document.getElementById("queryValue");
+    const openQueryBtn=document.getElementById("openQueryBtn");
+    const copyQueryBtn=document.getElementById("copyQueryBtn");
+    const openDogeUbLink=document.getElementById("openDogeUbLink");
+    const params=new URLSearchParams(location.search);
+
+    function getDogeUbTarget(query){
+      const target=new URL("http://127.0.0.1:2345");
+      if(query){
+        target.searchParams.set("q",query);
+      }
+      return target.toString();
+    }
+
+    function syncQueryState(){
+      const query=queryInput.value.trim();
+      queryValue.textContent=query||"Nothing queued yet. Type something in the DogeUB bar to carry it through.";
+      openDogeUbLink.href=getDogeUbTarget(query);
+      copyQueryBtn.disabled=!query;
+    }
+
+    function openDogeUb(){
+      syncQueryState();
+      window.open(openDogeUbLink.href,"_blank","noopener,noreferrer");
+    }
+
+    async function copyQuery(){
+      const query=queryInput.value.trim();
+      if(!query) return;
+      try{
+        await navigator.clipboard.writeText(query);
+        copyQueryBtn.textContent="Copied";
+        setTimeout(()=>{ copyQueryBtn.textContent="Copy Query"; },1200);
+      }catch(error){
+        copyQueryBtn.textContent="Copy Failed";
+        setTimeout(()=>{ copyQueryBtn.textContent="Copy Query"; },1200);
+      }
+    }
+
+    queryInput.value=params.get("q")||"";
+    syncQueryState();
+
+    queryInput.addEventListener("input",syncQueryState);
+    queryInput.addEventListener("keydown",event=>{
+      if(event.key==="Enter"){
+        event.preventDefault();
+        openDogeUb();
+      }
+    });
+    openQueryBtn.addEventListener("click",openDogeUb);
+    copyQueryBtn.addEventListener("click",copyQuery);
+  </script>
 </body>
 </html>

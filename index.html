@@ -319,29 +319,49 @@ a{color:inherit}
   width:min(760px,100%);
   display:grid;
   justify-items:center;
-  gap:18px;
+  gap:16px;
   text-align:center;
 }
 .landingLogo{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:16px;
+  gap:18px;
+  padding:14px 18px 14px 14px;
+  border-radius:30px;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 38px rgba(5,9,18,.22);
 }
 .landingLogoMark{
-  width:72px;
-  height:72px;
-  border-radius:24px;
+  width:68px;
+  height:68px;
+  border-radius:22px;
   display:grid;
   place-items:center;
-  background:linear-gradient(135deg,rgba(94,234,212,.22),rgba(119,168,255,.2));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 22px 40px rgba(5,9,18,.4);
+  background:
+    radial-gradient(circle at 30% 30%,rgba(94,234,212,.26),transparent 58%),
+    linear-gradient(135deg,rgba(94,234,212,.18),rgba(119,168,255,.18));
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
 .landingLogoMark img{
   width:42px;
   height:42px;
   object-fit:contain;
+}
+.landingLogoWordmark{
+  display:grid;
+  justify-items:start;
+  gap:6px;
+  text-align:left;
+}
+.landingLogoWordmark p{
+  margin:0;
+  color:var(--muted);
+  font-size:.88rem;
+  line-height:1.45;
+  letter-spacing:.04em;
 }
 #landing h1{
   margin:0;
@@ -364,22 +384,55 @@ a{color:inherit}
   grid-template-columns:auto minmax(0,1fr) auto;
   align-items:center;
   gap:14px;
-  padding:14px 16px 14px 18px;
-  border-radius:24px;
-  border:1px solid rgba(119,168,255,.22);
-  background:rgba(14,24,38,.92);
-  box-shadow:0 18px 42px rgba(5,9,18,.34);
+  padding:16px 18px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.1);
+  background:
+    linear-gradient(135deg,rgba(13,21,34,.96),rgba(9,15,25,.94)),
+    radial-gradient(circle at top left,rgba(94,234,212,.08),transparent 26%);
+  box-shadow:0 22px 48px rgba(5,9,18,.34);
+}
+.dogeSearchShell{
+  position:relative;
+}
+.dogeSearchShell::after{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(94,234,212,.24),transparent);
+}
+.dogeSearchMeta{
+  display:grid;
+  justify-items:start;
+  gap:3px;
 }
 .searchMark{
-  width:34px;
-  height:34px;
-  border-radius:50%;
+  width:42px;
+  height:42px;
+  border-radius:14px;
   display:grid;
   place-items:center;
-  background:linear-gradient(135deg,rgba(255,138,61,.95),rgba(255,209,102,.95));
+  background:linear-gradient(135deg,rgba(94,234,212,.95),rgba(119,168,255,.95));
   color:#0b1526;
-  font-size:1rem;
+  font-size:.95rem;
   font-weight:900;
+  letter-spacing:.08em;
+}
+.searchMetaTitle{
+  font-size:.76rem;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--primary);
+}
+.searchMetaCopy{
+  color:var(--muted);
+  font-size:.76rem;
+  line-height:1.2;
 }
 .landingSearchInput{
   width:100%;
@@ -394,14 +447,39 @@ a{color:inherit}
   color:rgba(226,235,255,.52);
 }
 .landingSearchBtn{
-  width:46px;
-  height:46px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);
-  color:var(--text);
-  font-size:1.15rem;
+  min-width:132px;
+  height:50px;
+  padding:0 18px;
+  border-radius:18px;
+  border:0;
+  background:linear-gradient(135deg,var(--secondary),var(--primary));
+  color:#04101d;
+  font:inherit;
+  font-size:.82rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
   cursor:pointer;
+  box-shadow:0 18px 36px rgba(94,234,212,.2);
+}
+.landingSearchHint{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  color:var(--muted);
+  font-size:.8rem;
+}
+.landingSearchHint button,
+.landingSearchHint a{
+  padding:0;
+  border:0;
+  background:none;
+  color:var(--secondary);
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
 }
 .landingDock{
   width:min(760px,100%);
@@ -414,18 +492,24 @@ a{color:inherit}
   padding:18px 16px;
   border-radius:24px;
   border:1px solid rgba(255,255,255,.08);
-  background:rgba(10,16,25,.66);
+  background:linear-gradient(180deg,rgba(16,24,36,.74),rgba(9,14,22,.64));
   text-align:left;
   color:var(--text);
   font:inherit;
   cursor:pointer;
-  box-shadow:0 16px 34px rgba(5,9,18,.28);
+  box-shadow:0 14px 28px rgba(5,9,18,.18);
   transition:transform .25s ease, border-color .25s ease, background .25s ease;
 }
 .dockCard:hover{
   transform:translateY(-3px);
   border-color:rgba(94,234,212,.42);
-  background:rgba(14,22,34,.84);
+  background:linear-gradient(180deg,rgba(20,30,44,.88),rgba(12,18,28,.82));
+}
+.dockCard.is-doge{
+  border-color:rgba(94,234,212,.22);
+  background:
+    radial-gradient(circle at top left,rgba(94,234,212,.12),transparent 32%),
+    linear-gradient(180deg,rgba(14,25,36,.82),rgba(9,16,26,.74));
 }
 .dockOrb{
   width:44px;
@@ -1500,10 +1584,16 @@ footer a:hover{color:var(--secondary)}
     font-size:clamp(2.5rem,16vw,4.1rem);
   }
   .landingSearchShell{
-    grid-template-columns:1fr auto;
+    grid-template-columns:1fr;
   }
-  .searchMark{
-    display:none;
+  .dogeSearchMeta{
+    grid-template-columns:auto 1fr;
+    width:100%;
+    align-items:center;
+    column-gap:12px;
+  }
+  .landingSearchBtn{
+    width:100%;
   }
   .landingNav{
     width:100%;
@@ -1525,12 +1615,17 @@ footer a:hover{color:var(--secondary)}
     padding:18px;
   }
   .landingLogo{
+    width:100%;
     flex-direction:column;
   }
   .landingLogoMark{
     width:62px;
     height:62px;
     border-radius:20px;
+  }
+  .landingLogoWordmark{
+    justify-items:center;
+    text-align:center;
   }
   .ugsLauncher{
     right:16px;
@@ -1610,15 +1705,29 @@ footer a:hover{color:var(--secondary)}
           <div class="landingLogoMark">
             <img src="favicon.png" alt="UGS Web Hub logo">
           </div>
-          <h1>UGS WEB HUB</h1>
+          <div class="landingLogoWordmark">
+            <h1>UGS WEB HUB</h1>
+            <p>Games in front, DogeUB built into the same launch surface.</p>
+          </div>
         </div>
         <p class="landingLead">
           A UGS-tuned start page built for fast game access, cleaner browsing, and the extra tools people actually use in school environments. Same hub underneath, just a more useful front door.
         </p>
-        <div class="landingSearchShell">
-          <div class="searchMark">U</div>
-          <input id="landingSearchInput" class="landingSearchInput" type="text" placeholder="Search the hub or type a game name">
-          <button id="landingSearchBtn" class="landingSearchBtn" type="button" aria-label="Search the hub">GO</button>
+        <div class="landingSearchShell dogeSearchShell">
+          <div class="dogeSearchMeta">
+            <div class="searchMark">D</div>
+            <div>
+              <div class="searchMetaTitle">DogeUB Bar</div>
+              <div class="searchMetaCopy">Paste a URL or type a search to continue through DogeUB.</div>
+            </div>
+          </div>
+          <input id="landingSearchInput" class="landingSearchInput" type="text" placeholder="Search the web or enter a URL with DogeUB">
+          <button id="landingSearchBtn" class="landingSearchBtn" type="button" aria-label="Open DogeUB">Open DogeUB</button>
+        </div>
+        <div class="landingSearchHint">
+          <span>Want games instead?</span>
+          <button type="button" id="landingHubShortcut">Open the game hub</button>
+          <a href="dogeub-launch.html">View the DogeUB launcher</a>
         </div>
         <div class="landingDock">
           <button class="dockCard" type="button" id="dockGamesBtn">
@@ -1626,10 +1735,10 @@ footer a:hover{color:var(--secondary)}
             <strong>Games</strong>
             <span>Jump straight into the full catalog.</span>
           </button>
-          <a class="dockCard" href="dogeub-launch.html" style="text-decoration:none;">
+          <a class="dockCard is-doge" href="dogeub-launch.html" style="text-decoration:none;">
             <div class="dockOrb">D</div>
             <strong>DogeUB</strong>
-            <span>Launch the real proxy app bundled with UGS.</span>
+            <span>Open the bundled proxy flow without leaving the UGS look and feel.</span>
           </a>
           <a class="dockCard" href="collections.html" style="text-decoration:none;">
             <div class="dockOrb">C</div>
@@ -1847,6 +1956,7 @@ const landingGamesBtn=document.getElementById("landingGamesBtn");
 const dockGamesBtn=document.getElementById("dockGamesBtn");
 const landingSearchInput=document.getElementById("landingSearchInput");
 const landingSearchBtn=document.getElementById("landingSearchBtn");
+const landingHubShortcut=document.getElementById("landingHubShortcut");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
@@ -2005,11 +2115,12 @@ enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
 landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
 dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
-landingSearchBtn.addEventListener("click",()=>openHubWithLandingSearch());
+landingSearchBtn.addEventListener("click",()=>openDogeUbFromLandingSearch());
+landingHubShortcut.addEventListener("click",()=>openHubWithLandingSearch());
 landingSearchInput.addEventListener("keydown",event=>{
   if(event.key==="Enter"){
     event.preventDefault();
-    openHubWithLandingSearch();
+    openDogeUbFromLandingSearch();
   }
 });
 search.addEventListener("input",render);
@@ -2097,6 +2208,14 @@ function openHubWithLandingSearch(){
     search.value=landingQuery;
   }
   render();
+}
+function openDogeUbFromLandingSearch(){
+  const landingQuery=landingSearchInput.value.trim();
+  const target=new URL("dogeub-launch.html",location.href);
+  if(landingQuery){
+    target.searchParams.set("q",landingQuery);
+  }
+  location.href=target.toString();
 }
 function goHome(){
   setLauncherOpen(false);
