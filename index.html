@@ -1660,56 +1660,36 @@ footer a:hover{color:var(--secondary)}
           <img src="favicon.png" alt="UGS Web Hub logo">
         </div>
         <div class="brandWordmark">
-          <strong>ugs hub</strong>
-          <span>dogeub style landing</span>
+          <strong>UGS Web Hub</strong>
+          <span>Arcade, apps, proxy tools, and fast exits</span>
         </div>
       </div>
       <nav class="landingNav" aria-label="Landing navigation">
-        <a href="collections.html">Apps</a>
         <button type="button" id="landingGamesBtn">Games</button>
+        <a href="dogeub-launch.html">DogeUB</a>
+        <a href="collections.html">Collections</a>
         <a href="guides.html">Guides</a>
-        <a href="about.html">Settings</a>
+        <a href="ugs-singlefile-launcher.html">Portable</a>
       </nav>
     </div>
     <div class="landingHero">
       <div class="landingCenter">
+        <div class="landingTag">School-safe launcher layout</div>
         <div class="landingLogo">
           <div class="landingLogoMark">
             <img src="favicon.png" alt="UGS Web Hub logo">
           </div>
           <div class="landingLogoWordmark">
-            <h1 aria-label="UGS Web Hub">ugs hub</h1>
-            <p>Search DogeUB, jump into games, and keep the launcher menu in the corner.</p>
+            <h1>UGS WEB HUB</h1>
+            <p>The fast front door for the vault, with DogeUB one click away instead of taking over the whole landing page.</p>
           </div>
         </div>
-        <div class="landingSearchShell dogeSearchShell">
-          <div class="dogeSearchMeta">
-            <div class="searchMark">D</div>
-            <div>
-              <div class="searchMetaTitle">Search DogeUB or type URL</div>
-              <div class="searchMetaCopy">Paste a URL or type a search to continue through DogeUB.</div>
-            </div>
-          </div>
-          <input id="landingSearchInput" class="landingSearchInput" type="text" placeholder="Search DogeUB or type URL">
-          <button id="landingSearchBtn" class="landingSearchBtn" type="button" aria-label="Open DogeUB">Open DogeUB</button>
-        </div>
-        <div class="landingDock">
-          <button class="dockCard" type="button" id="dockGamesBtn" aria-label="Enter the Hub">
-            <div class="dockOrb">🎮</div>
-            <strong>Games</strong>
-          </button>
-          <a class="dockCard is-doge" href="dogeub-launch.html" style="text-decoration:none;">
-            <div class="dockOrb">⚡</div>
-            <strong>DogeUB</strong>
-          </a>
-          <a class="dockCard" href="collections.html" style="text-decoration:none;">
-            <div class="dockOrb">▦</div>
-            <strong>Apps</strong>
-          </a>
-          <a class="dockCard" href="guides.html" style="text-decoration:none;">
-            <div class="dockOrb">?</div>
-            <strong>Guides</strong>
-          </a>
+        <p class="landingLead">
+          Launch the main vault, browse curated pages, or open DogeUB without turning the landing page into a copy of DogeUB itself.
+        </p>
+        <div class="heroActions">
+          <button id="enterBtn" type="button" aria-label="Enter the Hub">Launch Vault</button>
+          <a href="dogeub-launch.html" class="ghostBtn">Open DogeUB</a>
         </div>
       </div>
     </div>
@@ -2031,17 +2011,23 @@ if(enterBtn){
 }
 homeBtn.onclick=goHome;
 landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
-dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
-landingSearchBtn.addEventListener("click",()=>openDogeUbFromLandingSearch());
+if(dockGamesBtn){
+  dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
+}
+if(landingSearchBtn){
+  landingSearchBtn.addEventListener("click",()=>openDogeUbFromLandingSearch());
+}
 if(landingHubShortcut){
   landingHubShortcut.addEventListener("click",()=>openHubWithLandingSearch());
 }
-landingSearchInput.addEventListener("keydown",event=>{
-  if(event.key==="Enter"){
-    event.preventDefault();
-    openDogeUbFromLandingSearch();
-  }
-});
+if(landingSearchInput){
+  landingSearchInput.addEventListener("keydown",event=>{
+    if(event.key==="Enter"){
+      event.preventDefault();
+      openDogeUbFromLandingSearch();
+    }
+  });
+}
 search.addEventListener("input",render);
 platformSelectEl.addEventListener("change",()=>{
   activePlatform=platformSelectEl.value;
@@ -2119,7 +2105,7 @@ function enterHub(){
   render();
 }
 function openHubWithLandingSearch(){
-  const landingQuery=landingSearchInput.value.trim();
+  const landingQuery=landingSearchInput ? landingSearchInput.value.trim() : "";
   if(!hubActive){
     enterHub();
   }
@@ -2129,7 +2115,7 @@ function openHubWithLandingSearch(){
   render();
 }
 function openDogeUbFromLandingSearch(){
-  const landingQuery=landingSearchInput.value.trim();
+  const landingQuery=landingSearchInput ? landingSearchInput.value.trim() : "";
   const target=new URL("dogeub-launch.html",location.href);
   if(landingQuery){
     target.searchParams.set("q",landingQuery);
