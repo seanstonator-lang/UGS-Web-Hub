@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UGS Web Hub</title>
 
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon.png">
+<script src="games-metadata.js"></script>
+<script src="games-portability.js"></script>
 
 <style>
 :root{
@@ -201,69 +200,318 @@ a{color:inherit}
 #landing{
   min-height:100vh;
   display:flex;
-  align-items:center;
+  align-items:stretch;
   justify-content:center;
-  padding:48px 24px 64px;
+  padding:24px 24px 64px;
 }
 .heroShell{
-  width:min(1180px,100%);
+  width:min(1380px,100%);
+  min-height:calc(100vh - 88px);
   display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  grid-template-rows:auto 1fr auto;
   gap:28px;
+  padding:26px 30px 38px;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 20% 0%,rgba(94,234,212,.08),transparent 32%),
+    radial-gradient(circle at 80% 15%,rgba(255,138,61,.08),transparent 26%),
+    linear-gradient(180deg,rgba(14,18,28,.96),rgba(7,11,18,.98));
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.heroShell::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(rgba(176,194,255,.12) 1.2px,transparent 1.2px);
+  background-size:24px 24px;
+  opacity:.45;
+  pointer-events:none;
+}
+.landingTopbar,
+.landingHero,
+.heroLower{
+  position:relative;
+  z-index:1;
+}
+.landingTopbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding-bottom:18px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.landingBrand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.brandGlyph{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,rgba(94,234,212,.24),rgba(119,168,255,.2));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 34px rgba(5,9,18,.38);
+}
+.brandGlyph img{
+  width:26px;
+  height:26px;
+  object-fit:contain;
+}
+.brandWordmark{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.brandWordmark strong{
+  font-size:1.65rem;
+  line-height:1;
+  letter-spacing:.02em;
+}
+.brandWordmark span,
+.landingTag{
+  color:var(--muted);
+  font-size:.8rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.landingNav{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+.landingNav a,
+.landingNav button{
+  padding:12px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  text-decoration:none;
+  font:inherit;
+  font-size:.86rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:transform .25s ease, border-color .25s ease, background .25s ease;
+}
+.landingNav a:hover,
+.landingNav button:hover{
+  transform:translateY(-2px);
+  border-color:rgba(94,234,212,.4);
+  background:rgba(255,255,255,.06);
+}
+.landingHero{
+  display:grid;
+  place-items:center;
+  padding:34px 0 14px;
+}
+.landingCenter{
+  width:min(760px,100%);
+  display:grid;
+  justify-items:center;
+  gap:18px;
+  text-align:center;
+}
+.landingLogo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+}
+.landingLogoMark{
+  width:72px;
+  height:72px;
+  border-radius:24px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,rgba(94,234,212,.22),rgba(119,168,255,.2));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 22px 40px rgba(5,9,18,.4);
+}
+.landingLogoMark img{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+}
+#landing h1{
+  margin:0;
+  font-family:"Archivo Expanded","Arial Black",sans-serif;
+  font-size:clamp(2.8rem,7vw,5.4rem);
+  line-height:.95;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.landingLead{
+  max-width:54rem;
+  margin:0;
+  color:var(--muted);
+  font-size:1.02rem;
+  line-height:1.75;
+}
+.landingSearchShell{
+  width:min(660px,100%);
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:14px;
+  padding:14px 16px 14px 18px;
+  border-radius:24px;
+  border:1px solid rgba(119,168,255,.22);
+  background:rgba(14,24,38,.92);
+  box-shadow:0 18px 42px rgba(5,9,18,.34);
+}
+.searchMark{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,rgba(255,138,61,.95),rgba(255,209,102,.95));
+  color:#0b1526;
+  font-size:1rem;
+  font-weight:900;
+}
+.landingSearchInput{
+  width:100%;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:var(--text);
+  font:inherit;
+  font-size:1.08rem;
+}
+.landingSearchInput::placeholder{
+  color:rgba(226,235,255,.52);
+}
+.landingSearchBtn{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  font-size:1.15rem;
+  cursor:pointer;
+}
+.landingDock{
+  width:min(760px,100%);
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+.dockCard{
+  display:block;
+  padding:18px 16px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(10,16,25,.66);
+  text-align:left;
+  color:var(--text);
+  font:inherit;
+  cursor:pointer;
+  box-shadow:0 16px 34px rgba(5,9,18,.28);
+  transition:transform .25s ease, border-color .25s ease, background .25s ease;
+}
+.dockCard:hover{
+  transform:translateY(-3px);
+  border-color:rgba(94,234,212,.42);
+  background:rgba(14,22,34,.84);
+}
+.dockOrb{
+  width:44px;
+  height:44px;
+  margin-bottom:14px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,rgba(94,234,212,.24),rgba(119,168,255,.16));
+  font-size:1.2rem;
+}
+.dockCard strong{
+  display:block;
+  font-size:.92rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.dockCard span{
+  display:block;
+  margin-top:6px;
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.45;
+}
+.heroLower{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(320px,.86fr);
+  gap:24px;
   align-items:stretch;
 }
 .heroCopy,
 .heroPanel{
   position:relative;
   overflow:hidden;
-  border-radius:34px;
+  border-radius:28px;
   border:1px solid rgba(255,255,255,.08);
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-  box-shadow:var(--shadow);
+  box-shadow:0 18px 40px rgba(4,8,16,.26);
 }
 .heroCopy{
-  padding:42px;
+  padding:28px;
 }
 .heroCopy::after,
 .heroPanel::after{
   content:"";
   position:absolute;
-  inset:auto -20% -35% auto;
-  width:240px;
-  height:240px;
+  inset:auto -16% -28% auto;
+  width:220px;
+  height:220px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(255,138,61,.22),transparent 70%);
+  background:radial-gradient(circle,rgba(255,138,61,.18),transparent 70%);
   pointer-events:none;
-}
-#landing h1{
-  margin:18px 0 18px;
-  font-family:"Archivo Expanded","Arial Black",sans-serif;
-  font-size:clamp(3.2rem,9vw,7rem);
-  line-height:.95;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  text-wrap:balance;
 }
 #landing p{
   max-width:40rem;
   margin:0;
   color:var(--muted);
-  font-size:1.08rem;
+  font-size:1rem;
   line-height:1.7;
 }
 .heroActions{
   display:flex;
   flex-wrap:wrap;
   gap:14px;
-  margin-top:30px;
+  margin-top:24px;
+}
+.portableNote{
+  display:none;
+  margin-top:18px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(255,209,102,.28);
+  background:rgba(255,209,102,.1);
+  color:var(--text);
+  line-height:1.6;
+}
+.portableNote strong{
+  color:var(--accent);
 }
 .heroActions > *{
-  padding:18px 28px;
+  padding:16px 24px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   font-family:inherit;
-  font-size:.94rem;
+  font-size:.88rem;
   font-weight:700;
   letter-spacing:.14em;
   text-transform:uppercase;
@@ -294,11 +542,11 @@ a{color:inherit}
   box-shadow:0 26px 52px rgba(8,20,37,.34);
 }
 .heroPanel{
-  padding:28px;
+  padding:24px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  gap:22px;
+  gap:18px;
 }
 .heroPanel h2{
   margin:10px 0 6px;
@@ -339,6 +587,106 @@ a{color:inherit}
   border-top:1px solid rgba(255,255,255,.08);
   font-size:.84rem;
   color:var(--muted);
+}
+.ugsLauncher{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:80;
+}
+.ugsLauncherBtn{
+  width:70px;
+  height:70px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(180deg,rgba(18,28,42,.98),rgba(8,12,19,.98));
+  box-shadow:0 24px 52px rgba(3,6,12,.4);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+.ugsLauncherBtn img{
+  width:40px;
+  height:40px;
+  object-fit:contain;
+}
+.ugsLauncherPanel{
+  position:absolute;
+  right:0;
+  bottom:84px;
+  width:min(320px,calc(100vw - 32px));
+  padding:18px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(180deg,rgba(14,18,28,.98),rgba(7,11,18,.98));
+  box-shadow:0 26px 52px rgba(3,6,12,.46);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(12px) scale(.98);
+  transition:opacity .2s ease, transform .2s ease;
+}
+.ugsLauncher.open .ugsLauncherPanel{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0) scale(1);
+}
+.launcherHeader{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+.launcherHeader img{
+  width:38px;
+  height:38px;
+}
+.launcherHeader strong{
+  display:block;
+  font-size:1rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.launcherHeader span{
+  color:var(--muted);
+  font-size:.84rem;
+}
+.launcherGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.launcherAction{
+  display:block;
+  padding:14px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+}
+.launcherAction strong,
+.launcherAction span{
+  display:block;
+}
+.launcherAction strong{
+  font-size:.82rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.launcherAction span{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:.82rem;
+  line-height:1.45;
+}
+.launcherStatus{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+  font-size:.82rem;
 }
 
 /* HUB */
@@ -1105,8 +1453,17 @@ footer a:hover{color:var(--secondary)}
 
 @media (max-width:980px){
   .heroShell,
+  .heroLower,
+  .landingDock,
   .hubIntro{
     grid-template-columns:1fr;
+  }
+  .landingTopbar{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .landingNav{
+    justify-content:flex-start;
   }
   .controlsStack{
     grid-template-columns:1fr;
@@ -1127,6 +1484,9 @@ footer a:hover{color:var(--secondary)}
   #landing{
     padding-top:92px;
   }
+  .heroShell{
+    padding:22px;
+  }
   #hub{
     padding:92px 16px 90px;
   }
@@ -1139,12 +1499,50 @@ footer a:hover{color:var(--secondary)}
   #landing h1{
     font-size:clamp(2.5rem,16vw,4.1rem);
   }
+  .landingSearchShell{
+    grid-template-columns:1fr auto;
+  }
+  .searchMark{
+    display:none;
+  }
+  .landingNav{
+    width:100%;
+  }
+  .landingNav a,
+  .landingNav button{
+    flex:1 1 calc(50% - 10px);
+    justify-content:center;
+  }
   .heroCopy,
   .heroPanel,
   .hubTitleCard,
   .hubSearchCard{
     padding:22px;
     border-radius:24px;
+  }
+  .heroShell{
+    border-radius:28px;
+    padding:18px;
+  }
+  .landingLogo{
+    flex-direction:column;
+  }
+  .landingLogoMark{
+    width:62px;
+    height:62px;
+    border-radius:20px;
+  }
+  .ugsLauncher{
+    right:16px;
+    bottom:16px;
+  }
+  .ugsLauncherBtn{
+    width:62px;
+    height:62px;
+    border-radius:20px;
+  }
+  .ugsLauncherPanel{
+    bottom:76px;
   }
   #hub{
     padding:92px 16px 90px;
@@ -1187,56 +1585,152 @@ footer a:hover{color:var(--secondary)}
 
 <section id="landing">
   <div class="heroShell">
-    <div class="heroCopy">
-      <span class="eyebrow">Arcade Control Room</span>
-    <h1>UGS WEB HUB</h1>
-    <p>
-      A curated library of browser games that just work.<br><br>
-      No downloads. No accounts. No filler.<br><br>
-      Built for people who want games — not distractions.
-    </p>
-      <div class="statRow">
-        <div class="stat">
-          <strong id="heroCount">0</strong>
-          <span>Play-ready titles</span>
+    <div class="landingTopbar">
+      <div class="landingBrand">
+        <div class="brandGlyph">
+          <img src="favicon.png" alt="UGS Web Hub logo">
         </div>
-        <div class="stat">
-          <strong>A-Z</strong>
-          <span>Instant jump nav</span>
-        </div>
-        <div class="stat">
-          <strong>Zero</strong>
-          <span>Install friction</span>
+        <div class="brandWordmark">
+          <strong>UGS Web Hub</strong>
+          <span>Arcade, apps, proxy tools, and fast exits</span>
         </div>
       </div>
-      <div class="heroActions">
-        <button id="enterBtn">Enter the Hub</button>
+      <nav class="landingNav" aria-label="Landing navigation">
+        <button type="button" id="landingGamesBtn">Games</button>
+        <a href="dogeub-launch.html">DogeUB</a>
+        <a href="collections.html">Collections</a>
+        <a href="guides.html">Guides</a>
+        <a href="ugs-singlefile-launcher.html">Portable</a>
+      </nav>
+    </div>
+    <div class="landingHero">
+      <div class="landingCenter">
+        <div class="landingTag">School-safe launcher layout</div>
+        <div class="landingLogo">
+          <div class="landingLogoMark">
+            <img src="favicon.png" alt="UGS Web Hub logo">
+          </div>
+          <h1>UGS WEB HUB</h1>
+        </div>
+        <p class="landingLead">
+          A UGS-tuned start page built for fast game access, cleaner browsing, and the extra tools people actually use in school environments. Same hub underneath, just a more useful front door.
+        </p>
+        <div class="landingSearchShell">
+          <div class="searchMark">U</div>
+          <input id="landingSearchInput" class="landingSearchInput" type="text" placeholder="Search the hub or type a game name">
+          <button id="landingSearchBtn" class="landingSearchBtn" type="button" aria-label="Search the hub">GO</button>
+        </div>
+        <div class="landingDock">
+          <button class="dockCard" type="button" id="dockGamesBtn">
+            <div class="dockOrb">G</div>
+            <strong>Games</strong>
+            <span>Jump straight into the full catalog.</span>
+          </button>
+          <a class="dockCard" href="dogeub-launch.html" style="text-decoration:none;">
+            <div class="dockOrb">D</div>
+            <strong>DogeUB</strong>
+            <span>Launch the real proxy app bundled with UGS.</span>
+          </a>
+          <a class="dockCard" href="collections.html" style="text-decoration:none;">
+            <div class="dockOrb">C</div>
+            <strong>Collections</strong>
+            <span>Browse curated sets instead of the whole wall.</span>
+          </a>
+          <a class="dockCard" href="ugs-singlefile-launcher.html" style="text-decoration:none;">
+            <div class="dockOrb">P</div>
+            <strong>Portable</strong>
+            <span>Open the one-file launcher build.</span>
+          </a>
+        </div>
       </div>
     </div>
-    <aside class="heroPanel">
-      <div>
-        <span class="eyebrow">Signal Feed</span>
-        <h2>Built for fast picks and cleaner browsing</h2>
-        <p>The library is tuned for quick scanning, quick search, and quick launch so the vibe stays on games, not clutter.</p>
+    <div class="heroLower">
+      <div class="heroCopy">
+        <span class="eyebrow">Hub Status</span>
+        <p>
+          The main UGS hub is still the core experience. This landing page now doubles as the launcher surface for games, DogeUB, portable builds, and the other school-use essentials around them.
+        </p>
+        <div class="statRow">
+          <div class="stat">
+            <strong id="heroCount">0</strong>
+            <span>Play-ready titles</span>
+          </div>
+          <div class="stat">
+            <strong>A-Z</strong>
+            <span>Instant jump nav</span>
+          </div>
+          <div class="stat">
+            <strong>UGS</strong>
+            <span>Launcher-first layout</span>
+          </div>
+        </div>
+        <div class="heroActions">
+          <button id="enterBtn">Enter the Hub</button>
+          <a href="ugs-singlefile-launcher.html" class="ghostBtn">Open Single-File Launcher</a>
+        </div>
+        <div class="portableNote" id="portableNote">
+          <strong>Portable mode is active.</strong> This copy is running from local files, which helps keep the hub usable from a USB drive or offline folder. Online-only previews are reduced automatically.
+        </div>
       </div>
-      <div class="signalGrid">
-        <div class="signalCard">
-          <strong>Search Fast</strong>
-          <span>Type anything and the grid narrows instantly.</span>
+      <aside class="heroPanel">
+        <div>
+          <span class="eyebrow">Signal Feed</span>
+          <h2>Built for fast picks and cleaner browsing</h2>
+          <p>The library is tuned for quick scanning, quick search, and quick launch so the vibe stays on games, not clutter.</p>
         </div>
-        <div class="signalCard">
-          <strong>Jump Clean</strong>
-          <span>Alphabet rail and keyboard shortcuts cut straight to the zone you want.</span>
+        <div class="signalGrid">
+          <div class="signalCard">
+            <strong>Games First</strong>
+            <span>Search from the landing page and drop directly into the hub with results ready.</span>
+          </div>
+          <div class="signalCard">
+            <strong>School Utility</strong>
+            <span>DogeUB is now bundled into the repo so proxy access has a real home here instead of a placeholder.</span>
+          </div>
+          <div class="signalCard">
+            <strong>UGS Identity</strong>
+            <span>The start page now feels like our product instead of a generic catalog splash.</span>
+          </div>
         </div>
-        <div class="signalCard">
-          <strong>Catalog First</strong>
-          <span>Exact title mapping keeps the library readable instead of slug soup.</span>
-        </div>
-      </div>
-      <div class="heroNote">All killer, no filler.</div>
-    </aside>
+        <div class="heroNote">Built to look sharp, move fast, and stay useful.</div>
+      </aside>
+    </div>
   </div>
 </section>
+
+<div class="ugsLauncher" id="ugsLauncher">
+  <div class="ugsLauncherPanel" id="ugsLauncherPanel">
+    <div class="launcherHeader">
+      <img src="favicon.png" alt="UGS Web Hub logo">
+      <div>
+        <strong>UGS Quick Menu</strong>
+        <span>Fast actions for games and utility pages</span>
+      </div>
+    </div>
+    <div class="launcherGrid">
+      <button class="launcherAction" type="button" data-launcher-action="games">
+        <strong>Games Hub</strong>
+        <span>Open the main grid instantly.</span>
+      </button>
+      <a class="launcherAction" href="dogeub-launch.html" style="text-decoration:none;">
+        <strong>DogeUB</strong>
+        <span>Open the bundled proxy launcher page.</span>
+      </a>
+      <a class="launcherAction" href="ugs-singlefile-launcher.html" style="text-decoration:none;">
+        <strong>Portable</strong>
+        <span>Open the one-file launcher.</span>
+      </a>
+      <a class="launcherAction" href="collections.html" style="text-decoration:none;">
+        <strong>Collections</strong>
+        <span>Jump to curated views.</span>
+      </a>
+    </div>
+    <div class="launcherStatus">DogeUB-style utility shell, tuned for UGS Web Hub.</div>
+  </div>
+  <button class="ugsLauncherBtn" id="ugsLauncherBtn" type="button" aria-label="Open UGS quick menu" aria-expanded="false">
+    <img src="favicon.png" alt="UGS Web Hub logo">
+  </button>
+</div>
 
 <section id="hub">
   <div class="hubIntro">
@@ -1349,6 +1843,10 @@ const progress=document.getElementById("progress");
 const topBtn=document.getElementById("topBtn");
 const homeBtn=document.getElementById("homeBtn");
 const enterBtn=document.getElementById("enterBtn");
+const landingGamesBtn=document.getElementById("landingGamesBtn");
+const dockGamesBtn=document.getElementById("dockGamesBtn");
+const landingSearchInput=document.getElementById("landingSearchInput");
+const landingSearchBtn=document.getElementById("landingSearchBtn");
 const countEl=document.getElementById("count");
 const heroCountEl=document.getElementById("heroCount");
 const visibleCountEl=document.getElementById("visibleCount");
@@ -1374,6 +1872,11 @@ const spotlightBtn=document.getElementById("spotlightBtn");
 const favoriteCountEl=document.getElementById("favoriteCount");
 const clearRecentBtn=document.getElementById("clearRecentBtn");
 const recentListEl=document.getElementById("recentList");
+const portableNoteEl=document.getElementById("portableNote");
+const ugsLauncherEl=document.getElementById("ugsLauncher");
+const ugsLauncherBtn=document.getElementById("ugsLauncherBtn");
+const ugsLauncherPanel=document.getElementById("ugsLauncherPanel");
+const launcherGamesBtn=document.querySelector('[data-launcher-action="games"]');
 
 let hubActive=false;
 let activePlatform="all";
@@ -1386,7 +1889,10 @@ let spotlightGame=null;
 const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
 const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
 const MAX_RECENT_GAMES=3;
+const IS_PORTABLE_MODE=location.protocol==="file:";
 const gamesData=window.rawGames||[];
+const gameMetadataMap=window.gameMetadataMap||{};
+const gamePortabilityMap=window.gamePortabilityMap||{};
 const exactTitleMap=window.gameTitleMap||{};
 const cardMediaMap=window.gameCardMediaMap||{};
 const PLATFORM_OPTIONS=[
@@ -1442,6 +1948,18 @@ const COLLECTION_OPTIONS=[
     label:"Brain Burn",
     blurb:"Puzzles and strategy locks.",
     match:game=>["puzzle","strategy"].includes(game.genre.name)
+  },
+  {
+    key:"offline-ready",
+    label:"Offline Ready",
+    blurb:"Best bets for USB and local-file use.",
+    match:game=>game.portableSupport==="offline-ready"
+  },
+  {
+    key:"needs-internet",
+    label:"Needs Internet",
+    blurb:"Still in the hub, but depends on the web.",
+    match:game=>game.portableSupport==="internet-required"
   }
 ];
 const favoriteUrls=loadFavorites();
@@ -1451,14 +1969,20 @@ const normalizedGames=gamesData.map(game=>{
   const genre=getGenreProfile(displayName,game.name);
   const type=typeof game.type==="string" ? game.type : "html5";
   const system=typeof game.system==="string" ? game.system : "";
+  const metadata=gameMetadataMap[game.url]||{};
+  const portability=gamePortabilityMap[game.url]||{};
+  const tags=Array.isArray(metadata.tags) ? metadata.tags : [];
   return {
     ...game,
+    ...metadata,
+    ...portability,
     displayName,
     genre,
     type,
     system,
+    tags,
     cardMedia:cardMediaMap[game.url]||"",
-    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system}`)
+    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system} ${tags.join(" ")} ${metadata.launchMode||""} ${metadata.sourceHost||""} ${portability.portableSupport||""} ${portability.portableLabel||""}`)
   };
 });
 const EMULATED_SYSTEM_OPTIONS=[
@@ -1479,6 +2003,15 @@ heroCountEl.textContent=gamesData.length;
 /* NAV */
 enterBtn.onclick=enterHub;
 homeBtn.onclick=goHome;
+landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
+dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
+landingSearchBtn.addEventListener("click",()=>openHubWithLandingSearch());
+landingSearchInput.addEventListener("keydown",event=>{
+  if(event.key==="Enter"){
+    event.preventDefault();
+    openHubWithLandingSearch();
+  }
+});
 search.addEventListener("input",render);
 platformSelectEl.addEventListener("change",()=>{
   activePlatform=platformSelectEl.value;
@@ -1517,6 +2050,24 @@ spotlightBtn.addEventListener("click",()=>{
     launchGame(spotlightGame);
   }
 });
+ugsLauncherBtn.addEventListener("click",()=>{
+  const shouldOpen=!ugsLauncherEl.classList.contains("open");
+  setLauncherOpen(shouldOpen);
+});
+launcherGamesBtn.addEventListener("click",()=>{
+  setLauncherOpen(false);
+  openHubWithLandingSearch();
+});
+document.addEventListener("click",event=>{
+  if(!ugsLauncherEl.contains(event.target)){
+    setLauncherOpen(false);
+  }
+});
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"){
+    setLauncherOpen(false);
+  }
+});
 renderFilterControls();
 renderThemeControls();
 renderCollectionControls();
@@ -1528,6 +2079,7 @@ topBtn.addEventListener("click",()=>{
 });
 
 function enterHub(){
+  setLauncherOpen(false);
   landing.style.display="none";
   hub.style.display="block";
   homeBtn.style.display="block";
@@ -1536,7 +2088,18 @@ function enterHub(){
   window.scrollTo({top:0});
   render();
 }
+function openHubWithLandingSearch(){
+  const landingQuery=landingSearchInput.value.trim();
+  if(!hubActive){
+    enterHub();
+  }
+  if(landingQuery){
+    search.value=landingQuery;
+  }
+  render();
+}
 function goHome(){
+  setLauncherOpen(false);
   hub.style.display="none";
   landing.style.display="flex";
   homeBtn.style.display="none";
@@ -1555,6 +2118,10 @@ function goHome(){
   }
   renderFilterControls();
   render();
+}
+function setLauncherOpen(isOpen){
+  ugsLauncherEl.classList.toggle("open",isOpen);
+  ugsLauncherBtn.setAttribute("aria-expanded",String(isOpen));
 }
 
 function openHubFromDeepLink(){
@@ -1621,7 +2188,12 @@ function matchesPlatformFilters(game){
 }
 
 function getCardMediaUrl(game){
+  if(IS_PORTABLE_MODE&&isExternalAsset(game.cardMedia||"")) return "";
   return game.cardMedia||"";
+}
+
+function isExternalAsset(url){
+  return /^(?:https?:)?\/\//i.test(url||"");
 }
 
 function getGameDetailUrl(game){
@@ -1642,6 +2214,19 @@ function getCardFlavorText(game){
     hash=(hash+seed.charCodeAt(i)*(i+3))%templates.length;
   }
   return templates[hash];
+}
+
+function getLaunchBadge(game){
+  if(game.launchMode==="split-assets") return "Split Assets";
+  if(game.launchMode==="single-file") return "Single File";
+  if(game.launchMode==="external-host") return "External Host";
+  return "";
+}
+
+function getPortableBadge(game){
+  if(game.portableSupport==="offline-ready") return "Offline Ready";
+  if(game.portableSupport==="internet-required") return "Needs Internet";
+  return "";
 }
 
 function trackRecentGame(url){
@@ -1768,7 +2353,7 @@ function render(){
         ${cardMediaUrl ? `<div class="cardMedia"><img src="${cardMediaUrl}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></div>` : ""}
         <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${game.displayName}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
-          <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}</span>
+          <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}${getLaunchBadge(game) ? ` · ${getLaunchBadge(game)}` : ""}${getPortableBadge(game) ? ` · ${getPortableBadge(game)}` : ""}</span>
           <h3>${game.displayName}</h3>
           <div class="cardFooter">
           <p>${getCardFlavorText(game)}</p>
@@ -1940,7 +2525,9 @@ function updateSpotlight(filteredGames){
   const favoriteMeta=isFavorite(spotlightGame.url)
     ? "Saved in your favorites lane."
     : "Not saved yet. Lock it in if it deserves a permanent slot.";
-  spotlightMetaEl.textContent=`${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view. ${favoriteMeta}`;
+  spotlightMetaEl.textContent=IS_PORTABLE_MODE
+    ? `Portable mode active. ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} available in this view. Some games or artwork may still need internet unless bundled locally.`
+    : `${spotlightGame.genre.label} tuned for ${spotlightGame.genre.blurb.toLowerCase()} ${filteredGames.length} title${filteredGames.length===1 ? "" : "s"} live in this view. ${favoriteMeta}`;
   favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
   favoriteSurpriseBtn.textContent=favoriteUrls.size===0 ? "Save Favorites First" : "Surprise Favorites";
   spotlightFavoriteBtn.disabled=false;
@@ -1979,6 +2566,10 @@ function resetHubControls(){
   renderFilterControls();
   renderCollectionChipStates();
   render();
+}
+
+if(IS_PORTABLE_MODE&&portableNoteEl){
+  portableNoteEl.style.display="block";
 }
 
 /* ALPHA NAV */
