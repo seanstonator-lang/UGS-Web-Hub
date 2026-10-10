@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: ugs-dogeub
+    runtime: node
+    plan: free
+    rootDir: dogeub
+    buildCommand: npm ci && npm run build
+    startCommand: node server.js

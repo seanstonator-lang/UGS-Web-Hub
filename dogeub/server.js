@@ -70,4 +70,11 @@ app.setNotFoundHandler((req, reply) =>
     : reply.code(404).send({ error: "Not Found" })
 );
 
-app.listen({ host: "127.0.0.1", port }).then(()=>console.log(`UGS DogeUB running on http://127.0.0.1:${port}`));
+const host = process.env.HOST || "0.0.0.0";
+try {
+  await app.listen({ host, port });
+  console.log(`UGS DogeUB listening on ${host}:${port}`);
+} catch (error) {
+  console.error("Unable to start DogeUB:", error);
+  process.exitCode = 1;
+}

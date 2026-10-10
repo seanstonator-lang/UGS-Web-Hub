@@ -478,6 +478,27 @@ class TabManager {
   };
 }
 
+async function waitForActiveWorker(registration) {
+  const worker = registration.installing || registration.waiting || registration.active;
+  if (!worker) throw new Error('Proxy service worker is unavailable');
+  if (worker.state === 'activated') return;
+  await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => finish(new Error('Proxy service worker activation timed out')), 15000);
+    const finish = (error) => {
+      clearTimeout(timeout);
+      worker.removeEventListener('statechange', check);
+      if (error) reject(error);
+      else resolve();
+    };
+    const check = () => {
+      if (worker.state === 'activated') finish();
+      else if (worker.state === 'redundant') finish(new Error('Proxy service worker failed to install'));
+    };
+    worker.addEventListener('statechange', check);
+    check();
+  });
+}
+
 window.addEventListener('load', async function () {
   window.scr = null;
 
@@ -540,16 +561,18 @@ window.addEventListener('load', async function () {
   }
 
   try {
-    await navigator.serviceWorker.register('/s_sw.js', {
+    const registration = await navigator.serviceWorker.register('/s_sw.js', {
       scope: '/scramjet/',
     });
+    await waitForActiveWorker(registration);
   } catch (err) {
     error('scr sw reg err:', err);
     throw err;
   }
 
   try {
-    await navigator.serviceWorker.register('/uv/sw.js');
+    const registration = await navigator.serviceWorker.register('/uv/sw.js');
+    await waitForActiveWorker(registration);
   } catch (err) {
     error('uv sw reg err:', err);
     throw err;

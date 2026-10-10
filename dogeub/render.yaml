@@ -1,6 +1,8 @@
- services:
+services:
   - type: web
-    name: educational-website
-    env: node
+    name: ugs-dogeub
+    runtime: node
     plan: free
-    startCommand: npm install && npm build && node server.js
+    rootDir: dogeub
+    buildCommand: npm ci && npm run build
+    startCommand: node server.js
