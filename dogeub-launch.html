@@ -397,7 +397,7 @@
         <div class="heroCard">
           <span class="eyebrow">DogeUB Launch</span>
           <h1>Take the same front-door search into DogeUB</h1>
-          <p>The landing-page bar now feeds into this launcher. Drop in a search or URL, then open the local DogeUB app from the same UGS surface instead of bouncing through a detached utility page.</p>
+          <p>The landing-page bar now feeds into this launcher. Drop in a search or URL, then open DogeUB directly from the same UGS surface instead of bouncing through a detached utility page.</p>
 
           <div class="queryShell">
             <div class="queryMark">D</div>
@@ -406,15 +406,15 @@
           </div>
 
           <div class="actionRow">
-            <a id="openDogeUbLink" class="btn primary" href="http://127.0.0.1:2345" target="_blank" rel="noreferrer">Open Local DogeUB</a>
+            <a id="openDogeUbLink" class="btn primary" href="https://ugs-dogeub.onrender.com" target="_blank" rel="noreferrer">Open DogeUB</a>
             <button id="copyQueryBtn" class="btn" type="button">Copy Query</button>
             <a class="btn" href="run-dogeub.bat">Run DogeUB Batch</a>
           </div>
 
           <div class="stats">
             <div class="stat">
-              <strong>127.0.0.1</strong>
-              <span>Local DogeUB target after you run <code>run-dogeub.bat</code>.</span>
+              <strong>ugs-dogeub.onrender.com</strong>
+              <span>Direct DogeUB target used by the UGS launcher buttons.</span>
             </div>
             <div class="stat">
               <strong>UGS</strong>
@@ -437,7 +437,7 @@
           </div>
           <div class="signal">
             <strong>How it works</strong>
-            <p>This page keeps the query visible, lets you adjust it, and opens the local DogeUB app at <code>http://127.0.0.1:2345</code>. If DogeUB is not running yet, start it with <code>run-dogeub.bat</code>.</p>
+            <p>This page keeps the query visible, lets you adjust it, and opens DogeUB directly at <code>https://ugs-dogeub.onrender.com</code>.</p>
           </div>
           <div class="signal">
             <strong>Games still live here</strong>
@@ -472,7 +472,7 @@
     const params=new URLSearchParams(location.search);
 
     function getDogeUbTarget(query){
-      const target=new URL("http://127.0.0.1:2345");
+      const target=new URL("https://ugs-dogeub.onrender.com");
       if(query){
         target.searchParams.set("q",query);
       }

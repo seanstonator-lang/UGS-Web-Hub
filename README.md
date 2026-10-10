@@ -6,7 +6,30 @@ UGS Web Hub is a personal project built to turn the Ultimate Game Stash into a f
 
 Live site: [ugswebhub.com](https://ugswebhub.com)
 
+DogeUB service: [ugs-dogeub.onrender.com](https://ugs-dogeub.onrender.com)
+
 ## Current Features
+
+### Open from one file
+
+Double-click `UGS-Web-Hub.html` to open the full hub in your browser. You can copy
+that file anywhere; no install, server, or accompanying folder is needed. Search,
+filters, themes, favorites, and recent games run locally. Browser storage must be
+available to remember favorites across visits.
+
+Games download from the same jsDelivr UGS Files source used by the older
+`clSINGLEFILE.html` launcher, then open in a new tab. Internet access and access
+to that CDN are required. Supporting pages and DogeUB still use their own sites.
+This is a portable hub, not an offline archive of every game or a bundled proxy server.
+
+Rebuild it after hub/catalog changes with `npm run build:singlefile-hub`.
+The older `ugs-singlefile-launcher.html` is a separate launcher for a local games folder.
+
+For an internet-free local version, open `UGS-Web-Hub-Offline.html`. It includes
+29 games and does not load game files from the site. The file is about 53 MB;
+copy that one file to the Chromebook. Rebuild it with `npm run build:offline-hub`
+while online to cache the source game scripts. A Chromebook administrator can
+also restrict opening local HTML files; this project cannot override that setting.
 
 - Fast searchable game catalog with genre, platform, and system filters
 - Quick-start collections for different play moods
@@ -31,6 +54,7 @@ Live site: [ugswebhub.com](https://ugswebhub.com)
 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Operations](docs/OPERATIONS.md)
+- [DogeUB deployment](docs/DOGEUB_DEPLOYMENT.md)
 - [Release checklist](docs/RELEASE_CHECKLIST.md)
 - [GitHub ruleset](docs/GITHUB_RULESET.md)
 - [Repository settings](docs/REPO_SETTINGS.md)

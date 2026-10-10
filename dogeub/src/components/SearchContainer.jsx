@@ -17,6 +17,14 @@ export default function SearchContainer() {
   const navigate = useNavigate();
   const { options } = useOptions();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const incomingQuery = params.get('q')?.trim();
+    if (!incomingQuery) return;
+    sessionStorage.setItem('query', incomingQuery);
+    navigate('/indev', { replace: true });
+  }, [navigate]);
+
   const fetchResults = useCallback(async (searchQuery) => {
     if (!searchQuery.trim()) {
       setResults([]);

@@ -1666,7 +1666,7 @@ footer a:hover{color:var(--secondary)}
       </div>
       <nav class="landingNav" aria-label="Landing navigation">
         <button type="button" id="landingGamesBtn">Games</button>
-        <a href="dogeub-launch.html">DogeUB</a>
+        <a href="https://ugs-dogeub.onrender.com" target="_blank" rel="noreferrer">DogeUB</a>
         <a href="collections.html">Collections</a>
         <a href="guides.html">Guides</a>
         <a href="ugs-singlefile-launcher.html">Portable</a>
@@ -1689,7 +1689,7 @@ footer a:hover{color:var(--secondary)}
         </p>
         <div class="heroActions">
           <button id="enterBtn" type="button" aria-label="Enter the Hub">Launch Vault</button>
-          <a href="dogeub-launch.html" class="ghostBtn">Open DogeUB</a>
+          <a href="https://ugs-dogeub.onrender.com" class="ghostBtn" target="_blank" rel="noreferrer">Open DogeUB</a>
         </div>
       </div>
     </div>
@@ -1710,9 +1710,9 @@ footer a:hover{color:var(--secondary)}
         <strong>Games Hub</strong>
         <span>Open the full catalog.</span>
       </button>
-      <a class="launcherAction" href="dogeub-launch.html" style="text-decoration:none;">
+      <a class="launcherAction" href="https://ugs-dogeub.onrender.com" target="_blank" rel="noreferrer" style="text-decoration:none;">
         <strong>DogeUB</strong>
-        <span>Open the proxy launcher.</span>
+        <span>Open DogeUB directly.</span>
       </a>
       <a class="launcherAction" href="collections.html" style="text-decoration:none;">
         <strong>Collections</strong>
@@ -2116,11 +2116,11 @@ function openHubWithLandingSearch(){
 }
 function openDogeUbFromLandingSearch(){
   const landingQuery=landingSearchInput ? landingSearchInput.value.trim() : "";
-  const target=new URL("dogeub-launch.html",location.href);
+  const target=new URL("https://ugs-dogeub.onrender.com");
   if(landingQuery){
     target.searchParams.set("q",landingQuery);
   }
-  location.href=target.toString();
+  window.open(target.toString(),"_blank","noopener,noreferrer");
 }
 function goHome(){
   setLauncherOpen(false);
