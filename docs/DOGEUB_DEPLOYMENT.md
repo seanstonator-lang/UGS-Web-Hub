@@ -1,8 +1,11 @@
 # DogeUB deployment
 
-DogeUB is deployed as the `ugs-dogeub` Render web service at
+DogeUB has a `ugs-dogeub` Render web service at
 [https://ugs-dogeub.onrender.com](https://ugs-dogeub.onrender.com).
-The UGS hub and its single-file build open this address from their DogeUB links.
+Render currently shows the account as suspended for suspicious activity, and
+the public URL returns `Service Suspended`. The UGS hub and its single-file
+build point to this address, but DogeUB will not open until Render restores the
+account or the service is moved to another host and the links are updated.
 
 The root `render.yaml` defines a free Node web service with `dogeub/` as its
 root directory. It runs `npm ci && npm run build`, then `node server.js`.
