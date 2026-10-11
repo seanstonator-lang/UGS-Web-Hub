@@ -32,6 +32,7 @@ test.describe('UGS Web Hub', () => {
     expect(totalCount).toBeGreaterThan(0);
 
     await page.locator('#search').fill('mario');
+    await page.locator('.browseFilters summary').click();
     await page.locator('#genreSelect').selectOption('platformer');
 
     const visibleCount = Number(await page.locator('#visibleCount').textContent());
@@ -43,6 +44,7 @@ test.describe('UGS Web Hub', () => {
   test('changes genre from the dropdown and updates summary', async ({ page }) => {
     await enterHub(page);
 
+    await page.locator('.browseFilters summary').click();
     await page.locator('#genreSelect').selectOption('platformer');
 
     await expect(page.locator('#activeGenreLabel')).toHaveText(/Jump Tech/i);
@@ -57,6 +59,7 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#activePlatformLabel')).toHaveText(/All types/i);
 
     const totalCount = Number(await page.locator('#count').textContent());
+    await page.locator('.browseFilters summary').click();
     await page.locator('#platformSelect').selectOption('flash');
     const flashCount = Number(await page.locator('#visibleCount').textContent());
 
@@ -69,6 +72,7 @@ test.describe('UGS Web Hub', () => {
   test('shows emulation system filtering when emulation is selected', async ({ page }) => {
     await enterHub(page);
 
+    await page.locator('.browseFilters summary').click();
     await page.locator('#platformSelect').selectOption('emulated');
 
     await expect(page.locator('#systemSelectWrap')).toBeVisible();
@@ -103,8 +107,9 @@ test.describe('UGS Web Hub', () => {
     await enterHub(page);
 
     await page.locator('#search').fill('mario');
+    await page.locator('.browseFilters summary').click();
     await page.locator('#genreSelect').selectOption('platformer');
-    await page.getByRole('button', { name: /Reset View/i }).click();
+    await page.getByRole('button', { name: /^Clear$/i }).click();
 
     await expect(page.locator('#search')).toHaveValue('');
     await expect(page.locator('#genreSelect')).toHaveValue('all');
@@ -126,6 +131,8 @@ test.describe('UGS Web Hub', () => {
   test('keeps search and filters easy to reach', async ({ page }) => {
     await enterHub(page);
     await expect(page.locator('#search')).toBeVisible();
+    await expect(page.locator('.browseFilters summary')).toBeVisible();
+    await page.locator('.browseFilters summary').click();
     await expect(page.locator('#platformSelect')).toBeVisible();
     await expect(page.locator('#genreSelect')).toBeVisible();
     await page.locator('#search').fill('mario');
@@ -143,11 +150,11 @@ test.describe('UGS Web Hub', () => {
     await favoriteButton.click();
 
     await expect(page.locator('#favoriteCount')).toHaveText('1');
-    await expect(page.getByRole('button', { name: /Favorites Only: On/i })).toHaveCount(0);
+    await expect(page.locator('#favoritesFilterBtn')).toHaveAttribute('aria-pressed', 'false');
 
-    await page.getByRole('button', { name: /Favorites Only: Off/i }).click();
+    await page.locator('#favoritesFilterBtn').click();
 
-    await expect(page.getByRole('button', { name: /Favorites Only: On/i })).toBeVisible();
+    await expect(page.locator('#favoritesFilterBtn')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('#visibleCount')).toHaveText('1');
     await expect(page.locator('#genreSummaryText')).toHaveText(/Favorites/i);
     await expect(page.locator('#games .card')).toHaveCount(1);
