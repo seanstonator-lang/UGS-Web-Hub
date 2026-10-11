@@ -4,6 +4,7 @@
   "description": "Personal project to build a fast web hub for the Ultimate Game Stash.",
   "main": "games-data.js",
   "scripts": {
+    "import:frogies": "node scripts/import-frogies-games.cjs",
     "audit:large-games": "node scripts/audit-large-games.cjs",
     "build:card-media": "node generate-game-card-media.js",
     "build:card-media:local": "node scripts/build-local-card-media.cjs",
