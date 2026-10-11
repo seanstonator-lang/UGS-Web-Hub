@@ -1999,7 +1999,7 @@ footer a:hover{color:var(--secondary)}
 
 <div class="frogiesView" id="frogiesView" role="dialog" aria-modal="true" aria-label="Frogie's Arcade" hidden>
   <div class="frogiesBar">
-    <div><strong id="frogiesTitle">Game</strong><small>From Frogie’s Arcade · Internet required</small></div>
+    <div><strong id="frogiesTitle">Game</strong><small id="hostedGameSource">Online game · Internet required</small></div>
     <div class="frogiesBarActions">
       <a id="frogiesNewTabLink" href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
       <button id="closeFrogiesBtn" type="button">Back to games</button>
@@ -2026,6 +2026,7 @@ footer a:hover{color:var(--secondary)}
 
 <script src="games-data.js"></script>
 <script src="frogies-games.js"></script>
+<script src="gnmath-games.js"></script>
 <script src="games-titles.js"></script>
 <script src="game-card-media.js"></script>
 <script>
@@ -2034,19 +2035,28 @@ const hub=document.getElementById("hub");
 const frogiesView=document.getElementById("frogiesView");
 const frogiesFrame=document.getElementById("frogiesFrame");
 const frogiesTitle=document.getElementById("frogiesTitle");
+const hostedGameSource=document.getElementById("hostedGameSource");
 const frogiesNewTabLink=document.getElementById("frogiesNewTabLink");
 const closeFrogiesBtn=document.getElementById("closeFrogiesBtn");
 let frogiesPreviousOverflow="";
 let frogiesReturnFocus=null;
-function openFrogies(url,title,returnFocus){
-  if(!/^https:\/\/frogiesarcade\.net\//.test(url)) return;
+function openHostedGame(game,returnFocus){
+  const url=game.url;
+  const source=game.source==="gnmath" ? "GN Math" : "Frogie’s Arcade";
+  const allowedHost=game.source==="gnmath" ? "gn-math.dev" : "frogiesarcade.net";
+  let parsed;
+  try{parsed=new URL(url);}catch{return;}
+  if(parsed.protocol!=="https:"||parsed.hostname!==allowedHost) return;
   frogiesReturnFocus=returnFocus||search;
   frogiesPreviousOverflow=document.body.style.overflow;
   document.body.style.overflow="hidden";
   frogiesView.hidden=false;
-  frogiesTitle.textContent=title;
+  frogiesView.setAttribute("aria-label",game.source==="gnmath" ? "GN Math" : "Frogie's Arcade");
+  frogiesTitle.textContent=game.displayName;
+  hostedGameSource.textContent=`From ${source} · Internet required`;
   frogiesNewTabLink.href=url;
   frogiesFrame.src=url;
+  frogiesFrame.title=game.displayName;
   closeFrogiesBtn.focus();
 }
 function closeFrogies(){
@@ -2123,7 +2133,13 @@ const uniqueFrogiesGames=(window.frogiesGames||[]).filter(game=>{
   catalogNames.add(name);
   return true;
 });
-const gamesData=[...originalGames,...uniqueFrogiesGames];
+const uniqueGnMathGames=(window.gnMathGames||[]).filter(game=>{
+  const name=normalizeSearchText(game.name).replace(/ /g,"");
+  if(catalogNames.has(name)) return false;
+  catalogNames.add(name);
+  return true;
+});
+const gamesData=[...originalGames,...uniqueFrogiesGames,...uniqueGnMathGames];
 const gameMetadataMap=window.gameMetadataMap||{};
 const gamePortabilityMap=window.gamePortabilityMap||{};
 const exactTitleMap=window.gameTitleMap||{};
@@ -2388,6 +2404,9 @@ function openHubFromDeepLink(){
 function normalizeSearchText(value){
   return value.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 }
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[char]);
+}
 
 function loadFavorites(){
   try{
@@ -2463,7 +2482,7 @@ function getLaunchBadge(game){
 }
 
 function getPortableBadge(game){
-  if(game.source==="frogies") return "Needs Internet";
+  if(game.source==="frogies"||game.source==="gnmath") return "Needs Internet";
   if(game.portableSupport==="offline-ready") return "Offline Ready";
   if(game.portableSupport==="internet-required") return "Needs Internet";
   return "";
@@ -2482,8 +2501,8 @@ function launchGame(game){
   if(!game) return;
   trackRecentGame(game.url);
   renderRecentGames();
-  if(game.source==="frogies"){
-    openFrogies(game.url,game.displayName,search);
+  if(game.source==="frogies"||game.source==="gnmath"){
+    openHostedGame(game,search);
     return;
   }
   location.href=getGameDetailUrl(game);
@@ -2588,17 +2607,17 @@ function render(){
       const card=document.createElement("div");
       const favoriteActive=isFavorite(game.url);
       const cardMediaUrl=getCardMediaUrl(game);
-      card.className=`card genre-${game.genre.name}${game.source==="frogies" ? " source-frogies" : ""}`;
+      card.className=`card genre-${game.genre.name}${game.source==="frogies" ? " source-frogies" : ""}${game.source==="gnmath" ? " source-gnmath" : ""}`;
       if(!cardMediaUrl){
         card.classList.add("no-media");
       }
       card.style.setProperty("--card-index",index%18);
       card.innerHTML=`
         ${cardMediaUrl ? `<div class="cardMedia"><img src="${cardMediaUrl}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></div>` : ""}
-        <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${game.displayName}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
+        <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${escapeHtml(game.displayName)}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
           <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}${getLaunchBadge(game) ? ` · ${getLaunchBadge(game)}` : ""}${getPortableBadge(game) ? ` · ${getPortableBadge(game)}` : ""}</span>
-          <h3>${game.displayName}</h3>
+          <h3>${escapeHtml(game.displayName)}</h3>
           <div class="cardFooter">
           <span class="cardArrow">↗</span>
           </div>

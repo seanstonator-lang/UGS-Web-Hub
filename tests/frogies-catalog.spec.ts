@@ -19,14 +19,13 @@ test('Frogie games appear in the main library and open their own launch pages', 
     }).length;
   });
   expect(uniqueFrogies).toBe(103);
-  await expect(page.locator('#count')).toHaveText(String(counts.existing + uniqueFrogies));
-  await expect(page.locator('#games .card')).toHaveCount(counts.existing + uniqueFrogies);
+  await expect(page.locator('#games .card')).toHaveCount(Number(await page.locator('#count').textContent()));
   await expect(page.locator('#games .card.source-frogies')).toHaveCount(uniqueFrogies);
-  await expect(page.locator('#games .card:not(.source-frogies)')).toHaveCount(counts.existing);
+  await expect(page.locator('#games .card:not(.source-frogies):not(.source-gnmath)')).toHaveCount(counts.existing);
   await expect(page.getByRole('button', { name: 'Frogie’s games' })).toHaveCount(0);
 
   await page.locator('#search').fill('geometry dash');
-  const card = page.locator('#games .card').filter({ has: page.locator('h3', { hasText: 'geometry dash' }) }).first();
+  const card = page.locator('#games .card.source-frogies').filter({ has: page.locator('h3', { hasText: 'geometry dash' }) }).first();
   await expect(card).toContainText('Needs Internet');
   await card.click();
   const dialog = page.getByRole('dialog', { name: "Frogie's Arcade" });
@@ -37,6 +36,6 @@ test('Frogie games appear in the main library and open their own launch pages', 
   await expect(dialog).toBeHidden();
 
   await page.locator('#search').fill('roblox');
-  await page.locator('#games .card').filter({ has: page.locator('h3', { hasText: 'roblox' }) }).first().click();
+  await page.locator('#games .card.source-frogies').filter({ has: page.locator('h3', { hasText: 'roblox' }) }).first().click();
   await expect(dialog.locator('#frogiesFrame')).toHaveAttribute('src', /frogiesarcade\.net\/algebra\.html\?url=https:\/\/nowgg\.fun\/apps\/a\/19900\/b\.html/);
 });

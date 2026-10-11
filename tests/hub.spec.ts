@@ -85,7 +85,7 @@ test.describe('UGS Web Hub', () => {
     await enterHub(page);
     await expect(page.getByRole('button', { name: 'Frogie’s games' })).toHaveCount(0);
     await expect(page.locator('#games .card.source-frogies').first()).toBeVisible();
-    await expect(page.locator('#games .card:not(.source-frogies)').first()).toBeVisible();
+    await expect(page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').first()).toBeVisible();
     await expect(page.locator('.extraControls').first()).toBeHidden();
   });
 
@@ -136,7 +136,7 @@ test.describe('UGS Web Hub', () => {
   test('saves favorites and filters the hub to the saved lane', async ({ page }) => {
     await enterHub(page);
 
-    const firstCard = page.locator('#games .card:not(.source-frogies)').first();
+    const firstCard = page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').first();
     const favoriteButton = firstCard.getByRole('button', { name: /Add to favorites/i });
     const title = (await firstCard.locator('h3').textContent())?.trim();
 
@@ -156,14 +156,14 @@ test.describe('UGS Web Hub', () => {
     await page.reload();
 
     await expect(page.locator('#favoriteCount')).toHaveText('1');
-    await expect(page.locator('#games .card:not(.source-frogies)').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
+    await expect(page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
   });
 
   test('surprise favorites launches from the saved pool', async ({ page }) => {
     await enterHub(page);
     await page.locator('.hubExtras summary').click();
 
-    const firstCard = page.locator('#games .card:not(.source-frogies)').first();
+    const firstCard = page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
     await firstCard.getByRole('button', { name: /Add to favorites/i }).click();
 
@@ -178,7 +178,7 @@ test.describe('UGS Web Hub', () => {
     await enterHub(page);
     await page.locator('.hubExtras summary').click();
 
-    const firstCard = page.locator('#games .card:not(.source-frogies)').first();
+    const firstCard = page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
 
     await firstCard.click();
@@ -203,7 +203,7 @@ test.describe('UGS Web Hub', () => {
 
     const titles: string[] = [];
     for (let i = 0; i < 4; i += 1) {
-      const card = page.locator('#games .card:not(.source-frogies)').nth(i);
+      const card = page.locator('#games .card:not(.source-frogies):not(.source-gnmath)').nth(i);
       titles.push(((await card.locator('h3').textContent()) || '').trim());
       await card.click();
       await page.waitForLoadState('domcontentloaded');
