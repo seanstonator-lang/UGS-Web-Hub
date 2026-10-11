@@ -1644,6 +1644,18 @@ footer a:hover{color:var(--secondary)}
     min-height:auto;
   }
 }
+.frogiesOpen{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border:1px solid rgba(94,234,212,.4);border-radius:11px;background:rgba(94,234,212,.12);color:#b4f6ea;font:700 .9rem system-ui;cursor:pointer}
+.frogiesOpen:hover{background:rgba(94,234,212,.22)}
+.frogiesView[hidden]{display:none!important}
+.frogiesView{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;background:#0b1724;color:#e8f2fb}
+.frogiesBar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.13)}
+.frogiesBar strong{display:block;font-size:1rem}
+.frogiesBar small{display:block;color:#a9bfd1;font-size:.75rem}
+.frogiesBarActions{display:flex;flex-wrap:wrap;gap:8px}
+.frogiesBarActions button,.frogiesBarActions a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:#172e42;color:#e8f2fb;font:700 .82rem system-ui;text-decoration:none;cursor:pointer}
+.frogiesBarActions button:hover,.frogiesBarActions a:hover{background:#24445e}
+.frogiesFrame{flex:1;width:100%;min-height:0;border:0;background:#fff}
+@media(max-width:620px){.frogiesBar{align-items:flex-start}.frogiesBarActions{justify-content:flex-end}.frogiesBar small{max-width:150px}}
 </style>
 </head>
 
@@ -1667,6 +1679,7 @@ footer a:hover{color:var(--secondary)}
       <nav class="landingNav" aria-label="Landing navigation">
         <button type="button" id="landingGamesBtn">Games</button>
         <a href="dogeub-launch.html">DogeUB</a>
+        <button type="button" data-open-frogies>Frogie’s Arcade</button>
         <a href="collections.html">Collections</a>
         <a href="guides.html">Guides</a>
         <a href="ugs-singlefile-launcher.html">Portable</a>
@@ -1741,6 +1754,7 @@ footer a:hover{color:var(--secondary)}
         <span class="eyebrow">Library View</span>
         <h2>Find your next tab destroyer</h2>
         <p>Search the vault, sort by genre, flip the room theme, and launch straight into the good stuff.</p>
+        <button class="frogiesOpen" type="button" data-open-frogies>Open Frogie’s Arcade</button>
       </div>
       <div class="spotlightCard">
         <span class="controlLabel">Live Spotlight</span>
@@ -1816,6 +1830,17 @@ footer a:hover{color:var(--secondary)}
   <div id="games"></div>
 </section>
 
+<div class="frogiesView" id="frogiesView" role="dialog" aria-modal="true" aria-label="Frogie's Arcade" hidden>
+  <div class="frogiesBar">
+    <div><strong>Frogie’s Arcade</strong><small>Online games inside UGS</small></div>
+    <div class="frogiesBarActions">
+      <a href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
+      <button id="closeFrogiesBtn" type="button">Back to UGS</button>
+    </div>
+  </div>
+  <iframe class="frogiesFrame" id="frogiesFrame" title="Frogie's Arcade" referrerpolicy="no-referrer" allow="fullscreen; autoplay; gamepad" allowfullscreen></iframe>
+</div>
+
 <div id="alpha" aria-label="Alphabet navigation"></div>
 <div id="topBtn">↑</div>
 
@@ -1838,6 +1863,30 @@ footer a:hover{color:var(--secondary)}
 <script>
 const landing=document.getElementById("landing");
 const hub=document.getElementById("hub");
+const frogiesView=document.getElementById("frogiesView");
+const frogiesFrame=document.getElementById("frogiesFrame");
+const closeFrogiesBtn=document.getElementById("closeFrogiesBtn");
+let frogiesPreviousOverflow="";
+let frogiesReturnFocus=null;
+document.querySelectorAll("[data-open-frogies]").forEach(button=>button.addEventListener("click",()=>{
+  frogiesReturnFocus=button;
+  frogiesPreviousOverflow=document.body.style.overflow;
+  document.body.style.overflow="hidden";
+  frogiesView.hidden=false;
+  frogiesFrame.src="https://frogiesarcade.net/";
+  closeFrogiesBtn.focus();
+}));
+function closeFrogies(){
+  if(frogiesView.hidden) return;
+  frogiesView.hidden=true;
+  frogiesFrame.src="about:blank";
+  document.body.style.overflow=frogiesPreviousOverflow;
+  frogiesReturnFocus?.focus();
+}
+closeFrogiesBtn.addEventListener("click",closeFrogies);
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&!frogiesView.hidden){event.preventDefault();closeFrogies();}
+});
 const gamesEl=document.getElementById("games");
 const search=document.getElementById("search");
 const alpha=document.getElementById("alpha");
