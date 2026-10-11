@@ -2,15 +2,11 @@ import { expect, test } from '@playwright/test';
 import { enterHub } from './helpers';
 
 test.describe('UGS Web Hub', () => {
-  test('loads the landing page and enters the hub', async ({ page }) => {
+  test('opens directly to the game catalog', async ({ page }) => {
     await page.goto('/');
 
     await expect(page).toHaveTitle(/UGS Web Hub/i);
-    await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
-
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
-
-    await expect(page.getByRole('heading', { name: /Find your next tab destroyer/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Find a game/i })).toBeVisible();
     await expect(page.locator('#games .card').first()).toBeVisible();
     await expect(page.locator('#count')).toContainText(/\d+/);
     await expect(page.locator('#visibleCount')).toContainText(/\d+/);
@@ -87,6 +83,7 @@ test.describe('UGS Web Hub', () => {
 
   test('switches themes from the hub theme controls', async ({ page }) => {
     await enterHub(page);
+    await page.locator('.extraControls').filter({ has: page.locator('#themeFilters') }).locator('summary').click();
 
     await page.getByRole('button', { name: /Neon Grid/i }).click();
 
@@ -96,6 +93,8 @@ test.describe('UGS Web Hub', () => {
 
   test('random pick updates spotlight and launch opens the library page in the same tab', async ({ page }) => {
     await enterHub(page);
+    await page.locator('.hubExtras summary').click();
+    await page.locator('#search').fill('1 on 1 soccer');
 
     await page.getByRole('button', { name: /^Random Pick$/i }).click();
     await expect(page.locator('#spotlightTitle')).not.toHaveText(/Catalog Ready/i);
@@ -127,11 +126,12 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games .card')).toHaveCount(0);
     await expect(page.locator('#spotlightTitle')).toHaveText(/No Matches Found/i);
     await expect(page.locator('#spotlightMeta')).toContainText(/Try another search/i);
-    await expect(page.getByRole('button', { name: /No Launch/i })).toBeDisabled();
+    await expect(page.locator('#spotlightBtn')).toBeDisabled();
   });
 
   test('quick-start collections reshape the hub without typing a search', async ({ page }) => {
     await enterHub(page);
+    await page.locator('.extraControls').filter({ has: page.locator('#collectionGrid') }).locator('summary').click();
 
     await page.getByRole('button', { name: /Brain Burn/i }).click();
 
@@ -161,7 +161,6 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#games')).toContainText(title || '');
 
     await page.reload();
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
 
     await expect(page.locator('#favoriteCount')).toHaveText('1');
     await expect(page.locator('#games .card:not(.source-frogies)').first().getByRole('button', { name: /Remove from favorites/i })).toBeVisible();
@@ -169,6 +168,7 @@ test.describe('UGS Web Hub', () => {
 
   test('surprise favorites launches from the saved pool', async ({ page }) => {
     await enterHub(page);
+    await page.locator('.hubExtras summary').click();
 
     const firstCard = page.locator('#games .card:not(.source-frogies)').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
@@ -178,12 +178,12 @@ test.describe('UGS Web Hub', () => {
     await page.waitForLoadState('domcontentloaded');
     await expect(page).toHaveURL(/\/library\//i);
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
     await expect(page.locator('#recentList')).toContainText(title || '');
   });
 
   test('tracks recently played games and lets you clear the list', async ({ page }) => {
     await enterHub(page);
+    await page.locator('.hubExtras summary').click();
 
     const firstCard = page.locator('#games .card:not(.source-frogies)').first();
     const title = (await firstCard.locator('h3').textContent())?.trim();
@@ -192,12 +192,12 @@ test.describe('UGS Web Hub', () => {
     await page.waitForLoadState('domcontentloaded');
     await expect(page).toHaveURL(/\/library\//i);
     await page.goto('/');
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.locator('.hubExtras summary').click();
     await expect(page.locator('#recentList')).toContainText(title || '');
     await expect(page.getByRole('button', { name: /Play Again/i })).toBeVisible();
 
     await page.reload();
-    await page.getByRole('button', { name: /Enter the Hub/i }).click();
+    await page.locator('.hubExtras summary').click();
 
     await expect(page.locator('#recentList')).toContainText(title || '');
     await page.getByRole('button', { name: /Clear Recent/i }).click();
@@ -216,8 +216,7 @@ test.describe('UGS Web Hub', () => {
       await page.waitForLoadState('domcontentloaded');
       await expect(page).toHaveURL(/\/library\//i);
       await page.goto('/');
-      await page.getByRole('button', { name: /Enter the Hub/i }).click();
-    }
+      }
 
     await expect(page.locator('#recentList .recentItem')).toHaveCount(3);
     await expect(page.locator('#recentList')).toContainText(titles[3]);

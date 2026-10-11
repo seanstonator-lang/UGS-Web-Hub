@@ -23,7 +23,7 @@ test.describe('UGS Web Hub library pages', () => {
 
     await page.getByRole('link', { name: /Browse Library/i }).click();
     await expect(page).toHaveURL(/\/index\.html\?hub=1#hub$/i);
-    await expect(page.getByRole('heading', { name: /Find your next tab destroyer/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Find a game/i })).toBeVisible();
     await expect(page.locator('#games .card').first()).toBeVisible();
   });
 });

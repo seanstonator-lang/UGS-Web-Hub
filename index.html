@@ -1370,7 +1370,7 @@ a{color:inherit}
   position:absolute;
   top:16px;
   right:16px;
-  z-index:2;
+  z-index:3;
   width:40px;
   height:40px;
   border:1px solid rgba(255,255,255,.1);
@@ -1644,8 +1644,108 @@ footer a:hover{color:var(--secondary)}
     min-height:auto;
   }
 }
-.frogiesOpen{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border:1px solid rgba(94,234,212,.4);border-radius:11px;background:rgba(94,234,212,.12);color:#b4f6ea;font:700 .9rem system-ui;cursor:pointer}
-.frogiesOpen:hover{background:rgba(94,234,212,.22)}
+
+/* A calmer, more useful first screen for the single-file hub. */
+.landingHero{
+  padding:34px 0 40px;
+}
+.landingCenter{
+  width:min(830px,100%);
+  justify-items:start;
+  gap:22px;
+  padding:clamp(32px,5vw,66px);
+  text-align:left;
+  border:1px solid rgba(119,168,255,.18);
+  border-radius:32px;
+  background:linear-gradient(135deg,rgba(23,39,60,.96),rgba(12,22,38,.94) 58%,rgba(13,48,58,.9));
+  box-shadow:0 30px 85px rgba(3,9,20,.32),inset 0 1px rgba(255,255,255,.06);
+}
+.landingTag{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 12px;
+  border:1px solid rgba(94,234,212,.2);
+  border-radius:999px;
+  background:rgba(94,234,212,.07);
+  color:#9de8df;
+  letter-spacing:.06em;
+}
+.landingTag::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#5eead4;
+  box-shadow:0 0 12px rgba(94,234,212,.6);
+}
+.landingLogo{
+  flex-direction:row;
+  align-items:center;
+  gap:22px;
+}
+.landingLogoWordmark{
+  justify-items:start;
+  text-align:left;
+}
+#landing h1{
+  font-size:clamp(2.8rem,6vw,5.2rem);
+  line-height:1;
+  letter-spacing:-.045em;
+}
+.landingLogoWordmark p{
+  font-size:1rem;
+  letter-spacing:0;
+}
+.landingLead{
+  max-width:34rem;
+  font-size:1.08rem;
+}
+.heroActions{
+  margin-top:6px;
+}
+.heroActions > *{
+  min-height:52px;
+  padding:14px 22px;
+  border-radius:14px;
+  letter-spacing:.04em;
+  text-transform:none;
+  font-size:.95rem;
+}
+@media(max-width:650px){
+  #landing{padding-top:0}
+  .heroShell{min-height:100vh;grid-template-rows:auto auto;align-content:start;padding:14px}
+  .landingTopbar{gap:14px;padding:8px 0 16px}
+  .landingNav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .landingNav a,.landingNav button{min-width:0;padding:9px 5px;border:1px solid rgba(119,168,255,.17);border-radius:10px;background:rgba(255,255,255,.035);font-size:.78rem;text-align:center}
+  .landingHero{padding:24px 0 28px}
+  .landingCenter{padding:28px 22px;border-radius:22px}
+  .landingLogo{width:auto;flex-direction:row;align-items:center;gap:14px}
+  .landingLogoMark{width:52px;height:52px;border-radius:17px;flex:none}
+  .landingLogoMark img{width:32px;height:32px}
+  .landingLogoWordmark{justify-items:start;text-align:left}
+  #landing h1{font-size:clamp(2.2rem,9vw,3.5rem)}
+  .heroActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:10px}
+  .heroActions > *{min-width:0;width:100%;padding:13px 8px;font-size:.82rem;white-space:nowrap}
+  #landing:not([style*="none"]) + .ugsLauncher{display:none}
+}
+
+/* Keep the library focused on finding and opening games. */
+.singleFileNotice{padding:8px 16px;background:#102235;color:#b9d3e9;text-align:center;font:12px/1.4 system-ui;border-bottom:1px solid rgba(255,255,255,.07)}
+#landing,#homeBtn,.ugsLauncher{display:none!important}
+#hub{display:block!important;max-width:1500px;padding:34px 26px 90px}
+.hubIntro{grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:14px;margin-bottom:12px}
+.hubLead{display:block}
+.hubTitleCard,.hubSearchCard{height:100%;padding:22px;border-radius:22px}
+.hubTitleCard{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;background:linear-gradient(135deg,rgba(30,53,72,.96),rgba(14,36,48,.94))}
+.hubTitleCard h2{margin:0;font-size:clamp(2rem,3vw,2.8rem);letter-spacing:-.04em;text-transform:none}
+.hubTitleCard p{font-size:.9rem;line-height:1.45}
+.hubProxyBtn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin-top:8px;padding:10px 16px;border:1px solid rgba(94,234,212,.42);border-radius:11px;background:rgba(94,234,212,.12);color:#b4f6ea;text-decoration:none;font-size:.87rem;font-weight:800}
+.hubProxyBtn:hover{background:rgba(94,234,212,.2)}
+.hubQuickLinks{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.hubQuickLinks .hubProxyBtn{margin-top:8px}
+.hubQuickLinks .hubProxyBtn--secondary{border-color:rgba(180,195,215,.35);background:rgba(180,195,215,.1);color:#e2edf8}
+.hubQuickLinks .hubProxyBtn--secondary:hover{background:rgba(180,195,215,.2)}
 .frogiesView[hidden]{display:none!important}
 .frogiesView{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;background:#0b1724;color:#e8f2fb}
 .frogiesBar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.13)}
@@ -1656,10 +1756,40 @@ footer a:hover{color:var(--secondary)}
 .frogiesBarActions button:hover,.frogiesBarActions a:hover{background:#24445e}
 .frogiesFrame{flex:1;width:100%;min-height:0;border:0;background:#fff}
 @media(max-width:620px){.frogiesBar{align-items:flex-start}.frogiesBarActions{justify-content:flex-end}.frogiesBar small{max-width:150px}}
+.searchLabel{margin-bottom:7px;letter-spacing:.08em;text-transform:none;font-size:.86rem;font-weight:800}
+#search{height:48px;margin-bottom:11px;padding:10px 15px;border-radius:12px}
+.controlsStack{display:block;margin-top:0}
+.controlsStack>.controlGroup:first-child{padding:0;border:0;border-radius:0;background:none;box-shadow:none;gap:8px}
+.controlsStack>.controlGroup:first-child>.controlLabel{display:none}
+.genrePanel{gap:10px}
+.actionRow{margin-top:6px}
+.extraControls{display:inline-block;width:auto;margin:10px 8px 0 0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;vertical-align:top}
+.extraControls summary,.hubExtras summary{cursor:pointer;color:#a7d7ed;font-size:.82rem;font-weight:800;list-style:none}
+.extraControls summary::-webkit-details-marker,.hubExtras summary::-webkit-details-marker{display:none}
+.extraControls summary::before,.hubExtras summary::before{content:"＋";margin-right:7px;color:#5eead4}
+.extraControls[open] summary::before,.hubExtras[open] summary::before{content:"−"}
+.extraControls .controlLabel{display:none}
+.extraControls .collectionGrid,.extraControls .chipRow{margin-top:12px}
+.hubMeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.metaPill{min-height:28px;padding:5px 9px;border-radius:8px;font-size:.72rem}
+.hubMeta .metaPill:nth-child(n+4){display:none}
+.hubExtras{margin:0 0 18px;padding:10px 14px;border:1px solid rgba(119,168,255,.14);border-radius:13px;background:rgba(255,255,255,.025)}
+.hubExtrasGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.hubExtrasGrid>.spotlightCard,.hubExtrasGrid>.recentCard{margin:0}
+#alpha{display:none!important}
+.section{margin-top:12px;font-size:1.35rem}
+@media(max-width:900px){
+  #hub{padding:34px 16px 80px}
+  .hubIntro{grid-template-columns:1fr}
+  .hubTitleCard,.hubSearchCard{height:auto}
+  .hubExtrasGrid{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
+
+<div class="singleFileNotice" role="note">Games, DogeUB, and Frogie’s Arcade need an internet connection.</div>
 
 <div id="progress"></div>
 <button id="homeBtn">HOME</button>
@@ -1673,13 +1803,12 @@ footer a:hover{color:var(--secondary)}
         </div>
         <div class="brandWordmark">
           <strong>UGS Web Hub</strong>
-          <span>Arcade, apps, proxy tools, and fast exits</span>
+          <span>Games, browser, favorites</span>
         </div>
       </div>
       <nav class="landingNav" aria-label="Landing navigation">
         <button type="button" id="landingGamesBtn">Games</button>
-        <a href="dogeub-launch.html">DogeUB</a>
-        <button type="button" data-open-frogies>Frogie’s Arcade</button>
+        <a href="https://raspberrypi.tail153ae0.ts.net" target="_blank" rel="noreferrer">DogeUB</a>
         <a href="collections.html">Collections</a>
         <a href="guides.html">Guides</a>
         <a href="ugs-singlefile-launcher.html">Portable</a>
@@ -1687,22 +1816,22 @@ footer a:hover{color:var(--secondary)}
     </div>
     <div class="landingHero">
       <div class="landingCenter">
-        <div class="landingTag">School-safe launcher layout</div>
+        <div class="landingTag">Ready to play</div>
         <div class="landingLogo">
           <div class="landingLogoMark">
             <img src="favicon.png" alt="UGS Web Hub logo">
           </div>
           <div class="landingLogoWordmark">
             <h1>UGS WEB HUB</h1>
-            <p>The fast front door for the vault, with DogeUB one click away instead of taking over the whole landing page.</p>
+            <p>Games and DogeUB in one place.</p>
           </div>
         </div>
         <p class="landingLead">
-          Launch the main vault, browse curated pages, or open DogeUB without turning the landing page into a copy of DogeUB itself.
+          Find a game, save it for later, or open a website in DogeUB.
         </p>
         <div class="heroActions">
-          <button id="enterBtn" type="button" aria-label="Enter the Hub">Launch Vault</button>
-          <a href="dogeub-launch.html" class="ghostBtn">Open DogeUB</a>
+          <button id="enterBtn" type="button" aria-label="Enter the Hub">Browse games</button>
+          <a href="https://raspberrypi.tail153ae0.ts.net" class="ghostBtn" target="_blank" rel="noreferrer">Open DogeUB</a>
         </div>
       </div>
     </div>
@@ -1715,17 +1844,17 @@ footer a:hover{color:var(--secondary)}
       <img src="favicon.png" alt="UGS Web Hub logo">
       <div>
         <strong>UGS Menu</strong>
-        <span>Jump to hub sections</span>
+        <span>Jump to what you need</span>
       </div>
     </div>
     <div class="launcherGrid">
       <button class="launcherAction" type="button" data-launcher-action="games">
         <strong>Games Hub</strong>
-        <span>Open the full catalog.</span>
+        <span>Find a game to play.</span>
       </button>
-      <a class="launcherAction" href="dogeub-launch.html" style="text-decoration:none;">
+      <a class="launcherAction" href="https://raspberrypi.tail153ae0.ts.net" target="_blank" rel="noreferrer" style="text-decoration:none;">
         <strong>DogeUB</strong>
-        <span>Open the proxy launcher.</span>
+        <span>Open the browser.</span>
       </a>
       <a class="launcherAction" href="collections.html" style="text-decoration:none;">
         <strong>Collections</strong>
@@ -1740,7 +1869,7 @@ footer a:hover{color:var(--secondary)}
         <span>Launch the single-file build.</span>
       </a>
     </div>
-    <div class="launcherStatus">Corner launcher for the different parts of UGS.</div>
+    <div class="launcherStatus">Choose where to go.</div>
   </div>
   <button class="ugsLauncherBtn" id="ugsLauncherBtn" type="button" aria-label="Open UGS quick menu" aria-expanded="false">
     <img src="favicon.png" alt="UGS Web Hub logo">
@@ -1752,42 +1881,18 @@ footer a:hover{color:var(--secondary)}
     <div class="hubLead">
       <div class="hubTitleCard">
         <span class="eyebrow">Library View</span>
-        <h2>Find your next tab destroyer</h2>
-        <p>Search the vault, sort by genre, flip the room theme, and launch straight into the good stuff.</p>
-        <button class="frogiesOpen" id="frogiesGamesBtn" type="button">Show Frogie’s games</button>
-        <button class="frogiesOpen" type="button" data-open-frogies>Open Frogie’s Arcade</button>
-      </div>
-      <div class="spotlightCard">
-        <span class="controlLabel">Live Spotlight</span>
-        <h3 id="spotlightTitle">Catalog Ready</h3>
-        <div class="spotlightMeta" id="spotlightMeta">Search, filter, or hit random pick to surface the next tab destroyer.</div>
-        <div class="spotlightActions">
-          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
-          <button class="actionBtn" id="favoriteSurpriseBtn" type="button">Surprise Favorites</button>
-          <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
-          <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
+        <h2>Find a game</h2>
+        <p>Search, filter, or pick a game at random.</p>
+        <div class="hubQuickLinks">
+          <a class="hubProxyBtn" href="https://raspberrypi.tail153ae0.ts.net" target="_blank" rel="noreferrer">Open DogeUB</a>
+          <button class="hubProxyBtn hubProxyBtn--secondary" id="showFrogiesGamesBtn" type="button">Frogie’s games</button>
+          <button class="hubProxyBtn hubProxyBtn--secondary" id="openFrogiesBtn" type="button" title="Online only; open Frogie's Arcade inside UGS">Frogie’s Arcade</button>
         </div>
-      </div>
-      <div class="recentCard">
-        <div class="recentHeader">
-          <div>
-            <span class="controlLabel">Recently Played</span>
-            <p>Your last launches stay parked here for fast reruns.</p>
-          </div>
-          <div class="recentActions">
-            <button class="actionBtn" id="clearRecentBtn" type="button">Clear Recent</button>
-          </div>
-        </div>
-        <div class="recentList" id="recentList"></div>
       </div>
     </div>
     <div class="hubSearchCard">
-      <label class="searchLabel" for="search">Search the stack</label>
-  <input id="search" placeholder="Search games…" />
-      <div class="quickCollections">
-        <span class="controlLabel">Quick Start</span>
-        <div class="collectionGrid" id="collectionGrid"></div>
-      </div>
+      <label class="searchLabel" for="search">Search games</label>
+      <input id="search" placeholder="Type a game name…" />
       <div class="controlsStack">
         <div class="controlGroup">
           <span class="controlLabel">Browse Controls</span>
@@ -1813,11 +1918,16 @@ footer a:hover{color:var(--secondary)}
             <button class="actionBtn" id="resetBtn" type="button">Reset View</button>
           </div>
         </div>
-        <div class="controlGroup">
+        <details class="controlGroup extraControls">
+          <summary>Theme</summary>
           <span class="controlLabel">Hub Themes</span>
           <div class="chipRow" id="themeFilters"></div>
-        </div>
+        </details>
       </div>
+      <details class="quickCollections extraControls">
+        <summary>Collections</summary>
+        <div class="collectionGrid" id="collectionGrid"></div>
+      </details>
       <div class="hubMeta">
         <span class="metaPill">Total: <span id="count">0</span></span>
         <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
@@ -1828,6 +1938,34 @@ footer a:hover{color:var(--secondary)}
       </div>
     </div>
   </div>
+  <details class="hubExtras">
+    <summary>Spotlight and recently played</summary>
+    <div class="hubExtrasGrid">
+      <div class="spotlightCard">
+        <span class="controlLabel">Spotlight</span>
+        <h3 id="spotlightTitle">Catalog Ready</h3>
+        <div class="spotlightMeta" id="spotlightMeta">Try random pick to find something new.</div>
+        <div class="spotlightActions">
+          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
+          <button class="actionBtn" id="favoriteSurpriseBtn" type="button">Surprise Favorites</button>
+          <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
+          <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
+        </div>
+      </div>
+      <div class="recentCard">
+        <div class="recentHeader">
+          <div>
+            <span class="controlLabel">Recently Played</span>
+            <p>Your recent games appear here.</p>
+          </div>
+          <div class="recentActions">
+            <button class="actionBtn" id="clearRecentBtn" type="button">Clear Recent</button>
+          </div>
+        </div>
+        <div class="recentList" id="recentList"></div>
+      </div>
+    </div>
+  </details>
   <div id="games"></div>
 </section>
 
@@ -1836,7 +1974,7 @@ footer a:hover{color:var(--secondary)}
     <div><strong id="frogiesTitle">Frogie’s Arcade</strong><small>Online games inside UGS</small></div>
     <div class="frogiesBarActions">
       <a id="frogiesNewTabLink" href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
-      <button id="closeFrogiesBtn" type="button">Back to UGS</button>
+      <button id="closeFrogiesBtn" type="button">Back to games</button>
     </div>
   </div>
   <iframe class="frogiesFrame" id="frogiesFrame" title="Frogie's Arcade" referrerpolicy="no-referrer" allow="fullscreen; autoplay; gamepad" allowfullscreen></iframe>
@@ -1869,12 +2007,14 @@ const frogiesView=document.getElementById("frogiesView");
 const frogiesFrame=document.getElementById("frogiesFrame");
 const frogiesTitle=document.getElementById("frogiesTitle");
 const frogiesNewTabLink=document.getElementById("frogiesNewTabLink");
+const showFrogiesGamesBtn=document.getElementById("showFrogiesGamesBtn");
+const openFrogiesBtn=document.getElementById("openFrogiesBtn");
 const closeFrogiesBtn=document.getElementById("closeFrogiesBtn");
 let frogiesPreviousOverflow="";
 let frogiesReturnFocus=null;
 function openFrogies(url,title,returnFocus){
   if(!/^https:\/\/frogiesarcade\.net\//.test(url)) return;
-  frogiesReturnFocus=returnFocus||null;
+  frogiesReturnFocus=returnFocus||openFrogiesBtn;
   frogiesPreviousOverflow=document.body.style.overflow;
   document.body.style.overflow="hidden";
   frogiesView.hidden=false;
@@ -1883,15 +2023,13 @@ function openFrogies(url,title,returnFocus){
   frogiesFrame.src=url;
   closeFrogiesBtn.focus();
 }
-document.querySelectorAll("[data-open-frogies]").forEach(button=>button.addEventListener("click",()=>{
-  openFrogies("https://frogiesarcade.net/","Frogie’s Arcade",button);
-}));
+openFrogiesBtn.addEventListener("click",()=>openFrogies("https://frogiesarcade.net/","Frogie’s Arcade",openFrogiesBtn));
 function closeFrogies(){
   if(frogiesView.hidden) return;
   frogiesView.hidden=true;
   frogiesFrame.src="about:blank";
   document.body.style.overflow=frogiesPreviousOverflow;
-  frogiesReturnFocus?.focus();
+  frogiesReturnFocus.focus();
 }
 closeFrogiesBtn.addEventListener("click",closeFrogies);
 document.addEventListener("keydown",event=>{
@@ -2076,7 +2214,7 @@ if(enterBtn){
 }
 homeBtn.onclick=goHome;
 landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
-document.getElementById("frogiesGamesBtn").addEventListener("click",()=>{
+showFrogiesGamesBtn.addEventListener("click",()=>{
   document.querySelector('[data-collection-key="frogies"]').click();
   gamesEl.scrollIntoView({block:"start",behavior:"smooth"});
 });
@@ -2185,11 +2323,11 @@ function openHubWithLandingSearch(){
 }
 function openDogeUbFromLandingSearch(){
   const landingQuery=landingSearchInput ? landingSearchInput.value.trim() : "";
-  const target=new URL("dogeub-launch.html",location.href);
+  const target=new URL("https://raspberrypi.tail153ae0.ts.net");
   if(landingQuery){
     target.searchParams.set("q",landingQuery);
   }
-  location.href=target.toString();
+  window.open(target.toString(),"_blank","noopener,noreferrer");
 }
 function goHome(){
   setLauncherOpen(false);
@@ -2338,7 +2476,7 @@ function launchGame(game){
   trackRecentGame(game.url);
   renderRecentGames();
   if(game.source==="frogies"){
-    openFrogies(game.url,game.displayName,document.getElementById("frogiesGamesBtn"));
+    openFrogies(game.url,game.displayName,showFrogiesGamesBtn);
     return;
   }
   location.href=getGameDetailUrl(game);
@@ -2683,7 +2821,7 @@ if(IS_PORTABLE_MODE&&portableNoteEl){
 });
 
 addEventListener("hashchange",openHubFromDeepLink);
-openHubFromDeepLink();
+enterHub();
 
 /* SCROLL — HOTFIX */
 addEventListener("scroll",()=>{
