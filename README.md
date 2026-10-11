@@ -9,6 +9,7 @@ Live site: [ugswebhub.com](https://ugswebhub.com)
 ## Current Features
 
 - Fast searchable game catalog with genre, platform, and system filters
+- Frogie's Arcade games in the main catalog; these open from Frogie's online service inside the UGS player
 - Quick-start collections for different play moods
 - Favorites and recently played lists saved in the browser
 - Spotlight, random pick, favorite surprise, and same-tab launch flows

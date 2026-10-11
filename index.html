@@ -1754,6 +1754,7 @@ footer a:hover{color:var(--secondary)}
         <span class="eyebrow">Library View</span>
         <h2>Find your next tab destroyer</h2>
         <p>Search the vault, sort by genre, flip the room theme, and launch straight into the good stuff.</p>
+        <button class="frogiesOpen" id="frogiesGamesBtn" type="button">Show Frogie’s games</button>
         <button class="frogiesOpen" type="button" data-open-frogies>Open Frogie’s Arcade</button>
       </div>
       <div class="spotlightCard">
@@ -1832,9 +1833,9 @@ footer a:hover{color:var(--secondary)}
 
 <div class="frogiesView" id="frogiesView" role="dialog" aria-modal="true" aria-label="Frogie's Arcade" hidden>
   <div class="frogiesBar">
-    <div><strong>Frogie’s Arcade</strong><small>Online games inside UGS</small></div>
+    <div><strong id="frogiesTitle">Frogie’s Arcade</strong><small>Online games inside UGS</small></div>
     <div class="frogiesBarActions">
-      <a href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
+      <a id="frogiesNewTabLink" href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
       <button id="closeFrogiesBtn" type="button">Back to UGS</button>
     </div>
   </div>
@@ -1858,6 +1859,7 @@ footer a:hover{color:var(--secondary)}
 </footer>
 
 <script src="games-data.js"></script>
+<script src="frogies-games.js"></script>
 <script src="games-titles.js"></script>
 <script src="game-card-media.js"></script>
 <script>
@@ -1865,16 +1867,24 @@ const landing=document.getElementById("landing");
 const hub=document.getElementById("hub");
 const frogiesView=document.getElementById("frogiesView");
 const frogiesFrame=document.getElementById("frogiesFrame");
+const frogiesTitle=document.getElementById("frogiesTitle");
+const frogiesNewTabLink=document.getElementById("frogiesNewTabLink");
 const closeFrogiesBtn=document.getElementById("closeFrogiesBtn");
 let frogiesPreviousOverflow="";
 let frogiesReturnFocus=null;
-document.querySelectorAll("[data-open-frogies]").forEach(button=>button.addEventListener("click",()=>{
-  frogiesReturnFocus=button;
+function openFrogies(url,title,returnFocus){
+  if(!/^https:\/\/frogiesarcade\.net\//.test(url)) return;
+  frogiesReturnFocus=returnFocus||null;
   frogiesPreviousOverflow=document.body.style.overflow;
   document.body.style.overflow="hidden";
   frogiesView.hidden=false;
-  frogiesFrame.src="https://frogiesarcade.net/";
+  frogiesTitle.textContent=title;
+  frogiesNewTabLink.href=url;
+  frogiesFrame.src=url;
   closeFrogiesBtn.focus();
+}
+document.querySelectorAll("[data-open-frogies]").forEach(button=>button.addEventListener("click",()=>{
+  openFrogies("https://frogiesarcade.net/","Frogie’s Arcade",button);
 }));
 function closeFrogies(){
   if(frogiesView.hidden) return;
@@ -1942,7 +1952,7 @@ const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
 const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
 const MAX_RECENT_GAMES=3;
 const IS_PORTABLE_MODE=location.protocol==="file:";
-const gamesData=window.rawGames||[];
+const gamesData=[...(window.rawGames||[]),...(window.frogiesGames||[])];
 const gameMetadataMap=window.gameMetadataMap||{};
 const gamePortabilityMap=window.gamePortabilityMap||{};
 const exactTitleMap=window.gameTitleMap||{};
@@ -1976,6 +1986,12 @@ const COLLECTION_OPTIONS=[
     label:"Full Vault",
     blurb:"Everything online and ready.",
     match:()=>true
+  },
+  {
+    key:"frogies",
+    label:"Frogie’s Arcade",
+    blurb:"Games from Frogie’s Arcade. Internet required.",
+    match:game=>game.source==="frogies"
   },
   {
     key:"quick-hits",
@@ -2033,8 +2049,8 @@ const normalizedGames=gamesData.map(game=>{
     type,
     system,
     tags,
-    cardMedia:cardMediaMap[game.url]||"",
-    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system} ${tags.join(" ")} ${metadata.launchMode||""} ${metadata.sourceHost||""} ${portability.portableSupport||""} ${portability.portableLabel||""}`)
+    cardMedia:game.cardMedia||cardMediaMap[game.url]||"",
+    searchText:normalizeSearchText(`${game.name} ${displayName} ${genre.name} ${genre.label} ${type} ${system} ${game.source||""} ${tags.join(" ")} ${metadata.launchMode||""} ${metadata.sourceHost||""} ${portability.portableSupport||""} ${portability.portableLabel||""}`)
   };
 });
 const EMULATED_SYSTEM_OPTIONS=[
@@ -2060,6 +2076,10 @@ if(enterBtn){
 }
 homeBtn.onclick=goHome;
 landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
+document.getElementById("frogiesGamesBtn").addEventListener("click",()=>{
+  document.querySelector('[data-collection-key="frogies"]').click();
+  gamesEl.scrollIntoView({block:"start",behavior:"smooth"});
+});
 if(dockGamesBtn){
   dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
 }
@@ -2290,6 +2310,7 @@ function getCardFlavorText(game){
 }
 
 function getLaunchBadge(game){
+  if(game.source==="frogies") return "Frogie’s Arcade";
   if(game.launchMode==="split-assets") return "Split Assets";
   if(game.launchMode==="single-file") return "Single File";
   if(game.launchMode==="external-host") return "External Host";
@@ -2297,6 +2318,7 @@ function getLaunchBadge(game){
 }
 
 function getPortableBadge(game){
+  if(game.source==="frogies") return "Needs Internet";
   if(game.portableSupport==="offline-ready") return "Offline Ready";
   if(game.portableSupport==="internet-required") return "Needs Internet";
   return "";
@@ -2315,6 +2337,10 @@ function launchGame(game){
   if(!game) return;
   trackRecentGame(game.url);
   renderRecentGames();
+  if(game.source==="frogies"){
+    openFrogies(game.url,game.displayName,document.getElementById("frogiesGamesBtn"));
+    return;
+  }
   location.href=getGameDetailUrl(game);
 }
 
@@ -2417,7 +2443,7 @@ function render(){
       const card=document.createElement("div");
       const favoriteActive=isFavorite(game.url);
       const cardMediaUrl=getCardMediaUrl(game);
-      card.className=`card genre-${game.genre.name}`;
+      card.className=`card genre-${game.genre.name}${game.source==="frogies" ? " source-frogies" : ""}`;
       if(!cardMediaUrl){
         card.classList.add("no-media");
       }
