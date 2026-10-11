@@ -2157,6 +2157,11 @@ const gameMetadataMap=window.gameMetadataMap||{};
 const gamePortabilityMap=window.gamePortabilityMap||{};
 const exactTitleMap=window.gameTitleMap||{};
 const cardMediaMap=window.gameCardMediaMap||{};
+const alternateCardMediaMap=new Map();
+for(const game of [...(window.frogiesGames||[]),...(window.gnMathGames||[])]){
+  const name=normalizeSearchText(game.name).replace(/ /g,"");
+  if(game.cardMedia&&!alternateCardMediaMap.has(name)) alternateCardMediaMap.set(name,game.cardMedia);
+}
 const PLATFORM_OPTIONS=[
   {key:"all",label:"All types"},
   {key:"html5",label:"HTML5"},
@@ -2474,8 +2479,39 @@ function matchesPlatformFilters(game){
 }
 
 function getCardMediaUrl(game){
-  if(IS_PORTABLE_MODE&&isExternalAsset(game.cardMedia||"")) return "";
-  return game.cardMedia||"";
+  return getCardMediaCandidates(game)[0]||"";
+}
+
+function getPortableCardFallback(game){
+  return makePortableCardArt(game);
+}
+
+function getCardMediaCandidates(game){
+  const fallback=getPortableCardFallback(game);
+  if(IS_PORTABLE_MODE&&navigator.onLine===false) return [fallback];
+  const alternate=alternateCardMediaMap.get(normalizeSearchText(game.name).replace(/ /g,""));
+  return [...new Set([game.cardMedia,alternate,fallback].filter(Boolean))];
+}
+
+function makePortableCardArt(game){
+  let hash=0;
+  for(const char of game.displayName) hash=(hash*31+char.charCodeAt(0))>>>0;
+  const hue=hash%360;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 315">
+    <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="hsl(${hue},58%,25%)"/><stop offset="1" stop-color="hsl(${(hue+55)%360},63%,11%)"/></linearGradient></defs>
+    <rect width="560" height="315" fill="url(#bg)"/>
+    <circle cx="470" cy="28" r="160" fill="hsla(${(hue+80)%360},90%,67%,.13)"/>
+    <circle cx="70" cy="300" r="180" fill="hsla(${hue},95%,75%,.09)"/>
+    <path d="M0 250 210 0M130 315 390 0M350 315 560 55" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+    <g transform="translate(159 86)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M49 50c-18 0-28 9-33 28L3 133c-5 21 3 36 19 36 12 0 19-7 34-25l19-19h92l19 19c15 18 22 25 34 25 16 0 24-15 19-36l-13-55c-5-19-15-28-33-28z" fill="#fff" fill-opacity=".13" stroke-opacity=".65" stroke-width="5"/>
+      <path d="M58 77v42m-21-21h42" stroke-width="8"/>
+      <circle cx="173" cy="88" r="6" fill="#fff"/><circle cx="194" cy="107" r="6" fill="#fff"/>
+      <circle cx="92" cy="143" r="8" fill="#fff" fill-opacity=".6"/><circle cx="148" cy="143" r="8" fill="#fff" fill-opacity=".6"/>
+    </g>
+    <text x="27" y="42" fill="#fff" fill-opacity=".62" font-family="Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="4">UGS</text>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 function isExternalAsset(url){
@@ -2626,7 +2662,8 @@ function render(){
       }
       const card=document.createElement("div");
       const favoriteActive=isFavorite(game.url);
-      const cardMediaUrl=getCardMediaUrl(game);
+      const mediaCandidates=getCardMediaCandidates(game);
+      const cardMediaUrl=mediaCandidates[0]||"";
       card.className=`card genre-${game.genre.name}${game.source==="frogies" ? " source-frogies" : ""}${game.source==="gnmath" ? " source-gnmath" : ""}`;
       if(!cardMediaUrl){
         card.classList.add("no-media");
@@ -2646,7 +2683,13 @@ function render(){
       };
       const mediaImage=card.querySelector(".cardMedia img");
       if(mediaImage){
+        let mediaAttempt=0;
         mediaImage.onerror=()=>{
+          mediaAttempt++;
+          if(mediaAttempt<mediaCandidates.length){
+            mediaImage.src=mediaCandidates[mediaAttempt];
+            return;
+          }
           card.classList.add("no-media");
           mediaImage.remove();
         };

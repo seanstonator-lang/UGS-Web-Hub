@@ -12,6 +12,15 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#visibleCount')).toContainText(/\d+/);
   });
 
+  test('keeps card artwork visible when a cover host fails', async ({ page }) => {
+    await page.route('https://**/*', route => route.abort());
+    await enterHub(page);
+
+    const image = page.locator('#games .cardMedia img').first();
+    await expect(image).toHaveAttribute('src', /^data:image\/svg\+xml/);
+    await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  });
+
   test('filters the catalog with search', async ({ page }) => {
     await enterHub(page);
 
