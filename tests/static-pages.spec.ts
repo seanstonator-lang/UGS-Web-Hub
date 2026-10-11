@@ -73,12 +73,12 @@ test.describe('UGS Web Hub static pages', () => {
     await page.goto('/privacy.html');
     await page.getByRole('link', { name: /Back to Hub/i }).click();
     await expect(page).toHaveURL(/\/index\.html$/i);
-    await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Find a game/i })).toBeVisible();
 
     await page.goto('/contact.html');
     await page.getByRole('link', { name: /Back to Hub/i }).click();
     await expect(page).toHaveURL(/\/index\.html$/i);
-    await expect(page.getByRole('heading', { name: /UGS Web Hub/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Find a game/i })).toBeVisible();
   });
 
   test('missing pages return the current 404 response', async ({ page }) => {
