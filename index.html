@@ -1189,7 +1189,7 @@ a{color:inherit}
 }
 #games{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
   gap:18px;
 }
 .section{
@@ -1785,30 +1785,40 @@ footer a:hover{color:var(--secondary)}
 }
 /* One compact catalog for every game source. */
 #hub{padding-top:10px}
-.hubIntro{display:block;margin-bottom:8px;padding:14px;border:1px solid rgba(119,168,255,.17);border-radius:18px;background:rgba(17,38,55,.82)}
+.hubIntro{display:block;margin-bottom:18px;padding:20px;border:1px solid rgba(119,168,255,.17);border-radius:20px;background:rgba(17,38,55,.82)}
 .hubTitleCard,.hubSearchCard{height:auto;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
 .hubTitleCard{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.hubTitleCard h2{margin:0;font-size:clamp(1.35rem,2.5vw,1.8rem)}
+.hubTitleCard h2{margin:0;font-size:clamp(1.5rem,2.5vw,2rem)}
 .hubTitleCard .eyebrow,.hubTitleCard p,.searchLabel,.genreSummary,.extraControls{display:none!important}
 .hubQuickLinks{gap:8px}
 .hubQuickLinks .hubProxyBtn{min-height:36px;margin:0;padding:8px 12px;font-size:.78rem}
-.hubSearchCard{margin-top:10px}
-#search{height:44px;margin-bottom:10px;padding:9px 13px}
+.hubSearchCard{margin-top:16px}
+#search{height:52px;margin-bottom:12px;padding:10px 16px;font-size:1rem}
 .controlsStack>.controlGroup:first-child{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
-.genrePanel{flex:1 1 360px;min-width:0}
+.browseFilters{order:2;width:100%;font-size:.84rem;color:var(--muted)}
+.browseFilters summary{display:inline-flex;align-items:center;min-height:38px;padding:8px 12px;border:1px solid rgba(255,255,255,.14);border-radius:9px;cursor:pointer;color:var(--text);font-weight:700;list-style:none}
+.browseFilters summary::-webkit-details-marker{display:none}
+.browseFilters summary::after{content:"⌄";margin-left:10px;color:var(--muted)}
+.browseFilters[open] summary::after{content:"⌃"}
+.genrePanel{max-width:620px;margin-top:10px}
 .filterSelectGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.actionRow{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.actionRow{order:1;display:flex;flex-wrap:wrap;gap:8px;margin:0}
 .actionRow .actionBtn{min-height:38px;padding:8px 11px;font-size:.78rem}
-.hubMeta{margin-top:10px}
+.hubMeta{margin-top:14px}
 .hubMeta .metaPill{border:0;padding:0;background:none;color:var(--muted)}
 .hubMeta .metaPill:not(:first-child){display:none}
 .hubExtras{margin:0 0 8px;padding:6px 10px}
-.card{min-height:282px;grid-template-rows:160px minmax(122px,auto);border-radius:16px}
-.card.no-media{min-height:124px;grid-template-rows:1fr}
-.cardTop{min-height:122px;gap:8px;padding:14px}
-.cardTag{padding:5px 8px;font-size:.64rem;letter-spacing:.06em}
-.cardFooter{padding-top:0}
-.cardArrow{width:28px;height:28px;border-radius:8px}
+.card{min-height:260px;grid-template-rows:150px minmax(110px,auto);border-radius:16px}
+.card:hover{transform:translateY(-3px)}
+.card.no-media{min-height:144px;grid-template-rows:1fr}
+.cardTop{min-height:110px;gap:10px;padding:18px 16px 16px;background:linear-gradient(145deg,rgba(var(--genre-rgb),.08),transparent 55%)}
+.card.no-media .cardTop{grid-row:1;justify-content:space-between;padding:20px 18px 18px}
+.card h3{order:0;padding-right:30px;font-size:1.02rem;line-height:1.35;text-shadow:none}
+.cardTag{order:1;align-self:flex-start;max-width:100%;padding:0;border:0;border-radius:0;background:none;color:var(--muted);font-size:.72rem;font-weight:600;letter-spacing:0;text-transform:none;line-height:1.35}
+.cardTag::before{width:6px;height:6px;margin-right:7px;box-shadow:none;flex:none}
+.cardFooter{display:none}
+.favoriteBtn{top:12px;right:12px;width:32px;height:32px}
+.card.no-media .favoriteBtn{top:14px;right:14px}
 @media(max-width:650px){
   #hub{padding:10px 12px 70px}
   .hubIntro{padding:14px}
@@ -1925,6 +1935,8 @@ footer a:hover{color:var(--secondary)}
       <div class="controlsStack">
         <div class="controlGroup">
           <span class="controlLabel">Browse Controls</span>
+          <details class="browseFilters">
+            <summary>Filters</summary>
           <div class="genrePanel">
             <div class="filterSelectGrid" id="filterSelectGrid">
               <div class="selectWrap">
@@ -1942,9 +1954,10 @@ footer a:hover{color:var(--secondary)}
               <strong id="genreSummaryText">All Games</strong>
             </div>
           </div>
+          </details>
           <div class="actionRow">
-            <button class="actionBtn" id="favoritesFilterBtn" type="button">Favorites Only: Off</button>
-            <button class="actionBtn" id="resetBtn" type="button">Reset View</button>
+            <button class="actionBtn" id="favoritesFilterBtn" type="button">Favorites</button>
+            <button class="actionBtn" id="resetBtn" type="button">Clear</button>
           </div>
         </div>
         <details class="controlGroup extraControls">
@@ -2488,6 +2501,12 @@ function getPortableBadge(game){
   return "";
 }
 
+function getCardStatus(game){
+  const platform=game.type==="emulated"&&game.system ? game.system : getPlatformLabel(game.type);
+  const availability=game.portableSupport==="offline-ready" ? "Offline ready" : "Online only";
+  return `${platform} · ${availability}`;
+}
+
 function trackRecentGame(url){
   recentGameUrls=[url,...recentGameUrls.filter(item=>item!==url)].slice(0,MAX_RECENT_GAMES);
   saveRecentGames();
@@ -2585,7 +2604,8 @@ function render(){
   if(activeSystem!=="all"&&activePlatform==="emulated") laneParts.push(activeSystem);
   if(activeGenre!=="all") laneParts.push(GENRE_RULES.find(rule=>rule.name===activeGenre)?.label||activeGenre);
   genreSummaryTextEl.textContent=laneParts.join(" / ");
-  favoritesFilterBtn.textContent=`Favorites Only: ${favoritesOnly ? "On" : "Off"}`;
+  favoritesFilterBtn.textContent=favoritesOnly ? "★ Favorites" : "☆ Favorites";
+  favoritesFilterBtn.setAttribute("aria-pressed",String(favoritesOnly));
   favoritesFilterBtn.classList.toggle("is-active",favoritesOnly);
   favoriteSurpriseBtn.disabled=favoriteUrls.size===0;
   favoriteSurpriseBtn.textContent=favoriteUrls.size===0 ? "Save Favorites First" : "Surprise Favorites";
@@ -2616,11 +2636,8 @@ function render(){
         ${cardMediaUrl ? `<div class="cardMedia"><img src="${cardMediaUrl}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></div>` : ""}
         <button class="favoriteBtn${favoriteActive ? " is-active" : ""}" type="button" aria-label="${favoriteActive ? "Remove from favorites" : "Add to favorites"}: ${escapeHtml(game.displayName)}" aria-pressed="${favoriteActive ? "true" : "false"}">★</button>
         <div class="cardTop">
-          <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}${getLaunchBadge(game) ? ` · ${getLaunchBadge(game)}` : ""}${getPortableBadge(game) ? ` · ${getPortableBadge(game)}` : ""}</span>
           <h3>${escapeHtml(game.displayName)}</h3>
-          <div class="cardFooter">
-          <span class="cardArrow">↗</span>
-          </div>
+          <span class="cardTag">${escapeHtml(getCardStatus(game))}</span>
         </div>`;
       card.onclick=()=>launchGame(game);
       card.querySelector(".favoriteBtn").onclick=(event)=>{
