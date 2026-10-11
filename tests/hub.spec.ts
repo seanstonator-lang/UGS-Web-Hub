@@ -54,7 +54,7 @@ test.describe('UGS Web Hub', () => {
     await enterHub(page);
 
     await expect(page.locator('#platformSelect')).toHaveValue('all');
-    await expect(page.locator('#activePlatformLabel')).toHaveText(/Full Vault/i);
+    await expect(page.locator('#activePlatformLabel')).toHaveText(/All types/i);
 
     const totalCount = Number(await page.locator('#count').textContent());
     await page.locator('#platformSelect').selectOption('flash');
@@ -81,25 +81,19 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#visibleCount')).not.toHaveText('0');
   });
 
-  test('switches themes from the hub theme controls', async ({ page }) => {
+  test('shows one compact catalog without separate Frogie controls', async ({ page }) => {
     await enterHub(page);
-    await page.locator('.extraControls').filter({ has: page.locator('#themeFilters') }).locator('summary').click();
-
-    await page.getByRole('button', { name: /Neon Grid/i }).click();
-
-    await expect(page.locator('body')).toHaveAttribute('data-theme', 'neon-grid');
-    await expect(page.locator('#activeThemeLabel')).toHaveText(/Neon Grid/i);
+    await expect(page.getByRole('button', { name: 'Frogie’s games' })).toHaveCount(0);
+    await expect(page.locator('#games .card.source-frogies').first()).toBeVisible();
+    await expect(page.locator('#games .card:not(.source-frogies)').first()).toBeVisible();
+    await expect(page.locator('.extraControls').first()).toBeHidden();
   });
 
-  test('random pick updates spotlight and launch opens the library page in the same tab', async ({ page }) => {
+  test('random game launches a match with one click', async ({ page }) => {
     await enterHub(page);
-    await page.locator('.hubExtras summary').click();
     await page.locator('#search').fill('1 on 1 soccer');
 
-    await page.getByRole('button', { name: /^Random Pick$/i }).click();
-    await expect(page.locator('#spotlightTitle')).not.toHaveText(/Catalog Ready/i);
-
-    await page.locator('#spotlightBtn').click();
+    await page.getByRole('button', { name: 'Random game' }).click();
     await page.waitForLoadState('domcontentloaded');
     await expect(page).toHaveURL(/\/library\//i);
     await expect(page.getByRole('link', { name: /^Play /i })).toHaveAttribute('href', /\.\.\/games\//i);
@@ -129,14 +123,13 @@ test.describe('UGS Web Hub', () => {
     await expect(page.locator('#spotlightBtn')).toBeDisabled();
   });
 
-  test('quick-start collections reshape the hub without typing a search', async ({ page }) => {
+  test('keeps search and filters easy to reach', async ({ page }) => {
     await enterHub(page);
-    await page.locator('.extraControls').filter({ has: page.locator('#collectionGrid') }).locator('summary').click();
-
-    await page.getByRole('button', { name: /Brain Burn/i }).click();
-
-    await expect(page.locator('#genreSummaryText')).toHaveText(/Brain Burn/i);
-    await expect(page.locator('#visibleCount')).not.toHaveText('2222');
+    await expect(page.locator('#search')).toBeVisible();
+    await expect(page.locator('#platformSelect')).toBeVisible();
+    await expect(page.locator('#genreSelect')).toBeVisible();
+    await page.locator('#search').fill('mario');
+    await expect(page.locator('#visibleCount')).not.toHaveText('0');
     await expect(page.locator('#games .card')).toHaveCount(Number(await page.locator('#visibleCount').textContent()));
   });
 

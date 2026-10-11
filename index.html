@@ -1731,7 +1731,6 @@ footer a:hover{color:var(--secondary)}
 }
 
 /* Keep the library focused on finding and opening games. */
-.singleFileNotice{padding:8px 16px;background:#102235;color:#b9d3e9;text-align:center;font:12px/1.4 system-ui;border-bottom:1px solid rgba(255,255,255,.07)}
 #landing,#homeBtn,.ugsLauncher{display:none!important}
 #hub{display:block!important;max-width:1500px;padding:34px 26px 90px}
 .hubIntro{grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:14px;margin-bottom:12px}
@@ -1784,12 +1783,45 @@ footer a:hover{color:var(--secondary)}
   .hubTitleCard,.hubSearchCard{height:auto}
   .hubExtrasGrid{grid-template-columns:1fr}
 }
+/* One compact catalog for every game source. */
+#hub{padding-top:10px}
+.hubIntro{display:block;margin-bottom:8px;padding:14px;border:1px solid rgba(119,168,255,.17);border-radius:18px;background:rgba(17,38,55,.82)}
+.hubTitleCard,.hubSearchCard{height:auto;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+.hubTitleCard{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.hubTitleCard h2{margin:0;font-size:clamp(1.35rem,2.5vw,1.8rem)}
+.hubTitleCard .eyebrow,.hubTitleCard p,.searchLabel,.genreSummary,.extraControls{display:none!important}
+.hubQuickLinks{gap:8px}
+.hubQuickLinks .hubProxyBtn{min-height:36px;margin:0;padding:8px 12px;font-size:.78rem}
+.hubSearchCard{margin-top:10px}
+#search{height:44px;margin-bottom:10px;padding:9px 13px}
+.controlsStack>.controlGroup:first-child{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.genrePanel{flex:1 1 360px;min-width:0}
+.filterSelectGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.actionRow{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.actionRow .actionBtn{min-height:38px;padding:8px 11px;font-size:.78rem}
+.hubMeta{margin-top:10px}
+.hubMeta .metaPill{border:0;padding:0;background:none;color:var(--muted)}
+.hubMeta .metaPill:not(:first-child){display:none}
+.hubExtras{margin:0 0 8px;padding:6px 10px}
+.card{min-height:282px;grid-template-rows:160px minmax(122px,auto);border-radius:16px}
+.card.no-media{min-height:124px;grid-template-rows:1fr}
+.cardTop{min-height:122px;gap:8px;padding:14px}
+.cardTag{padding:5px 8px;font-size:.64rem;letter-spacing:.06em}
+.cardFooter{padding-top:0}
+.cardArrow{width:28px;height:28px;border-radius:8px}
+@media(max-width:650px){
+  #hub{padding:10px 12px 70px}
+  .hubIntro{padding:14px}
+  .hubTitleCard{align-items:flex-start}
+  .hubQuickLinks{width:100%}
+  .genrePanel{flex-basis:100%}
+  .filterSelectGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .actionRow{width:100%}
+}
 </style>
 </head>
 
 <body>
-
-<div class="singleFileNotice" role="note">Games, DogeUB, and Frogie’s Arcade need an internet connection.</div>
 
 <div id="progress"></div>
 <button id="homeBtn">HOME</button>
@@ -1880,13 +1912,10 @@ footer a:hover{color:var(--secondary)}
   <div class="hubIntro">
     <div class="hubLead">
       <div class="hubTitleCard">
-        <span class="eyebrow">Library View</span>
         <h2>Find a game</h2>
-        <p>Search, filter, or pick a game at random.</p>
         <div class="hubQuickLinks">
           <a class="hubProxyBtn" href="https://raspberrypi.tail153ae0.ts.net" target="_blank" rel="noreferrer">Open DogeUB</a>
-          <button class="hubProxyBtn hubProxyBtn--secondary" id="showFrogiesGamesBtn" type="button">Frogie’s games</button>
-          <button class="hubProxyBtn hubProxyBtn--secondary" id="openFrogiesBtn" type="button" title="Online only; open Frogie's Arcade inside UGS">Frogie’s Arcade</button>
+          <button class="hubProxyBtn hubProxyBtn--secondary" id="randomBtn" type="button">Random game</button>
         </div>
       </div>
     </div>
@@ -1929,8 +1958,8 @@ footer a:hover{color:var(--secondary)}
         <div class="collectionGrid" id="collectionGrid"></div>
       </details>
       <div class="hubMeta">
-        <span class="metaPill">Total: <span id="count">0</span></span>
-        <span class="metaPill">Showing: <span id="visibleCount">0</span></span>
+        <span class="metaPill"><span id="visibleCount">0</span> games</span>
+        <span id="count" hidden>0</span>
         <span class="metaPill">Favorites: <span id="favoriteCount">0</span></span>
         <span class="metaPill">Platform: <span id="activePlatformLabel">Full Vault</span></span>
         <span class="metaPill">Genre: <span id="activeGenreLabel">All</span></span>
@@ -1939,14 +1968,13 @@ footer a:hover{color:var(--secondary)}
     </div>
   </div>
   <details class="hubExtras">
-    <summary>Spotlight and recently played</summary>
+    <summary>More</summary>
     <div class="hubExtrasGrid">
       <div class="spotlightCard">
         <span class="controlLabel">Spotlight</span>
         <h3 id="spotlightTitle">Catalog Ready</h3>
         <div class="spotlightMeta" id="spotlightMeta">Try random pick to find something new.</div>
         <div class="spotlightActions">
-          <button class="actionBtn" id="randomBtn" type="button">Random Pick</button>
           <button class="actionBtn" id="favoriteSurpriseBtn" type="button">Surprise Favorites</button>
           <button class="actionBtn" id="spotlightFavoriteBtn" type="button">Save to Favorites</button>
           <button class="actionBtn primary" id="spotlightBtn" type="button">Launch Spotlight</button>
@@ -1971,7 +1999,7 @@ footer a:hover{color:var(--secondary)}
 
 <div class="frogiesView" id="frogiesView" role="dialog" aria-modal="true" aria-label="Frogie's Arcade" hidden>
   <div class="frogiesBar">
-    <div><strong id="frogiesTitle">Frogie’s Arcade</strong><small>Online games inside UGS</small></div>
+    <div><strong id="frogiesTitle">Game</strong><small>From Frogie’s Arcade · Internet required</small></div>
     <div class="frogiesBarActions">
       <a id="frogiesNewTabLink" href="https://frogiesarcade.net/" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
       <button id="closeFrogiesBtn" type="button">Back to games</button>
@@ -2007,14 +2035,12 @@ const frogiesView=document.getElementById("frogiesView");
 const frogiesFrame=document.getElementById("frogiesFrame");
 const frogiesTitle=document.getElementById("frogiesTitle");
 const frogiesNewTabLink=document.getElementById("frogiesNewTabLink");
-const showFrogiesGamesBtn=document.getElementById("showFrogiesGamesBtn");
-const openFrogiesBtn=document.getElementById("openFrogiesBtn");
 const closeFrogiesBtn=document.getElementById("closeFrogiesBtn");
 let frogiesPreviousOverflow="";
 let frogiesReturnFocus=null;
 function openFrogies(url,title,returnFocus){
   if(!/^https:\/\/frogiesarcade\.net\//.test(url)) return;
-  frogiesReturnFocus=returnFocus||openFrogiesBtn;
+  frogiesReturnFocus=returnFocus||search;
   frogiesPreviousOverflow=document.body.style.overflow;
   document.body.style.overflow="hidden";
   frogiesView.hidden=false;
@@ -2023,13 +2049,12 @@ function openFrogies(url,title,returnFocus){
   frogiesFrame.src=url;
   closeFrogiesBtn.focus();
 }
-openFrogiesBtn.addEventListener("click",()=>openFrogies("https://frogiesarcade.net/","Frogie’s Arcade",openFrogiesBtn));
 function closeFrogies(){
   if(frogiesView.hidden) return;
   frogiesView.hidden=true;
   frogiesFrame.src="about:blank";
   document.body.style.overflow=frogiesPreviousOverflow;
-  frogiesReturnFocus.focus();
+  frogiesReturnFocus?.focus();
 }
 closeFrogiesBtn.addEventListener("click",closeFrogies);
 document.addEventListener("keydown",event=>{
@@ -2090,13 +2115,21 @@ const FAVORITES_STORAGE_KEY="ugs-web-hub:favorites";
 const RECENT_STORAGE_KEY="ugs-web-hub:recently-played";
 const MAX_RECENT_GAMES=3;
 const IS_PORTABLE_MODE=location.protocol==="file:";
-const gamesData=[...(window.rawGames||[]),...(window.frogiesGames||[])];
+const originalGames=window.rawGames||[];
+const catalogNames=new Set(originalGames.map(game=>normalizeSearchText(game.name).replace(/ /g,"")));
+const uniqueFrogiesGames=(window.frogiesGames||[]).filter(game=>{
+  const name=normalizeSearchText(game.name).replace(/ /g,"");
+  if(catalogNames.has(name)) return false;
+  catalogNames.add(name);
+  return true;
+});
+const gamesData=[...originalGames,...uniqueFrogiesGames];
 const gameMetadataMap=window.gameMetadataMap||{};
 const gamePortabilityMap=window.gamePortabilityMap||{};
 const exactTitleMap=window.gameTitleMap||{};
 const cardMediaMap=window.gameCardMediaMap||{};
 const PLATFORM_OPTIONS=[
-  {key:"all",label:"Full Vault"},
+  {key:"all",label:"All types"},
   {key:"html5",label:"HTML5"},
   {key:"flash",label:"Flash"},
   {key:"emulated",label:"Emulation"}
@@ -2124,12 +2157,6 @@ const COLLECTION_OPTIONS=[
     label:"Full Vault",
     blurb:"Everything online and ready.",
     match:()=>true
-  },
-  {
-    key:"frogies",
-    label:"Frogie’s Arcade",
-    blurb:"Games from Frogie’s Arcade. Internet required.",
-    match:game=>game.source==="frogies"
   },
   {
     key:"quick-hits",
@@ -2214,10 +2241,6 @@ if(enterBtn){
 }
 homeBtn.onclick=goHome;
 landingGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
-showFrogiesGamesBtn.addEventListener("click",()=>{
-  document.querySelector('[data-collection-key="frogies"]').click();
-  gamesEl.scrollIntoView({block:"start",behavior:"smooth"});
-});
 if(dockGamesBtn){
   dockGamesBtn.addEventListener("click",()=>openHubWithLandingSearch());
 }
@@ -2409,7 +2432,7 @@ function getCollectionOption(key){
 }
 
 function getPlatformLabel(key){
-  return PLATFORM_OPTIONS.find(option=>option.key===key)?.label||"Full Vault";
+  return PLATFORM_OPTIONS.find(option=>option.key===key)?.label||"All types";
 }
 
 function matchesPlatformFilters(game){
@@ -2432,23 +2455,7 @@ function getGameDetailUrl(game){
   return `library/${fileName}`;
 }
 
-function getCardFlavorText(game){
-  const seed=(game.displayName||game.name||"").toLowerCase();
-  const templates=[
-    `Jump into ${game.displayName} and push the run further.`,
-    `${game.displayName}: ${game.genre.label} energy, no slowdown.`,
-    `Dial in ${game.displayName} and chase a cleaner score.`,
-    `${game.genre.label} lane active in ${game.displayName}.`
-  ];
-  let hash=0;
-  for(let i=0;i<seed.length;i+=1){
-    hash=(hash+seed.charCodeAt(i)*(i+3))%templates.length;
-  }
-  return templates[hash];
-}
-
 function getLaunchBadge(game){
-  if(game.source==="frogies") return "Frogie’s Arcade";
   if(game.launchMode==="split-assets") return "Split Assets";
   if(game.launchMode==="single-file") return "Single File";
   if(game.launchMode==="external-host") return "External Host";
@@ -2476,7 +2483,7 @@ function launchGame(game){
   trackRecentGame(game.url);
   renderRecentGames();
   if(game.source==="frogies"){
-    openFrogies(game.url,game.displayName,showFrogiesGamesBtn);
+    openFrogies(game.url,game.displayName,search);
     return;
   }
   location.href=getGameDetailUrl(game);
@@ -2593,7 +2600,6 @@ function render(){
           <span class="cardTag">${game.type==="emulated"&&game.system ? `${getPlatformLabel(game.type)} · ${game.system}` : getPlatformLabel(game.type)}${getLaunchBadge(game) ? ` · ${getLaunchBadge(game)}` : ""}${getPortableBadge(game) ? ` · ${getPortableBadge(game)}` : ""}</span>
           <h3>${game.displayName}</h3>
           <div class="cardFooter">
-          <p>${getCardFlavorText(game)}</p>
           <span class="cardArrow">↗</span>
           </div>
         </div>`;
@@ -2778,17 +2784,11 @@ function launchRandomGame(){
   const collection=getCollectionOption(activeCollection);
   const pool=normalizedGames.filter(game=>collection.match(game)&&matchesPlatformFilters(game)&&(!favoritesOnly||isFavorite(game.url))&&(activeGenre==="all"||game.genre.name===activeGenre)&&(!q||game.searchText.includes(q)));
   if(!pool.length){
-    updateSpotlight([]);
+    search.focus();
     return;
   }
   const choice=pool[Math.floor(Math.random()*pool.length)];
-  spotlightGame=choice;
-  spotlightTitleEl.textContent=choice.displayName;
-  spotlightMetaEl.textContent=`Random lock-in: ${choice.genre.label}. ${choice.genre.blurb}`;
-  spotlightFavoriteBtn.disabled=false;
-  spotlightFavoriteBtn.textContent=isFavorite(choice.url) ? "Remove Favorite" : "Save to Favorites";
-  spotlightBtn.disabled=false;
-  spotlightBtn.textContent="Launch Random Pick";
+  launchGame(choice);
 }
 
 function resetHubControls(){

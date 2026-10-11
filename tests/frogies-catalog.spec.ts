@@ -8,15 +8,26 @@ test('Frogie games appear in the main library and open their own launch pages', 
     frogies: (window as any).frogiesGames.length,
   }));
   expect(counts.frogies).toBe(231);
-  await expect(page.locator('#count')).toHaveText(String(counts.existing + counts.frogies));
-
-  await page.getByRole('button', { name: 'Frogie’s games' }).click();
-  await expect(page.locator('#games .card')).toHaveCount(counts.frogies);
-  await expect(page.locator('#games .card').first()).toContainText('Frogie’s Arcade');
-  await expect(page.locator('#games .card').first()).toContainText('Needs Internet');
+  const uniqueFrogies = await page.evaluate(() => {
+    const normalize = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const seen = new Set((window as any).rawGames.map((game: any) => normalize(game.name)));
+    return (window as any).frogiesGames.filter((game: any) => {
+      const name = normalize(game.name);
+      if (seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    }).length;
+  });
+  expect(uniqueFrogies).toBe(103);
+  await expect(page.locator('#count')).toHaveText(String(counts.existing + uniqueFrogies));
+  await expect(page.locator('#games .card')).toHaveCount(counts.existing + uniqueFrogies);
+  await expect(page.locator('#games .card.source-frogies')).toHaveCount(uniqueFrogies);
+  await expect(page.locator('#games .card:not(.source-frogies)')).toHaveCount(counts.existing);
+  await expect(page.getByRole('button', { name: 'Frogie’s games' })).toHaveCount(0);
 
   await page.locator('#search').fill('geometry dash');
   const card = page.locator('#games .card').filter({ has: page.locator('h3', { hasText: 'geometry dash' }) }).first();
+  await expect(card).toContainText('Needs Internet');
   await card.click();
   const dialog = page.getByRole('dialog', { name: "Frogie's Arcade" });
   await expect(dialog).toBeVisible();
