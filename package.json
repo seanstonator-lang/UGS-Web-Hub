@@ -25,6 +25,7 @@
     "build:sitemap": "node generate-sitemap.js",
     "build:content": "node scripts/build-portability-map.cjs && node scripts/build-game-detail-pages.cjs && node scripts/build-singlefile-launcher.cjs && node generate-sitemap.js",
     "import:ugs-doc": "node scripts/import-ugs-doc.js && node generate-game-titles.js && node generate-game-card-media.js",
+    "import:gnmath": "node scripts/import-gnmath-games.cjs",
     "check:links": "node scripts/check-links.cjs",
     "check:sitemap": "node scripts/check-sitemap.cjs",
     "check:rulesets": "node scripts/check-rulesets.cjs",
